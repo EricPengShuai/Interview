@@ -1,0 +1,1443 @@
+- [ 面试题总结](#head1)
+	- [ 👴操作系统](#head2)
+		- [1. 进程和线程区别](#head3)
+		- [ 2.进程间的通信方式](#head4)
+		- [ 3.申请和管理内存](#head5)
+		- [4. 虚拟地址与物理地址相关](#head6)
+			- [ 如何映射？](#head7)
+			- [Linux 中虚拟内存和物理内存有什么区别？有什么优点？](#head8)
+		- [==5.  简述 socket 中 select 与 epoll 的使用场景以及区别，epoll 中水平触发以及边缘触发有什么不同？==](#head9)
+		- [6. 简述操作系统中的缺页中断？](#head10)
+		- [==7.  两个线程交替打印一个共享变量==](#head11)
+		- [8. 简述 mmap 的使用场景以及原理](#head12)
+		- [9. 什么时候会由用户态陷入内核态？](#head13)
+		- [10. 什么情况下，进程会进行切换？](#head14)
+		- [11. 简述 traceroute 命令的原理](#head15)
+		- [12.简述 Linux 零拷贝的原理](#head16)
+		- [13. 进程调度算法](#head17)
+		- [14. 简述自旋锁与互斥锁的使用场景](#head18)
+	- [ 👵计算机网络](#head19)
+		- [1. HTTP vs HTTPS](#head20)
+		- [2. TCP && UDP 相关](#head21)
+			- [TCP vs UDP](#head22)
+			- [ TCP连接和释放](#head23)
+			- [ 数据包封装和解封过程](#head24)
+			- [ TCP拥塞控制算法](#head25)
+			- [ TCP如何保证可靠性](#head26)
+			- [ TCP四个计时器](#head27)
+		- [3. HTTP相关](#head28)
+			- [ 一次完整的HTTP请求过程](#head29)
+			- [ 常见状态码](#head30)
+			- [简述 HTTPS 的加密与认证过程](#head31)
+			- [ 什么是跨域，什么情况下会发生跨域请求？](#head32)
+			- [ HTTP方法](#head33)
+		- [4. DNS相关](#head34)
+		- [5. OSI和TCP/IP模型](#head35)
+		- [ 6.简述对称与非对称加密的概念](#head36)
+	- [ 👲C++](#head37)
+		- [==1. 简述 C++ 右值引用与转移语义==](#head38)
+		- [2. const、static 关键字有什么区别](#head39)
+		- [3. C++的多态是如何实现的？](#head40)
+		- [4. C++ 中解释类模板和模板类的区别](#head41)
+		- [5. C++ 中哪些函数不能被声明为虚函数？](#head42)
+		- [6. C++ 中虚函数与纯虚函数的区别](#head43)
+		- [7. 简述 C++ 中内存对齐的使用场景](#head44)
+		- [8. 构造函数为什么不能被声明为虚函数？](#head45)
+		- [9.  什么是内存泄漏，怎么确定内存泄漏？](#head46)
+	- [ 👳数据库](#head47)
+		- [ 基本概念](#head48)
+			- [1. 事务定义](#head49)
+			- [2. <span id="2">并发一致性</span>](#head50)
+			- [3. 封锁粒度](#head51)
+			- [4. <span id='1'>隔离级别</span>](#head52)
+			- [5. 多版本并发控制](#head53)
+			- [6. Next-Key Locks](#head54)
+			- [7. 关系型数据库设计理论 && ER图](#head55)
+			- [8. MySQL](#head56)
+		- [MySQL 为什么使用 B+ 树来作索引，对比 B 树它的优点和缺点是什么？](#head57)
+		- [ 数据库的事务隔离级别有哪些？各有哪些优缺点](#head58)
+		- [ ==关于Redis（还没看呢）==](#head59)
+		- [ 简述乐观锁以及悲观锁的区别以及使用场景](#head60)
+		- [ 数据库有哪些常见索引？数据库设计的范式是什么？](#head61)
+		- [ Cookie和Session的关系和区别是什么](#head62)
+		- [ 什么情况下会发生死锁，如何解决死锁](#head63)
+		- [ 并发事务会引发哪些问题？如何解决](#head64)
+		- [MySQL 中 join 与 left join 的区别是什么](#head65)
+		- [ MySQL三大日志以及使用场景](#head66)
+	- [ 👱算法](#head67)
+		- [1. 10亿个数中如何高效地找到最大的一个数以及最大的第 K 个数](#head68)
+		- [2. 给定 100G 的 URL 磁盘数据，使用最多 1G 内存，统计出现频率最高的 Top K 个 URL](#head69)
+		- [3. 64匹马8个跑道需要多少轮才能选出最快的四匹](#head70)
+		- [4. [合并两个有序链表 leetcode21](https://leetcode-cn.com/problems/merge-two-sorted-lists/)](#head71)
+		- [5. 实现快速排序](#head72)
+		- [6. [两数相加 II leetcode445](https://leetcode-cn.com/problems/add-two-numbers-ii/)](#head73)
+		- [7. [搜索旋转排序数组leetcode33](https://leetcode-cn.com/problems/search-in-rotated-sorted-array/) [搜索旋转排序数组 II leetcode81](https://leetcode-cn.com/problems/search-in-rotated-sorted-array-ii/)](#head74)
+		- [8. 判断有环链表的环长度 最长连续子序列](#head75)
+		- [9. [旋转数组的最小数字](https://leetcode-cn.com/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/)](#head76)
+		- [10. [连续子数组的最大和](https://leetcode-cn.com/problems/lian-xu-zi-shu-zu-de-zui-da-he-lcof/)](#head77)
+		- [11.给定一个 foo 函数，60%的概率返回0，40%的概率返回1，如何利用 foo 函数实现一个 50% 返回 0 的函数](#head78)
+		- [12. [K 个一组翻转链表](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)](#head79)
+		- [13. [二叉树的最近公共祖先](https://leetcode-cn.com/problems/er-cha-shu-de-zui-jin-gong-gong-zu-xian-lcof/)](#head80)
+		- [14. [最小栈](https://leetcode-cn.com/problems/min-stack/)](#head81)
+		- [15. ==丑数==](#head82)
+		- [16. 路径总和](#head83)
+		- [17. [二叉树的锯齿形层次遍历](https://leetcode-cn.com/problems/binary-tree-zigzag-level-order-traversal/)](#head84)
+		- [18. [旋转数组](https://leetcode-cn.com/problems/rotate-array/)](#head85)
+		- [19. [最长不含重复字符的子字符串](https://leetcode-cn.com/problems/zui-chang-bu-han-zhong-fu-zi-fu-de-zi-zi-fu-chuan-lcof/)](#head86)
+	- [ 项目相关](#head87)
+		- [1. [装饰器](https://www.runoob.com/w3cnote/python-func-decorators.html)](#head88)
+		- [2. WSGI](#head89)
+		- [3. 哈希表](#head90)
+	- [ 字节广告部门](#head91)
+		- [11.20  一面](#head92)
+			- [ 很多C++基础问题](#head93)
+			- [ 计网和OS](#head94)
+			- [ 算法](#head95)
+## <span id="head1"> 面试题总结</span>
+
+
+### <span id="head2"> 👴操作系统</span>
+
+#### <span id="head3">1. 进程和线程区别</span>
+
+- 进程是程序的一次执行过程，是一个动态概念，**是程序在执行过程中分配和管理资源的基本单位**，每一个进程都有一个自己的地址空间，至少有 5 种基本状态，它们是：初始态，执行态，等待状态，就绪状态，终止状态。
+- **线程是CPU调度和分派的基本单位**，它可与同属一个进程的其他的线程共享进程所拥有的全部资源。
+
+> 联系： 线程是进程的一部分，一个线程只能属于一个进程，而一个进程可以有多个线程，但至少有一个线程。线程共享进程的资源：**进程代码段、进程的公有数据(利用这些共享的数据，线程很容易的实现相互之间的通讯)、进程打开的文件描述符、信号的处理器、进程的当前目录和进程用户ID与进程组ID**
+>
+> 所处环境：在操作系统中能同时运行多个进程（程序）；而在同一个进程（程序）中有多个线程同时执行（通过CPU调度，在每个时间片中只有一个线程执行）
+>
+> 包含关系：没有线程的进程可以看做是单线程的，如果一个进程内有多个线程，则执行过程不是一条线的，而是多条线（线程）共同完成的；线程是进程的一部分，所以线程也被称为轻权进程或者轻量级进程。
+>
+> > **相关概念**
+> >
+> > **并发**：是指同一个时间段内多个任务同时都在执行，并且都没有执行结束。并发任务强调在一个时间段内同时执行，而一个时间段由多个单位时间累积而成，所以说并发的多个任务在单位时间内不一定同时在执行 。
+> >
+> > **并行**：是说在单位时间内多个任务同时在执行 。
+> >
+> > 在多线程编程实践中，线程的个数往往多于CPU的个数，所以一般都称**多线程并发编程而不是多线程并行编程**。
+
+
+
+#### <span id="head4"> 2.进程间的通信方式</span>
+
+- 管道：匿名管道`|`和命名管道`mkfifo`，前者是单向的，后者是双向的
+- 消息队列
+- 共享内存
+- 信号量
+- socket
+
+
+
+#### <span id="head5"> 3.申请和管理内存</span>
+
+- 申请：申请虚拟地址
+
+  - brk是将数据段的最高地址指针_edata往高地址推；
+  - mmap是在进程的虚拟地址空间中（堆和栈中间，文件映射区）找一块空闲的虚拟内存。
+
+  > **这两种方式分配的都是虚拟内存，没有分配物理内存。在第一次访问已分配的虚拟地址空间的时候，发生缺页中断，操作系统负责分配物理内存，然后建立虚拟内存和物理内存之间的映射关系**
+
+- 管理：通过首次适应、最佳适应、最坏适应分配内存块
+
+  - 页式管理：内部碎片
+  - 段式管理：外部碎片
+  - 段页式管理：内部碎片
+
+
+
+#### <span id="head6">4. 虚拟地址与物理地址相关</span>
+
+##### <span id="head7"> 如何映射？</span>
+
+- 虚拟内存地址由页号（与页表中的页号关联）和偏移量组成
+- 虚拟内存地址的大小是与地址总线位数相关，物理内存地址的大小跟物理内存条的容量相关。
+- 页号+页内偏移
+
+##### <span id="head8">Linux 中虚拟内存和物理内存有什么区别？有什么优点？</span>
+
+- 一个新进程建立的时候，将会建立起自己的内存空间，各个进程的内存空间具有类似的结构，这就是虚拟内存。当进程访问某个虚拟地址，去看页表，都需要把地址翻译为实际物理内存地址，如果发现对应的数据不在物理内存中，则缺页异常。
+- 优点
+  - 既然每个进程的内存空间都是一致而且固定的，所以链接器在链接可执行文件时，可以设定内存地址，而不用去管这些数据最终实际的内存地址，这是有独立内存空间的好处
+  - 当不同的进程使用同样的代码时，比如库文件中的代码，物理内存中可以只存储一份这样的代码，不同的进程只需要把自己的虚拟内存映射过去就可以了，节省内存
+
+
+
+#### <span id="head9">==5.  简述 socket 中 select 与 epoll 的使用场景以及区别，epoll 中水平触发以及边缘触发有什么不同？==</span>
+
+> ==I/O多路复用中 select, poll, epoll之间有什么区别，各自支持的最大描述符上限以及原因是什么？==
+
+
+
+#### <span id="head10">6. 简述操作系统中的缺页中断？</span>
+
+缺页中断：在请求分页系统中，可以通过查询页表中的状态位来确定所要访问的页面是否存在于内存中。每当所要访问的页面不在内存中时，会产生一次缺页中断，此时操作系统会根据页表中的外存地址在外存中找到所缺的一页，将其调入内存。
+
+缺页中断是由于所要访问的页面不存在于内存时，由**硬件所产生的一种特殊的中断**，因此，与一般的中断存在区别：
+
+1. 在指令执行期间产生和处理缺页中断信号
+2. 一条指令在执行期间，可能产生多次缺页中断
+3. 缺页中断返回是执行产生中断的一条指令，而一般的中断返回是执行下一条指令
+
+
+
+#### <span id="head11">==7.  两个线程交替打印一个共享变量==</span>
+
+
+
+#### <span id="head12">8. 简述 mmap 的使用场景以及原理</span>
+
+Linux通过将一个虚拟内存区域与一个磁盘上的对象(object)关联起来，以初始化这个虚拟内存区域的内容，这个过程称为**内存映射**(memory mapping)。
+
+**mmap是用来建立从虚拟空间到磁盘空间的映射的**，可以将一个虚拟空间地址映射到一个磁盘文件上，当不设置这个地址时，则由系统自动设置，函数返回对应的内存地址（虚拟地址），当访问这个地址的时候，就需要把磁盘上的内容拷贝到内存了，然后就可以读或者写，最后通过manmap可以将内存上的数据换回到磁盘，**也就是解除虚拟空间和内存空间的映射，这也是一种读写磁盘文件的方法，也是一种进程共享数据的方法 共享内存**
+
+#### <span id="head13">9. 什么时候会由用户态陷入内核态？</span>
+
+**a. 系统调用 **：用户进程通过系统调用申请操作系统提供的服务程序完成工作，调用int `$0x80`的汇编指令（软中断）
+
+**b. 异常 **：当CPU在执行运行在用户态的程序时，发现了某些事件不可知的异常，这是会触发由当前运行进程切换到处理此异常的内核相关程序中，也就到了内核态，比如缺页异常（硬中断）
+
+**c. 外围设备的中断**：硬盘读写操作完成，系统会切换到硬盘读写的中断处理程序中执行后续操作等
+
+
+
+#### <span id="head14">10. 什么情况下，进程会进行切换？</span>
+
+<img src="https://i.loli.net/2021/03/27/Ow78cQbXI9L1vkV.png" alt="2.1.2 进程状态切换" style="zoom:50%;" />
+
+> 进程切换和线程切换的区别
+>
+> 最主要的一个区别在于**进程切换涉及虚拟地址空间的切换而线程不会**。因为每个进程都有自己的虚拟地址空间，而线程是共享所在进程的虚拟地址空间的，因此同一个进程中的线程进行线程切换时不涉及虚拟地址空间的转换。
+>
+> > 有的同学可能还是不太明白，为什么虚拟地址空间切换会比较耗时呢？
+> >
+> > 现在我们已经知道了进程都有自己的虚拟地址空间，把虚拟地址转换为物理地址需要查找页表，页表查找是一个很慢的过程，因此通常使用Cache来缓存常用的地址映射，这样可以加速页表查找，这个cache就是TLB（translation Lookaside Buffer，我们不需要关心这个名字只需要知道TLB本质上就是一个cache，是用来加速页表查找的）。由于每个进程都有自己的虚拟地址空间，那么显然每个进程都有自己的页表，那么**当进程切换后页表也要进行切换，页表切换后TLB就失效了**，cache失效导致命中率降低，那么虚拟地址转换为物理地址就会变慢，表现出来的就是程序运行会变慢，而线程切换则不会导致TLB失效，因为线程线程无需切换地址空间，因此我们通常说线程切换要比较进程切换块，原因就在这里。
+
+#### <span id="head15">11. 简述 traceroute 命令的原理</span>
+
+1. 构造一个UDP报文，TTL分别为1,当这个报文到达第一个路由器后，TTL减去1后为零，报文被丢弃，然后路由器发送ICMP报文（时间超过）给源主机。
+
+2. 构造UDP报文，TTL为2，同样的，第二个路由器会返回ICMP报文（时间超过）给源主机
+
+> 以此类推，注意发送过程中的UDP报文使用的端口都是非法端口，以使最后达到的时候无法交付，不然你就不知道什么时候应该停
+
+3. 直到TTL 到达某个值，而这个值可以使这个UDP报文刚好到达目的主机，由于报文的端口号不合法，目的主机返回ICMP（端口不可达）报文给源主机。
+
+> 上述过程中，路由器和目的主机返回的ICMP报文中均含有它们的地址，所以得到了路径。
+>
+> 实际实现中，源主机每次发送三个相同TTL的UDP报文，因为现实中网络环境比较复杂，可能会有丢包情况发生。
+
+
+
+#### <span id="head16">12.简述 Linux 零拷贝的原理</span>
+
+**零拷贝（Zero-Copy）**是指将数据直接从磁盘文件复制到网卡设备中，而不需要经由应用程序之手 。零拷贝大大提高了应用程序的性能，**减少了内核和用户模式之间的上下文切换** 。 对 Linux操作系统而言，零拷贝技术依赖于底层的 `sendfile()` 方法实现 。
+
+> 考虑这样一种常用的情形 ： 你需要将静态内容(类似图片、文件)展示给用户 。 这个情形就意味着需要先将静态内容从磁盘中复制出来放到一个内存 buf 中，然后将这个 buf 通过套接字（Socket）传输给用户，进而用户获得静态内容 
+>
+> ```java
+> read(file, tmp_buf, len);
+> write(socket, tmp_buf, len);
+> ```
+>
+> 如果采用了零拷贝技术，那么应用程序可以直接请求内核把磁盘中的数据传输给 Socket
+>
+> https://zhuanlan.zhihu.com/p/85571977
+
+
+
+#### <span id="head17">13. 进程调度算法</span>
+
+- 先来先服务(FCFS)/先进先出(FIFO)调度算法
+- 短作业优先调度算法（SJF）
+- 高优先权调度算法
+- 高响应比优先调度算法
+- 简单的时间片轮转法(RR—Round Robin)
+
+
+
+#### <span id="head18">14. 简述自旋锁与互斥锁的使用场景</span>
+
+加锁的目的就是保证共享资源在任意时间里，只有一个线程访问，这样就可以避免多线程导致共享数据错乱的问题。
+
+当已经有一个线程加锁后，其他线程加锁则就会失败，互斥锁和自旋锁对于加锁失败后的处理方式是不一样的：
+
+- **互斥锁**加锁失败后，线程会**释放 CPU** ，给其他线程；
+- **自旋锁**加锁失败后，线程会**忙等待**，直到它拿到锁；
+
+所以，**如果你能确定被锁住的代码执行时间很短，就不应该用互斥锁，而应该选用自旋锁，否则使用互斥锁。**
+
+**当加锁失败时，互斥锁用「线程切换」来应对，自旋锁则用「忙等待」来应对**。
+
+https://blog.csdn.net/qq_34827674/article/details/108608566
+
+---
+
+### <span id="head19"> 👵计算机网络</span>
+
+#### <span id="head20">1. HTTP vs HTTPS</span>
+
+1. **HTTP**：HTTP 协议是以明文方式发送信息的，如果黑客截取了 Web 浏览器和服务器之间的传输报文，就可以直接获得其中的信息。
+
+   >① 客户端的浏览器首先要通过网络与服务器建立连接，该连接是通过 TCP 来完成的，一般 **TCP 连接的端口号是80**。 建立连接后，客户机发送一个请求给服务器，请求方式的格式为：**统一资源标识符（URI）、协议版本号，后边是 MIME 信息**包括请求修饰符、客户机信息和许可内容。
+   >
+   ><table> 	
+   ><tr> 
+   ><td>统一资源标识符（URI）</td> 
+   ><td>协议版本号</td> 
+   ><td>MIME信息</td>
+   ></tr>
+   ></table>
+   >
+   >
+   >
+   >② 服务器接到请求后，给予相应的**响应**信息，其格式为**一个状态行，包括信息的协议版本号、一个成功或错误的代码，后边是 MIME 信息**包括服务器信息、实体信息和可能的内容。
+   >
+   ><table> 	
+   ><tr> 
+   ><td>状态行（包括协议版本号、code）</td>  
+   ><td>MIME信息</td>
+   ></tr>
+   ></table>
+
+2. **HTTPS**：是以安全为目标的 HTTP 通道，是 HTTP 的安全版。HTTPS 的安全基础是 SSL。SSL 协议位于TCP/IP 协议与各种应用层协议之间，为数据通讯提供安全支持。**端口号是443**
+
+   > SSL 协议可分为两层：**SSL 记录协议（SSL Record Protocol）**，它建立在可靠的传输协议（如TCP）之上，为高层协议提供数据封装、压缩、加密等基本功能的支持。**SSL 握手协议（SSL Handshake Protocol）**它建立在 SSL 记录协议之上，用于在实际的数据传输开始前，通讯双方进行身份认证、协商加密算法、交换加密密钥等。
+   >
+   > <img src="https://img-blog.csdnimg.cn/20200707084720409.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM4Mjg5ODE1,size_16,color_FFFFFF,t_70" alt="img" style="zoom:75%;" />
+   >
+   > 
+   >
+   > >**双向身份认证**
+   > >
+   > >客户端和服务器传输数据之前，会有一个基于X.509证书的双向身份认证的过程：
+   > >
+   > >① 客户端发起SLL handshake protocol消息给服务器
+   > >
+   > >② 服务端将证书颁发给客户端
+   > >
+   > >③ 客户端检查服务端证书，合规就认证了服务端
+   > >
+   > >④ 服务端要求客户端发送证书，并检查是否通过验证，成功之后从证书中拿到公钥
+
+
+
+#### <span id="head21">2. TCP && UDP 相关</span>
+
+##### <span id="head22">TCP vs UDP</span>
+
+> 1. 前者有连接，建立连接三次握手；后者无连接
+> 2. TCP要求系统资源较多，UDP较少、UDP程序结构较简单 
+> 3. TCP通过**拥塞控制、滑动窗口**机制实现**可靠传输**，保证数据正确性、数据顺序（也就是流模式），UDP可能丢包，不保证数据顺序（也就是数据报模式）
+>
+> > TCP应用场景：适用于对数据传输可靠性要求比较高的场景，例如文本传输之类的。具体点比如HTTP、HTTPS、FTP等传输文件的协议，POP、SMTP等邮件传输的协议。
+> >
+> > UDP应用场景：**面向数据报方式，网络数据大多为短消息**，**拥有大量Client等广播、多播通信**，对数据安全性无特殊要求，**视频音频等对实时性要求很高的多媒体通信**，具体协议比如：DNS，NFS
+>
+> - TCP格式
+>
+> <img src="https://img-blog.csdn.net/20180410135625408?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dyZWVudGVhbGM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img" style="zoom:80%;" />
+>
+> - UDP格式
+>
+> <img src="https://img-blog.csdn.net/20180410135845213?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dyZWVudGVhbGM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img" style="zoom:80%;" />
+
+##### <span id="head23"> TCP连接和释放</span>
+
+（1）三次握手
+
+<img src="https://img-blog.csdn.net/20180410140138631?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dyZWVudGVhbGM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img" style="zoom:80%;" />
+
+- 首先是服务器监听状态
+-  $\longrightarrow$ 向服务器发出连接请求报文，同步字段SYN=1，同时选择一个初始序列号 seq=x（不携带数据，但是消耗一个序号）
+- $\longrightarrow$ 服务器响应一个报文，ACK=1，SYN=1，确认号是ack=x+1，同时也要为自己初始化一个序列号 seq=y （不携带数据，但是消耗一个序号）
+- $\longrightarrow$ 客户端确认报文，ACK=1，确认号ack=y+1，自己的序列号seq=x+1（可以携带数据，但是如果不携带数据就不消耗一个序号）
+
+> 问题：为什么需要三次握手？
+>
+> 答案：如果只有两次握手，假设前两次就可以建立连接，假设一个场景：客户端发送一个请求建立连接，但是由于网络延迟很久之后才到服务器，服务器这边也就不会立马ack，此时客户端以为丢失所以就是重传，这时很快就完成了前两次的握手过程，然后传输数据释放连接。**但是之后服务器有收到之前那个请求，又给客户端这边ack，又会建立连接（本来不需要了），所以就造成了不必要的资源浪费。但是如果是三次握手，客户端这边收到ack之后就不会给服务器那边ACK**
+>
+> 另外甚至可能发生死锁，客户端这边一直等待服务器发送ack报文
+
+（2）四次挥手
+
+<img src="https://img-blog.csdn.net/20180410140623642?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dyZWVudGVhbGM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img" style="zoom:80%;" />
+
+- 客户端进程发出连接释放报文，并且停止发送数据。释放数据报文首部，FIN=1，其序列号为seq=u（等于前面已经传送过来的数据的最后一个字节的序号加1），此时，**客户端进入FIN-WAIT-1（终止等待1）状态**。 TCP规定，FIN报文段即使不携带数据，也要消耗一个序号。
+- $\longrightarrow$ 服务器收到连接释放报文，发出确认报文，ACK=1，ack=u+1，并且带上自己的序列号seq=v，此时，**服务端就进入了CLOSE-WAIT（关闭等待）状态。**
+- $\longrightarrow$ 客户端收到服务器的确认请求后，此时，**客户端就进入FIN-WAIT-2（终止等待2）状态**，等待服务器发送连接释放报文（在这之前还需要接受服务器发送的最后的数据）。
+- $\longrightarrow$ 服务器将最后的数据发送完毕后，就向客户端发送连接释放报文，FIN=1，ack=u+1，由于在半关闭状态，服务器很可能又发送了一些数据，假定此时的序列号为seq=w，此时，**服务器就进入了LAST-ACK（最后确认）状态，等待客户端的确认。**
+- $\longrightarrow$ 客户端收到服务器的连接释放报文后，必须发出确认，ACK=1，ack=w+1，而自己的序列号是seq=u+1，此时，**客户端就进入了TIME-WAIT（时间等待）状态**。注意此时TCP连接还没有释放，必须经过2MSL（最长报文段寿命）的时间后，当客户端撤销相应的TCB后，才进入CLOSED状态。
+- **$\longrightarrow$ 服务器只要收到了客户端发出的确认，立即进入CLOSED状态**。同样，撤销TCB后，就结束了这次的TCP连接。可以看到，服务器结束TCP连接的时间要比客户端早一些。
+
+> 【问题1】为什么连接的时候是三次握手，关闭的时候却是四次握手？
+>
+> 答：**因为当Server端收到Client端的SYN连接请求报文后，可以直接发送SYN+ACK报文**。但是关闭连接时，当Server端收到FIN报文时，很可能并不会立即关闭SOCKET，所以只能先回复一个ACK报文，告诉Client端，"你发的FIN报文我收到了"。**只有等到我Server端所有的报文都发送完了，我才能发送FIN报文，因此不能一起发送**。故需要四步握手。
+>
+> 【问题2】为什么TIME_WAIT状态需要经过2MSL(最大报文段生存时间)才能返回到CLOSE状态？
+>
+> 答：**有可以最后一个ACK丢失。所以TIME_WAIT状态就是用来重发可能丢失的ACK报文**。Server如果没有收到ACK，将不断重复发送FIN片段。所以Client不能立即关闭，它必须确认Server接收到了该ACK。Client会设置一个计时器，等待2MSL的时间。如果在该时间内再次收到FIN，那么Client会重发ACK并再次等待2MSL。所谓的2MSL是两倍的MSL(Maximum Segment Lifetime)。MSL指一个片段在网络中最大的存活时间，2MSL就是一个发送和一个回复所需的最大时间。如果直到2MSL，Client都没有再次收到FIN，那么Client推断ACK已经被成功接收，则结束TCP连接
+>
+> 【问题3】如果已经建立了连接，但是客户端突然出现故障了怎么办？
+>
+> 答：TCP还设有一个保活计时器，显然，客户端如果出现故障，服务器不能一直等下去，白白浪费资源。服务器每收到一次客户端的请求后都会重新复位这个计时器，时间通常是设置为2小时，若两小时还没有收到客户端的任何数据，服务器就会发送一个探测报文段，以后每隔75秒钟发送一次。若一连发送10个探测报文仍然没反应，服务器就认为客户端出了故障，接着就关闭连接。
+>
+##### <span id="head24"> 数据包封装和解封过程</span>
+
+![封装和解封](https://img-blog.csdnimg.cn/20191013113757339.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2pjdzMyMQ==,size_16,color_FFFFFF,t_70)
+
+##### <span id="head25"> TCP拥塞控制算法</span>
+
+- 慢启动和拥塞避免：拥塞时，swnd=cwnd=1，ssthread=拥塞时cwnd的一半
+- 快重传和快恢复：拥塞时，swnd=cwnd=拥塞时cwnd的一半，**直接进入到拥塞避免阶段**
+
+> **流量控制 vs 拥塞控制**
+>
+> **流量控制是点到点/端到端的控制**，例如A通过网络给B发数据，A发送的太快导致B没法接收(B缓冲窗口过小或者处理过慢)，这时候的控制就是流量控制，原理是通过滑动窗口的大小改变来实现。 
+>
+> **拥塞控制全局性的过程**，是A与B之间的网络发生堵塞导致传输过慢或者丢包，来不及传输。防止过多的数据注入到网络中，这样可以使网络中的路由器或链路不至于过载。涉及到所有的主机、路由器，以及与降低网络性能有关的所有因素。
+
+##### <span id="head26"> TCP如何保证可靠性</span>
+
+- 应用数据被分割成 TCP 认为最适合发送的数据块。
+- 校验和：首部和数据的校验和，TCP会丢弃校验和有差错的字段。
+- 流量控制：TCP的接收端只允许发送端发送接收端缓冲区能接纳的数据。当接收方来不及处理发送方的数据，能提示发送方降低发送的速率，防止包丢失。
+- 拥塞控制
+- 停止等待协议：每发完一个分组就- 停止发送，等待对方确认。在收到确认后再发下一个分组。
+- 有RTO重传计时器
+
+##### <span id="head27"> TCP四个计时器</span>
+
+- 重传计时器：重传丢失的报文段
+- 坚持计时器：应付接收端零窗口问题，发送端
+- 保活计时器：解决客户端出现问题的情况
+- 时间等待计时器：用于解决服务端发送FIN报文段之后，客户端这边发送ACK丢失的情况
+
+
+
+#### <span id="head28">3. HTTP相关</span>
+##### <span id="head29"> 一次完整的HTTP请求过程</span>
+![在这里插入图片描述](https://img-blog.csdn.net/20180928090731646?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODA0MDA1/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+
+> [域名解析过程](https://blog.csdn.net/yipiankongbai/article/details/25031461) 
+>
+> 本地域名服务器请求根域名服务器，然后根域名服务器递归请求顶级域名服务器，顶级域名服务器递归请求权限域名服务器，查到之后原路返回
+
+##### <span id="head30"> 常见状态码</span>
+
+- **301** : 跳转，代表永久性重定向
+- **304** : 客户端发送附带条件的请求时，服务器端允许请求访问资源，但因发生请求未满足条件的情况后，直接返回了304
+- **401** : 发送的请求需要有通过HTTP认证的认证信息
+- **403** : 对请求资源的访问被服务器拒绝了
+
+##### <span id="head31">简述 HTTPS 的加密与认证过程</span>
+
+首先认证服务器 $\longrightarrow$ 协商会话密钥 $\longrightarrow$ 加密传输
+
+加密有对称密钥和非对称密钥（公钥和私钥）甚至还有混合密钥，认证过程有CA，包含数字签名
+
+https://www.cnblogs.com/kubidemanong/p/9390021.html
+
+##### <span id="head32"> 什么是跨域，什么情况下会发生跨域请求？</span>
+
+- 浏览器从一个域名的网页去请求另一个域名的资源时，域名、端口、协议任一不同，都是跨域
+
+> **在前后端分离的模式下，前后端的域名是不一致的**，此时就会发生跨域访问问题。在请求的过程中我们要想回传数据一般都是post/get请求，所以..跨域问题出现
+>
+> **跨域问题来源于JavaScript的同源策略，即只有 协议+主机名+端口号(如存在)相同，则允许相互访问**。也就是说JavaScript只能访问和操作自己域下的资源，不能访问和操作其他域下的资源。跨域问题是针对JS和ajax的，html本身没有跨域问题，比如a标签、script标签、甚至form标签（可以直接跨域发送数据并接收数据）等
+
+##### <span id="head33"> HTTP方法</span>
+
+- **GET**：GET请求是可以缓存的，我们可以从浏览器历史记录中查找到GET请求，还可以把它收藏到书签中；且GET请求有长度限制，仅用于请求数据（不修改）。
+
+  > 因GET请求的不安全性，在处理敏感数据时，绝不可以使用GET请求。
+
+- **POST**：用于将数据发送到服务器以创建或更新资源，它要求服务器确认请求中包含的内容作为由URI区分的Web资源的另一个下属。
+
+  > POST请求永远不会被缓存，且对数据长度没有限制；我们无法从浏览器历史记录中查找到POST请求。
+
+> 两者区别参考：https://www.cnblogs.com/logsharing/p/8448446.html
+
+
+
+#### <span id="head34">4. DNS相关</span>
+
+- DNS劫持
+
+> 那DNS服务器会告诉你A网站的IP是A，B网站的IP是B，那假如你输入的A网站域名，但是他给你B的IP，你是不是就访问到别的网站去了？
+>
+> 既然DNS服务器可以这么玩，我是不是可以将用户引导到我的网站上？比如你要看个电影，然后你输入了爱奇艺的官网，然后我作为DNS服务器，我把优酷的IP返回给你，最后就是你虽然输入的爱奇艺官网，但是却得到了优酷的IP并访问了优酷的IP，进入了优酷的网站上。
+>
+> 当然这里我只是举个例子，我举这个例子就是想告诉大家，DNS服务器想给你返回什么IP就给你返回什么，所以他可以在幕后操作一些东西。最简单的就是广告。比如A网站没有广告，你直接访问就是没有的，但是你的DNS服务器把A网站下载下来了，给这个网站加了个广告，然后重新上传到了一个IP上，并把这个IP告诉了你，那就是你虽然输入的A网站的域名，但是你访问的是一个包含了广告的复制版A网站，虽然两者功能一样，但是却完全不是一个服务器上的。
+>
+> 这些就被我们成为DNS劫持，DNS劫持对于网络访问的影响和体验是非常严重的，除了DNS服务器，你的路由器同样可以这么干，所以在买路由器的时候也有人会关注这个路由器是否会进行DNS劫持。
+
+- ==具体看一下自己的DNS服务器项目==
+  - 多个client请求问题需要进行ID转换
+  - 三种类型：本地服务器解析、屏蔽、中继解析
+  - 通过QR字段来避免多线程复杂编程：QR为0表示请求，QR为1表示响应（而且一定是中继模块）
+  - 收获：
+    - 讨论出**signed char [-128, 128)**  vs **unsigned char [0, 256)**；
+    - 解决多个用户同时请求服务器的情况：ID转换，默认时阻塞态
+
+
+
+#### <span id="head35">5. OSI和TCP/IP模型</span>
+
+![img](https://img-blog.csdn.net/20130909165027546?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvaHR5dXJlbmNhb3Rhbmc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+
+
+
+#### <span id="head36"> 6.简述对称与非对称加密的概念</span>
+
+对称加密使用对称密钥（共享密钥），非对称加密使用（公钥和私钥）
+
+---
+
+### <span id="head37"> 👲C++</span>
+
+#### <span id="head38">==1. 简述 C++ 右值引用与转移语义==</span>
+
+右值引用 (Rvalue Referene) 是 C++ 新标准 (C++11, 11 代表 2011 年 ) 中引入的新特性 , 它实现了**转移语义** (Move Sementics) 和**精确传递** (Perfect Forwarding)。它的主要目的有两个方面：
+
+- **消除两个对象交互时不必要的对象拷贝，节省运算存储资源，提高效率。**
+- **能够更简洁明确地定义泛型函数。**
+
+在现有的 C++ 机制中，我们可以定义拷贝构造函数和赋值函数。要实现转移语义，需要定义**转移构造函数**，还可以定义**转移赋值操作符**。对于右值的拷贝和赋值会调用转移构造函数和转移赋值操作符。**如果转移构造函数和转移拷贝操作符没有定义，那么就遵循现有的机制，拷贝构造函数和赋值操作符会被调用。**
+
+
+
+#### <span id="head39">2. const、static 关键字有什么区别</span>
+
+- static 声明的变量内存只分配一次，static 变量存放在数据区，程序结束后才会释放；该变量（static）只被分配一次，因此它的值在下一次调用时依然可以维持上次结果的值。
+
+  > static数据成员必须进行初始化，默认初始化为0。
+  >
+  > 模块内声明的static函数，可以被该模块内的函数进行调用，模块外的函数不可调用它。
+
+- const修饰的变量可以防止被改变，初始化后，就没有机会再去改变它。这样可以阻止一个变量被改变。
+
+>  const定义的常量在超出其作用域之后其空间会被释放，而static定义的静态常量在函数执行后不会释放其存储空间，程序结束之后才会释放。
+
+
+
+#### <span id="head40">3. C++的多态是如何实现的？</span>
+
+1. 函数重载：形参个数或者类型不同
+2. 运算符重载：比如可以实现字符串相加
+3. 虚函数：使用关键字`virtual`声明，在基类中申明一些能够在派生类中重新定义的函数
+
+
+
+#### <span id="head41">4. C++ 中解释类模板和模板类的区别</span>
+
+1. **一个类模板(类生成类)允许用户为类定义个一种模式**，使得类中的某些数据成员、默认成员函数的参数，某些成员函数的返回值，能够取任意类型(包括系统预定义的和用户自定义的)。
+   - 只能在头文件中定义
+   - 外部定义函数需要加上模板声明
+2. **模板类是类模板实例化后的一个产物**，类模板比作是一个作饺子的模子，而模板类就是用这个模子做出来的饺子，至于饺子什么馅儿的就需要你自己去实例化自己的内容
+
+[博客讲解类模板](https://blog.csdn.net/weixin_30907935/article/details/95182154?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.channel_param&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.channel_param)
+
+[**类模板代码例子**](https://blog.csdn.net/small_prince_/article/details/80533105)
+
+
+
+#### <span id="head42">5. C++ 中哪些函数不能被声明为虚函数？</span>
+
+- 普通函数（非类成员函数）
+- 构造函数：**虚函数指针指向虚函数地址，vptr指针在构造函数时候被初始化，而调用虚函数的前提是有vptr指针** (https://blog.csdn.net/gochenguowei/article/details/79682681)
+- 内联函数
+- static成员函数不能定义为虚函数：**静态成员函数没有this指针，没办法调用vptr指针**
+- 友元函数
+
+>  **虚函数的调用关系：this -> vptr -> vtable ->virtual function**
+
+
+
+#### <span id="head43">6. C++ 中虚函数与纯虚函数的区别</span>
+
+- 纯虚函数只有定义，没有实现；而虚函数既有定义，也有实现的代码。
+
+  > 纯虚函数一般没有代码实现部分，如`virtual void print() = 0;`
+  >
+  > 而一般虚函数必须要有代码的实现部分，否则会出现函数未定义的错误。
+  >
+  > ```c++
+  > virtual void print()
+  > { 
+  > 	printf("This is virtual function\n");
+  > }
+  > ```
+
+- 包含纯虚函数的类不能定义其对象，而包含虚函数的则可以。
+
+
+
+#### <span id="head44">7. 简述 C++ 中内存对齐的使用场景</span>
+
+- 结构(struct)(或联合(union))的数据成员，第一个数据成员放在offset为0的地方，以后每个数据成员存储的起始位置要从该成员大小或者成员的子成员大小（只要该成员有子成员，比如说是数组，结构体等）的整数倍开始
+
+- 结构体作为成员:如果一个结构里有某些结构体成员,则结构体成员要从其内部**最宽基本类型成员**的整数倍地址开始存储
+
+  > struct a里存有struct b,b里有char,int ,double等元素,那b应该从8的整数倍开始存储
+
+>1、 平台原因(移植原因)：不是所有的硬件平台都能访问任意地址上的任意数据的；某些硬件平台只能在某些地址处取某些特定类型的数据，否则抛出硬件异常。
+>
+>2、 性能原因：经过内存对齐后，CPU的内存访问速度大大提升
+
+
+
+#### <span id="head45">8. 构造函数为什么不能被声明为虚函数？</span>
+
+1. **构造一个对象的时候，必须知道对象的实际类型**，而虚函数行为是在运行期间确定实际类型的。而在构造一个对象时，由于对象还未构造成功。编译器无法知道对象的实际类型，是该类本身，还是该类的一个派生类，或是更深层次的派生类。无法确定。
+
+2. 虚函数的执行依赖于虚函数表。而虚函数表在构造函数中进行初始化工作，即初始化`vptr`，让他指向正确的虚函数表。而在构造对象期间，虚函数表还没有被初始化，将无法进行。
+
+> 虚函数对应一个vtable，可是这个vtable其实是存储在对象的内存空间的。问题出来了，如果构造函数是虚的，就需要通过 vtable来调用，**可是对象还没有实例化，也就是内存空间还没有，怎么找vtable呢？**所以构造函数不能是虚函数。
+
+
+
+#### <span id="head46">9.  什么是内存泄漏，怎么确定内存泄漏？</span>
+
+- 内存泄漏指的是在程序里动态申请的内存在使用完后，没有进行释放，导致这部分内存没有被系统回收，久而久之，可能导致程序内存不断增大，系统内存不足……引发一系列灾难性后果
+
+- 检漏方法
+
+  > 对象计数方法：**在对象构造时计数++，析构时--**，每隔一段时间打印对象的数量
+  >
+  > 重载new和delete方法：**重载new/delete，记录分配点（甚至是调用堆栈），定期打印。**
+
+---
+
+### <span id="head47"> 👳数据库</span>
+
+#### <span id="head48"> 基本概念</span>
+
+##### <span id="head49">1. 事务定义</span>
+
+事务指的是满足 ACID 特性的一组操作，可以通过 Commit 提交一个事务，也可以使用 Rollback 进行回滚
+
+##### <span id="head50">2. <span id="2">并发一致性</span></span>
+
+- 丢失修改就是写覆盖
+
+  > 一级封锁协议，写的时候加锁，T结束才释放
+
+- 读脏数据就是读取本来要回滚的数据
+
+  > 二级封锁协议，读的时候加S锁，读完就释放
+
+- 不可重复读就是由于第二次读取别的事务写之后的数据，而导致两次读取到不同数据
+
+  > 三级封锁协议，读取数据加S锁，直到事务结束才释放
+
+- 幻影读本质就是不可重复读
+
+##### <span id="head51">3. 封锁粒度</span>
+
+MySQL 中提供了两种封锁粒度：行级锁以及表级锁。
+
+应该尽量**只锁定需要修改的那部分数据**，而不是所有的资源。锁定的数据量越少，**发生锁争用的可能就越小，系统的并发程度就越高**。
+
+但是加锁需要消耗资源，锁的各种操作（包括获取锁、释放锁、以及检查锁状态）都会增加系统开销。因此**封锁粒度越小，系统开销就越大**。
+
+在选择封锁粒度时，需要**在锁开销和并发程度之间做一个权衡**。
+
+> **可串行化调度**是指，通过并发控制，使得并发执行的事务结果与某个串行执行的事务结果相同。串行执行的事务互不干扰，不会出现并发一致性问题。
+>
+> 加锁和解锁分为两个阶段进行  ==>  冲突可串行化
+>
+> MySQL 的 InnoDB 存储引擎采用两段锁协议
+>
+> [意向锁的理解](https://www.zhihu.com/question/51513268)
+
+##### <span id="head52">4. <span id='1'>隔离级别</span></span>
+
+- 未提交读：事务中的修改，即使没有提交，对其它事务也是可见的。==可以保证读取没有损坏的数据==
+- **提交读**：一个事务只能读取已经提交的事务所做的修改。换句话说，一个事务所做的修改在提交之前对其它事务是不可见的。==可以避免脏读==
+- **可重复读**：保证在同一个事务中多次读取同一数据的结果是一样的。==可以避免不可重复读的发生==
+- 可串行化：强制事务串行执行，这样多个事务互不干扰，==不会出现并发一致性问题==。该隔离级别需要加锁实现，因为要使用加锁机制保证同一时间只有一个事务执行，也就是保证事务串行执行。
+
+##### <span id="head53">5. 多版本并发控制</span>
+
+多版本并发控制`Multi-Version Concurrency Control, MVCC`是 `MySQL` 的 `InnoDB `存储引擎实现隔离级别的一种具体方式，**用于实现提交读和可重复读这两种隔离级别。而未提交读隔离级别总是读取最新的数据行，要求很低，无需使用 MVCC**。可串行化隔离级别需要对所有读取的行都加锁，单纯使用 MVCC 无法实现。
+
+> ##### 版本号
+>
+> - 系统版本号 SYS_ID：是一个递增的数字，每开始一个新的事务，系统版本号就会自动递增。
+> - 事务版本号 TRX_ID ：事务开始时的系统版本号。
+>
+> Undo日志
+>
+> ReadView……
+
+##### <span id="head54">6. Next-Key Locks</span>
+
+Next-Key Locks 是 MySQL 的 InnoDB 存储引擎的一种锁实现。
+
+MVCC 不能解决幻影读问题，Next-Key Locks 就是为了解决这个问题而存在的。在可重复读（REPEATABLE READ）隔离级别下，使用 MVCC + Next-Key Locks 可以解决幻读问题。
+
+##### <span id="head55">7. 关系型数据库设计理论 && ER图</span>
+
+- 函数依赖：A-->B，B依赖A
+- 异常
+- 范式
+
+##### <span id="head56">8. MySQL</span>
+
+- 查询性能优化：使用`explain`分析
+  - 优化数据访问：减少请求的数据量、减少服务端扫描行数
+  - 重构查询方式：切分大查询，分解大连接查询
+  
+- 存储引擎
+  - InnoDB：事务型，支持外键和在线热备份
+  - MyISAM：崩溃损坏频率高，恢复速度慢
+  
+- 切分
+  - 水平切分：减少单个表存储数据的压力，哈希取模
+  - 垂直区分
+  
+- 主从复制
+
+  - **binlog线程**：将主服务器数据更改写入二进制日志`Binary log`
+  - **I/O线程**：从主服务器上读取二进制日志，写入从服务器的中继日志
+  - **SQL 线程** ：读取中继日志，解析出主服务器已经执行的数据更改并在从服务器中重放
+
+- 读写分离
+
+  - 主服务器处理写操作以及实时性比较高的读操作，而从服务器处理读操作
+
+  - 提高性能原因如下：
+
+    > 主从服务器负责各自的读和写，极大程度缓解了锁的争用
+    >
+    > 从服务器可以使用 MyISAM，提升查询性能以及节约系统开销
+    >
+    > 增加冗余，提高可用性
+
+  
+
+
+#### <span id="head57">MySQL 为什么使用 B+ 树来作索引，对比 B 树它的优点和缺点是什么？</span>
+
+AVL树适合用于插入删除次数比较少，但查找多的情况。所以对于搜索、插入、删除操作多的情况下，我们就用红黑树。
+
+稳定、更快（树的高度小）
+
+- **B+树的磁盘读写代价更低**：B+树的内部节点并没有指向关键字具体信息的指针，因此其内部节点相对B树更小，如果把所有同一内部节点的关键字存放在同一盘块中，那么盘块所能容纳的关键字数量也越多，一次性读入内存的需要查找的关键字也就越多，相对IO读写次数就降低了。
+- **B+树的查询效率更加稳定**：由于非终结点并不是最终指向文件内容的结点，而只是叶子结点中关键字的索引。所以任何关键字的查找必须走一条从根结点到叶子结点的路。所有关键字查询的路径长度相同，导致每一个数据的查询效率相当。
+
+#### <span id="head58"> 数据库的事务隔离级别有哪些？各有哪些优缺点</span>
+
+[隔离级别](#1)
+
+#### <span id="head59"> ==关于Redis（还没看呢）==</span>
+
+#### <span id="head60"> 简述乐观锁以及悲观锁的区别以及使用场景</span>
+
+- **乐观锁总是认为不会产生并发问题，每次去取数据的时候总认为不会有其他线程对数据进行修改，因此不会上锁**，但是在更新时会判断其他线程在这之前有没有对数据进行修改，一般会使用版本号机制或CAS操作实现
+
+  > **比较适合读取操作比较频繁的场景**，如果出现大量的写入操作，数据发生冲突的可能性就会增大，为了保证数据的一致性，应用层需要不断的重新获取数据，这样会增加大量的查询操作，降低了系统的吞吐量。
+
+- **悲观锁总是假设最坏的情况，每次取数据时都认为其他线程会修改，所以都会加锁（读锁、写锁、行锁等），当其他线程想要访问数据时，都需要阻塞挂起**。可以依靠数据库实现，如行锁、读锁和写锁等，都是在操作之前加锁，
+
+  > **比较适合写入操作比较频繁的场景**，如果出现大量的读取操作，每次读取的时候都会进行加锁，这样会增加大量的锁的开销，降低了系统的吞吐量。
+
+
+
+#### <span id="head61"> 数据库有哪些常见索引？数据库设计的范式是什么？</span>
+
+> - 密集索引和稀疏索引：MyISAM全是稀疏索引，InnoDB有且只有一个密集索引
+> - 聚集索引和非聚集索引
+>   - 聚集索引：数据行的物理顺序与列值（一般是主键的那一列）的逻辑顺序相同，一个表中只能拥有一个聚集索引。
+>   - 非聚集索引：该索引中索引的逻辑顺序与磁盘上行的物理存储顺序不同，一个表中可以拥有多个非聚集索引。==涉及到二次查询==
+
+#### <span id="head62"> Cookie和Session的关系和区别是什么</span>
+
+- cookie和session都是用来跟踪浏览器用户身份的会话方式。[了解一下两者的过程](https://blog.csdn.net/chen13333336677/article/details/100939030)
+- cookie数据保存在客户端，session数据保存在服务端
+  - 浏览器第一次访问服务器时，服务器端创建Cookie，该Cookie中包含用户的信息，然后将该Cookie发送到浏览器端，服务器端通过Cookie中携带的数据区分不同的用户
+  - session基于cookies实现，浏览器第一次访问服务器时候创建一个session，同时会创建一个特殊的Cookie（`name`为`JSESSIONID`的固定值，`value`为`session对象的ID`），然后将该Cookie发送至浏览器端，服务器端根据name为JSESSIONID的Cookie的value(sessionId),去查询Session对象，从而区分不同用户。
+- cookies不是很安全，存储数据大小限制3K，有cookies欺骗，session一般存放登录等重要信息
+- session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能，如果主要考虑到减轻服务器性能方面，应当使用Cookies
+
+
+
+#### <span id="head63"> 什么情况下会发生死锁，如何解决死锁</span>
+
+如果线程A锁住了记录1并等待记录2，而线程B锁住了记录2并等待记录1，这样两个线程就发生了死锁现象
+
+- **主要原因**：系统资源不足； 进程运行推进的顺序不合适；资源分配不当等。
+- **避免死锁**：破坏出现死锁的4个必要条件中的某一个：不让线程循环等待
+
+
+
+#### <span id="head64"> 并发事务会引发哪些问题？如何解决</span>
+
+- [并发一致性](#2)问题：会产生脏读（读到还没有提交的数据）、不可重复读（两次读取数据不一致）、幻影读、丢失修改
+- 解决：[隔离级别](#1)
+
+
+
+#### <span id="head65">MySQL 中 join 与 left join 的区别是什么</span>
+
+https://zhuanlan.zhihu.com/p/45338392
+
+
+
+#### <span id="head66"> MySQL三大日志以及使用场景</span>
+
+- binlog：`binlog`用于记录数据库执行的写入性操作(不包括查询)信息，以二进制的形式保存在磁盘中。`binlog`是`mysql`的逻辑日志，并且由`Server`层进行记录，使用任何存储引擎的`mysql`数据库都会记录`binlog`日志
+
+  >在实际应用中，`binlog`的主要使用场景有两个，分别是**主从复制**和**数据恢复**。
+
+- Redo log：具体来说就是只记录事务对数据页做了哪些修改
+
+  > 用于保持一致性
+
+- Undo log：**原子性** 底层就是通过 `undo log` 实现的。`undo log`主要记录了数据的逻辑变化，比如一条 `INSERT` 语句，对应一条`DELETE` 的 `undo log` ，对于每个 `UPDATE` 语句，对应一条相反的 `UPDATE` 的 `undo log` ，这样在发生错误时，就能回滚到事务之前的数据状态。
+
+
+***
+
+### <span id="head67"> 👱算法</span>
+
+#### <span id="head68">1. 10亿个数中如何高效地找到最大的一个数以及最大的第 K 个数</span>
+
+- 第三种方法是分治法，将1亿个数据分成100份，每份100万个数据，找到每份数据中最大的10000个，**最后在剩下的100\*10000个数据里面找出最大的10000个**。如果100万数据选择足够理想，那么可以过滤掉1亿数据里面99%的数据。**100万个数据里面查找最大的10000个数据的方法如下：用快速排序的方法**，将数据分为2堆，如果大的那堆个数N大于10000个，继续对大堆快速排序一次分成2堆，如果大的那堆个数N大于10000个，继续对大堆快速排序一次分成2堆，如果大堆个数N小于10000个，就在小的那堆里面快速排序一次，找第10000-n大的数字；**递归以上过程**，就可以找到第1w大的数。参考上面的找出第1w大数字，就可以类似的方法找到前10000大数字了。此种方法需要每次的内存空间为10^6*4=4MB，一共需要101次这样的比较
+
+- 第五种方法采用**最小堆。首先读入前10000个数来创建大小为10000的最小堆**，建堆的时间复杂度为O（m）（m为数组的大小即为10000），然后遍历后续的数字，并与堆顶（最小）数字进行比较。**如果比最小的数小，则继续读取后续数字；如果比堆顶数字大，则替换堆顶元素并重新调整堆为最小堆**。整个过程直至1亿个数全部遍历完为止。然后按照中序遍历的方式输出当前堆中的所有10000个数字。该算法的时间复杂度为O（nlogm），空间复杂度是10000（常数）。
+
+  > 建堆时间复杂度应该是O(m),不是O(mlogm)。堆调整的时间复杂度是O(logm) 最终时间复杂度等于，1次建堆时间+n次堆调整时间=O(m+nlogm)=O(nlogm)
+
+
+
+#### <span id="head69">2. 给定 100G 的 URL 磁盘数据，使用最多 1G 内存，统计出现频率最高的 Top K 个 URL</span>
+
+1. 分文件（在外存中进行）
+
+   > 顺序读文件中，对于每个词x，取hash(x)%100，然后按照该值存到100个小文件（记为x0,x1,...x4999）中。这样每个文件大概是1G左右。
+
+2. 文件内排序（内存中）
+
+   > 对每个小文件，统计每个文件中出现的词以及相应的频率（可以采用trie树/[hash_map](https://www.baidu.com/link?url=EK0A8o1mCFgWQJRwVAHuh0B_z4t4NPVojZdhJhxHmXx8wUG6g5BejSlcNM8WFvJ5Dk1Dt8Q-nTLR3Dp9Ni3c2_&wd=&eqid=904132b1000b056a000000025fabc874)等），并取出出现频率最大的100个词（**可以用含100个结点的最小堆**），并把100个词及相应的频率存入文件，这样又得到了100个文件。
+
+3. 归并
+
+   > 下一步就是把这100个文件进行归并（类似与归并排序）的过程了。
+
+
+
+#### <span id="head70">3. 64匹马8个跑道需要多少轮才能选出最快的四匹</span>
+
+1. 首先分8组，每组8匹马，跑8轮，淘汰每组的后4名（这样还剩32匹）
+2. 将之前8个组的第一名拿出来继续比，淘汰后4名马所在组的所有马（这样还剩16匹）
+3. 目前可以得到跑的最快的马，*然后淘汰一些*，得到9匹马
+4. [最后选择除开$B_2$的其他8匹马比一下](https://blog.csdn.net/qq_44756792/article/details/103851500?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param)
+
+> 最少10轮，最多11轮
+
+
+
+#### <span id="head71">4. [合并两个有序链表 leetcode21](https://leetcode-cn.com/problems/merge-two-sorted-lists/)</span>
+
+#### <span id="head72">5. 实现快速排序</span>
+
+```c++
+int Partition(int a[], int low, int high)
+{
+	int pivotkey = a[low];
+  while(low < high) 
+  {
+    while(low < high && a[high] >= pivotkey)
+      -- high;
+    a[low] = a[high];
+    while(low < high && a[low] <= pivotkey)
+      ++ low;
+    a[high] = a[low];
+	}
+  a[low] = pivotkey;
+  return low;
+}
+
+void QuickSort(int a[], int low, int high)
+{
+  int pivotkey;
+  if (low < high)
+  {
+    pivotkey = Partition(a, low, high);
+    QuickSort(a, low, pivotkey - 1);
+    QuickSort(a, pivotkey + 1, high);
+  }
+}
+
+int main()
+{
+  int a[] = {5, 1, 4, 2, 3, 8};
+  QuickSort(a, 0, 5);
+  return 0;
+}
+```
+[215. 数组中的第K个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
+
+#### <span id="head73">6. [两数相加 II leetcode445](https://leetcode-cn.com/problems/add-two-numbers-ii/)</span>
+
+> 栈解决
+
+
+
+#### <span id="head74">7. [搜索旋转排序数组leetcode33](https://leetcode-cn.com/problems/search-in-rotated-sorted-array/) [搜索旋转排序数组 II leetcode81](https://leetcode-cn.com/problems/search-in-rotated-sorted-array-ii/)</span>
+
+> 如何判断是左半边有序还是右半边有序，直接`a[left] >= a[0]`
+>
+> 如果有重复的就直接`left += 1`，相当于去掉一个重复的干扰项。
+
+
+
+#### <span id="head75">8. 判断有环链表的环长度 最长连续子序列</span>
+
+最长上升子序列
+
+```java
+public class Solution {
+    public int lengthOfLIS(int[] nums) {
+        int len = nums.length;
+        if (len <= 1) {
+            return len;
+        }
+
+        // tail 数组的定义：长度为 i + 1 的上升子序列的末尾最小是几
+        int[] tail = new int[len];
+        // 遍历第 1 个数，直接放在有序数组 tail 的开头
+        tail[0] = nums[0];
+        // end 表示有序数组 tail 的最后一个已经赋值元素的索引
+        int end = 0;
+
+        for (int i = 1; i < len; i++) {
+            // 【逻辑 1】比 tail 数组实际有效的末尾的那个元素还大
+            if (nums[i] > tail[end]) {
+                // 直接添加在那个元素的后面，所以 end 先加 1
+                end++;
+                tail[end] = nums[i];
+            } else {
+                // 使用二分查找法，在有序数组 tail 中
+                // 找到第 1 个大于等于 nums[i] 的元素，尝试让那个元素更小
+                int left = 0;
+                int right = end;
+                while (left < right) {
+                    // 选左中位数不是偶然，而是有原因的，原因请见 LeetCode 第 35 题题解
+                    // int mid = left + (right - left) / 2;
+                    int mid = left + ((right - left) >>> 1);
+                    if (tail[mid] < nums[i]) {
+                        // 中位数肯定不是要找的数，把它写在分支的前面
+                        left = mid + 1;
+                    } else {
+                        right = mid;
+                    }
+                }
+                // 走到这里是因为 【逻辑 1】 的反面，因此一定能找到第 1 个大于等于 nums[i] 的元素
+                // 因此，无需再单独判断
+                tail[left] = nums[i];
+            }
+            // 调试方法
+            // printArray(nums[i], tail);
+        }
+        // 此时 end 是有序数组 tail 最后一个元素的索引
+        // 题目要求返回的是长度，因此 +1 后返回
+        end++;
+        return end;
+    }
+}
+```
+
+
+
+#### <span id="head76">9. [旋转数组的最小数字](https://leetcode-cn.com/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/)</span>
+
+二分法：
+
+```c++
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        int low = 0;
+        int high = nums.size() - 1;
+        while (low < high) {
+            int pivot = low + (high - low) / 2;
+            if (nums[pivot] < nums[high]) {
+                high = pivot;
+            }
+            else if (nums[pivot] > nums[high]) {
+                low = pivot + 1;
+            }
+            else {
+                high -= 1;
+            }
+        }
+        return nums[low];
+    }
+};
+```
+
+
+
+#### <span id="head77">10. [连续子数组的最大和](https://leetcode-cn.com/problems/lian-xu-zi-shu-zu-de-zui-da-he-lcof/)</span>
+
+```python
+# 动态规划
+class Solution:
+    def maxSubArray(self, nums: List[int]) -> int:
+        for i in range(1, len(nums)):
+            nums[i] += max(nums[i - 1], 0)
+        return max(nums)
+```
+
+
+
+#### <span id="head78">11.给定一个 foo 函数，60%的概率返回0，40%的概率返回1，如何利用 foo 函数实现一个 50% 返回 0 的函数</span>
+
+```c++
+int half01()
+{
+  while(1)
+  {
+    int a = foo();
+    int b = foo();
+
+    if(a != b) return a;
+  }
+}
+```
+
+> 有个函数foo，返回0和1的概率都是50%，让你自己写一个函数，使返回0和1的概率分别是30%和70%。
+>
+> 这道题乍一看不知道咋下手，其实还很简单的，相当于利用了遗传算法的思想，每次产生一个数字，然后以为，一共产生四个数字，这样就可以得到一个四位的数字，**即`[0,15]`，只要这个数字大于等于10就抛弃，这样产生`0~9`的数字，而且`0~9`的数字出现的概率是随机的，这样，`0~2`返回0, `3~9`返回1，这样，就满足了题目要求**
+
+
+
+#### <span id="head79">12. [K 个一组翻转链表](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)</span>
+
+==首先学会反转链表，然后反转每组K个的链表==
+
+这个最好自己比划一下
+
+
+
+#### <span id="head80">13. [二叉树的最近公共祖先](https://leetcode-cn.com/problems/er-cha-shu-de-zui-jin-gong-gong-zu-xian-lcof/)</span>
+
+递归烧脑
+
+```c++
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if (root == NULL or root == p or root == q) {
+            return root;
+        }
+        TreeNode* left = lowestCommonAncestor(root->left, p, q);
+        TreeNode* right = lowestCommonAncestor(root->right, p, q);
+      	// 说明左右子树不含有pq
+        if (left == NULL and right == NULL) {
+            return NULL;
+        }
+      	// 右子树含有pq
+        else if (left == NULL) {
+            return right;
+        }
+      	// 左子树还有pq
+        else if (right == NULL) {
+            return left;
+        }
+      	// pq分别在两侧
+        else{
+            return root;
+        } 
+    }
+};
+```
+
+#### <span id="head81">14. [最小栈](https://leetcode-cn.com/problems/min-stack/)</span>
+
+维护两个栈就可以
+
+#### <span id="head82">15. ==丑数==</span>
+
+```python
+class Solution:
+    def nthUglyNumber(self, n: int) -> int:
+        i2 = i3 = i5 = 0
+        nums = [1]
+        if n == 1:
+            return 1
+        for i in range(1, n):
+            ugly = min(nums[i2]*2, nums[i3]*3, nums[i5]*5)
+            nums.append(ugly)
+						# 注意不是elif，只要有相等的都需要前移动
+            if ugly == nums[i2]*2:
+                i2 += 1
+            if ugly == nums[i3]*3:
+                i3 += 1
+            if ugly == nums[i5]*5:
+                i5 += 1
+    
+        return nums[-1]
+```
+
+
+
+#### <span id="head83">16. 路径总和</span>
+
+迭代和递归，递归简洁一点，但是有点费脑子，学会判断出口条件
+
+```python
+class Solution:
+    def hasPathSum(self, root: TreeNode, sum: int) -> bool:
+        # 错误
+        # if sum == root.val:
+        #     return True
+        # if root.left:
+        #     return self.hasPathSum(root.left, sum - root.val)
+        # if root.right:
+        #     return self.hasPathSum(root.right, sum - root.val)
+        if root == None:
+            return False
+        if root.left == None and root.right == None:
+            return sum - root.val == 0
+        # 对于某个样例返回null
+        # if self.hasPathSum(root.left, sum - root.val) or self.hasPathSum(root.right, sum - root.val):
+        #     return True
+        return self.hasPathSum(root.left, sum - root.val) or self.hasPathSum(root.right, sum - root.val)
+      
+      
+# 也可以使用BFS求出路径
+class Solution:
+    def pathSum(self, root: TreeNode, sum: int) -> List[List[int]]:
+        res = []
+        # BFS
+        que = collections.deque()
+        que.append((root, [], 0))
+        
+        while que:
+            node, path, total = que.popleft()
+            if node == None:
+                continue
+
+            if not node.left and not node.right and total+node.val == sum:
+                res.append(path[:]+[node.val])
+            
+            que.append((node.left, path+[node.val], total+node.val))
+            que.append((node.right, path+[node.val], total+node.val))
+
+        return res
+```
+
+#### <span id="head84">17. [二叉树的锯齿形层次遍历](https://leetcode-cn.com/problems/binary-tree-zigzag-level-order-traversal/)</span>
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        vector<vector<int>> res;
+        queue<TreeNode *> q;
+
+        if(root) q.push(root);
+
+        bool lr = true;
+      	// 标准的BFS
+        while(!q.empty()) {
+            int size = q.size();
+            vector<int> level(size, 0);
+            for(int i = 0; i < size; i ++) {
+                TreeNode* node = q.front();
+                q.pop();
+                if(lr == false) {
+                    level[size - i - 1] = node->val;
+                } else {
+                    level[i] = node->val;
+                }
+               
+                if (node->left) {
+                    q.push(node->left);
+                }
+                if (node->right) {
+                    q.push(node->right);
+                }
+            }
+            res.push_back(move(level));
+            lr = !lr;
+        }
+        return res;
+    }
+};
+```
+
+#### <span id="head85">18. [旋转数组](https://leetcode-cn.com/problems/rotate-array/)</span>
+
+```c++
+class Solution {
+public:
+  	// 反转数组的begin到end段
+    void reverse(vector<int>& nums, int begin, int end) {
+        int temp;
+        while(begin < end) {
+            temp = nums[begin];
+            nums[begin] = nums[end];
+            nums[end] = temp;
+            begin ++;
+            end --;
+        }
+    }
+  	// 三次反转
+    void rotate(vector<int>& nums, int k) {
+        if(nums.size() < 2) {
+            return;
+        }
+        k %= nums.size();
+        reverse(nums, 0, nums.size() - k - 1);
+        reverse(nums, nums.size() - k, nums.size() - 1);
+        reverse(nums, 0, nums.size() - 1);
+    }
+};
+```
+
+#### <span id="head86">19. [最长不含重复字符的子字符串](https://leetcode-cn.com/problems/zui-chang-bu-han-zhong-fu-zi-fu-de-zi-zi-fu-chuan-lcof/)</span>
+
+```python
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        if s == "":
+            return 0
+        dp = [0] * len(s)
+        dp[0] = 1
+        for i in range(1, len(s)):
+            l = s[:i]
+            # print(l, s[i], l.find(s[i]), dp)
+            if l.find(s[i]) == -1:
+                dp[i] = dp[i-1] + 1
+            else:
+                for j in range(len(l)-1, -1, -1):
+                    if l[j] == s[i]:
+                        # 以s[i]结尾的最长序列需要dp[i-1]来定
+                        if i - j > dp[i-1]:
+                            dp[i] = dp[i - 1] + 1
+                        # 以s[i]结尾的最长序列还是用i-j来定
+                        else:
+                            dp[i] = i - j
+                        break
+        # print(dp)
+        return max(dp)
+```
+
+
+
+### <span id="head87"> 项目相关</span>
+
+#### <span id="head88">1. [装饰器](https://www.runoob.com/w3cnote/python-func-decorators.html)</span>
+
+- 装饰器本质上是一个 Python 函数或类，它可以让其他函数或类在不需要做任何代码修改的前提下增加额外功能，装饰器的返回值也是**一个函数/类对象**。
+- 它经常用于有切面需求的场景，比如：插入日志、性能测试、事务处理、缓存、权限校验等场景，装饰器是解决这类问题的绝佳设计。
+
+> 有了装饰器，我们就可以抽离出大量与函数功能本身无关的雷同代码到装饰器中并继续重用(**较少重复代码**)。概括的讲，装饰器的作用就是为已经存在的对象添加额外的功能。
+>
+> - 语法糖
+> - 例子：/Users/pengshuai/Documents/python/装饰器/ex1.py
+
+> **flask框架路由实现原理是什么**
+>
+> 使用app.route('url')就相当于使用装饰器，@是一个语法糖
+>
+> 1. 通过装饰器调用`self.add_url_rule(rule, endpoint, f, **options)`
+>
+> 2. 参数处理完之后，将url规则写入url_map（创建好Rule对象，并添加到Map对象中，`werkzeug.routing:Map/Rule类`），将视图函数写入view_function字典中。
+>
+>    > **Flask的核心路由逻辑是在werkzeug中实现的**
+>
+> 3. 通过`wsgi_app`进行路由匹配：创建RequestContext对象，match_request方法，最后调用full_dispatch_request()【重点执行dispatch_request()】
+>
+> https://www.cnblogs.com/ybjourney/p/11789983.html
+
+
+
+#### <span id="head89">2. WSGI</span>
+
+全称Python Web Server Gateway Interface，指定了web服务器和Python web应用或web框架之间的标准接口，以提高web应用在一系列web服务器间的移植性。
+
+
+
+#### <span id="head90">3. 哈希表</span>
+
+- 构造：**① 直接定址法；②平方取中法；③折叠法；④除留取余法**
+- 冲突解决：**① 开放定址法（线性探测）② 链地址法**
+- 优点：能够在常数级的时间复杂度上进行查找，并且插入数据和删除数据比较容易
+- 缺点：比如不支持排序，一般比用线性表存储需要更多的空间
+
+
+
+### <span id="head91"> 字节广告部门</span>
+
+> 后端主要C++，少量Python/Golang
+
+#### <span id="head92">11.20  一面</span>
+
+##### <span id="head93"> 很多C++基础问题</span>
+
+
+
+- const是啥，[指针常量和常量指针](https://www.jb51.net/article/86519.htm)，怎样改变函数const声明的变量值
+
+> ```c++
+> // 首先应该明白指针就是地址 
+> // p是一个常量指针【指向常量的指针】，指向的内容不可以变化，但是可以通过改变地址让它指向另一个常量	
+> const int *p; 或者是 int const *p; 
+> // p是一个指针常量【指针本身是常量】，指向内部存储的内存地址是常量，不可以改变，但是内存地址所对应的内容是可以变化的
+> int *const p;	
+> const int *const p; // 指向常量的常量指针
+> ```
+>
+> - void function(const int Var);   //传递过来的参数在函数内不可以改变(无意义，该函数以传值的方式调用)
+> - void function(const char* Var);  //参数指针所指内容为常量不可变
+> - void function(char* const Var);  //参数指针本身为常量不可变(也无意义，var本身也是通过传值的形式赋值的)
+> - void function(const Class& Var); //引用参数在函数内不可以改变
+>
+> volatile关键字：http://www.cppblog.com/mzty/archive/2006/08/08/10959.html
+>
+> ```c++
+> // 修改construction修饰的变量
+> // https://blog.csdn.net/weixin_41413441/article/details/80860135
+> const volatile int i = 10；
+> 
+> // https://www.cnblogs.com/gylhaut/p/5502583.html
+> # include <iostream>
+> using namespace std;
+> class TestMutable
+> {
+> public:
+>   TestMutable(){i=0;}
+>   int Output() const
+>   {
+>     return i++; 
+>   }
+> private:
+> 	mutable int i;
+> };
+> ```
+
+
+
+- static是啥，比较，用在那些场景
+
+> https://www.jianshu.com/p/0b2d9679a9f2
+>
+> - 限制符号的作用域只在本程序文件
+>- 指定变量的存储位置
+> - C++类的静态成员变量和函数：静态成员函数中没有this指针，只能调用静态成员变量
+>
+
+
+
+- 遍历一个vector所有元素的方法有哪些
+
+> ```c++
+> vector<int> a;
+> // for循坏
+> for(int i = 0; i < a.size(); i++) { 
+>   cout << a[i];
+> 	cout << a.at(i);
+> }
+> 
+> // 迭代器iterator  cbegin()  cend()
+> // auto也可以换成vector<int>::const_iterator
+> for (auto iter = valList.begin(); iter != valList.end(); iter++)
+> {
+>   cout << (*iter) << endl;
+> }
+> 
+> // for_each  cbegin()  cend()
+> template<typename T>
+> void printer(const T& val)
+> {
+> 	cout << val << endl;
+> }
+> void ShowVec(const vector<int>& valList)
+> {
+>   	for_each(valList.begin(), valList.end(), printer<int>);
+> }
+> 
+> // 直接for auto遍历
+> for (auto& val : valList)
+> {
+>     cout << val << endl;
+> }
+> ```
+
+
+
+- `++i` 和 `i++`区别，哪个更快，为什么
+
+> i++ 不能作为左值，而++i 可以。
+>
+> 1. a++是先用临时对象保存原来的对象，然后对原对象自增，再返回临时对象，不能作为左值；++a是直接对于原对象进行自增，然后返回原对象的引用，可以作为左值。
+> 2. 由于要生成临时对象，a++需要调用两次拷贝构造函数与析构函数（将原对象赋给临时对象一次，临时对象以值传递方式返回一次）；++a由于不用生成临时变量，且以引用方式返回，故没有构造与析构的开销，效率更高。
+>
+> ```c++
+> int i = 0;
+> int *p1 = &(++i); //正确
+> int *p2 = &(i++); //错误
+> 
+> ++i = 1; //正确
+> i++ = 5; //错误
+> 
+> cout << ++(++(++i)) << endl;
+> cout << ++ ++i << endl;
+> ```
+>
+> 左值是对应内存中有确定存储地址的对象的表达式的值，而右值是所有不是左值的表达式的值。
+>
+> 左值与右值的根本区别在于是否允许取地址&运算符获得对应的内存地址。
+>
+> http://haoqchen.site/2018/10/15/difference-between-++i-i++-i+=1-i=i+1/
+
+
+
+##### <span id="head94"> 计网和OS</span>
+
+1. 请求一个网页具体过程
+
+   > 本地DNS服务器之前是查找浏览器、操作系统和路由器的DNS缓存，然后是参考[一次完整的HTTP请求过程图](#####一次完整的HTTP请求过程)
+
+2. 进程通信方式
+
+   > socket忘记了
+
+3. 进程和线程区别
+
+   > 差点把进程是资源分配的单位、线程是调度的基本单位说反了
+
+
+
+**附带一点linux**
+
+1. linux中vi模式的查找命令
+
+   > 正则式：命令模式下输入“/字符串”，例如“/hive.sit”
+   >
+   > 如果查找下一个，按“n”即可
+
+##### <span id="head95"> 算法</span>
+
+1. 有环链表的入口节点
+
+   > 双指针，相遇之后，头再起一个指针知道和p1相遇
+
+2. [1, 3, 1, 6]四个数字全部都用，使用加减乘除运算怎么得到24
+
+   > 3 \* 8 和 4 \* 6
