@@ -32,26 +32,28 @@ upper_bound()   返回键值>给定元素的第一个位置
 int main() {
     map<int, string> mapStu;
     // 插入元素
-    mapStu.insert(pair<int, string>(000, "stu_zero"));
-    mapStu.insert(map<int, string>::value_type(001, "stu_one"));
-    mapStu[002] = "stu_two";
+    mapStu.insert(pair<int, string>(0, "stu_zero"));
+    mapStu.insert(map<int, string>::value_type(1, "stu_one"));
+    mapStu[2] = "stu_two";
+    mapStu[-1] = "test";
+    mapStu[3] = "shengxu";
 
     // 查找元素
-    map<int, string>::iterator iter = mapStu.find(001);
+    map<int, string>::iterator iter = mapStu.find(1);
     if (iter != mapStu.end()) {
-        cout << "001 is found: " <<iter->second << endl;
+        cout << "1 is found: " <<iter->second << endl;
     } else {
-        cout << "001 is not found!" << endl;
+        cout << "1 is not found!" << endl;
     }
 
     // 删除元素
-    map<int, string>::iterator iter1 = mapStu.find(002);
+    map<int, string>::iterator iter1 = mapStu.find(2);
     mapStu.erase(iter1);
 
-    if (mapStu.erase(001) == 1) {
-        cout << "001 --> value is deleted\n";
+    if (mapStu.erase(1) == 1) {
+        cout << "1 --> value is deleted\n";
     }  else {
-        cout << "001 -->value isn't deleted\n";
+        cout << "1 -->value isn't deleted\n";
     }
 
     // 输出map
