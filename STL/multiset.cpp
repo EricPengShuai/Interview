@@ -13,12 +13,14 @@ multiset: http://c.biancheng.net/view/545.html
 int main()
 {
     // 默认升序less<int>, 如果要倒叙就用greater<int>
-    set<int, less<int> > s;
+    multiset<int, less<int> > s;
     s.insert(12);
     s.insert(2);
     s.insert(58);
     s.insert(30);
     s.insert(70);
+    s.insert(12);
+    // 遍历set
     set<int>::iterator it = s.begin();
     for (it = s.begin(); it != s.end(); ++ it) {
         cout << *it << ' ';
@@ -27,11 +29,15 @@ int main()
     cout << "s.max_size(): " << s.max_size() << endl;
     cout << "s.size(): " << s.size() << endl;
     cout << "s.begin(): " << *s.begin() << endl;
+
     // 返回指向大于或等于某值的第一个元素的迭代器
     cout << "lower_bound(12): " << *s.lower_bound(12) << endl;
+    
     // 返回指向大于某值的迭代器
     cout << "upper_bound(12): " << *s.upper_bound(12) << endl;
+    
     // 返回一个指向被查找到元素的迭代器
     cout << "find(12): " << *s.find(12) << endl;
+    
     return 0;
 }
