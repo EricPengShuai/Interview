@@ -37,6 +37,29 @@ int main() {
     mapStu[2] = "stu_two";
     mapStu[-1] = "test";
     mapStu[3] = "shengxu";
+    // 输出map
+    cout << "输出map:" << endl << "-----------" << endl;
+    for (map<int, string>::iterator i = mapStu.begin(); i != mapStu.end(); ++ i) {
+        cout << i->first << ' ' << i->second << endl;
+    }
+    cout << "-----------" << endl;
+
+    // 查找第一个key值大于等于2的迭代器
+    auto it_lower = mapStu.lower_bound(2);
+    if (it_lower != mapStu.end()) {
+        cout << "第一个key大于等于2的map是" << it_lower->first << ' ' << it_lower->second << endl;
+    } else {
+        cout << "不存在";
+    }
+
+    // 查找第一个key值大于等于2的迭代器
+    auto it_upper = mapStu.upper_bound(2);
+    if (it_upper != mapStu.end()) {
+        cout << "第一个key大于2的map是" << it_upper->first << ' ' << it_upper->second << endl;
+    } else {
+        cout << "不存在";
+    }
+
 
     // 查找元素
     map<int, string>::iterator iter = mapStu.find(1);
@@ -55,11 +78,5 @@ int main() {
     }  else {
         cout << "1 -->value isn't deleted\n";
     }
-
-    // 输出map
-    for (map<int, string>::iterator i = mapStu.begin(); i != mapStu.end(); ++ i) {
-        cout << i->first << ' ' << i->second << endl;
-    }
-
     return 0;
 }
