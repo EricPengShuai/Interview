@@ -260,9 +260,9 @@ https://blog.csdn.net/qq_34827674/article/details/108608566
 
 > 问题：为什么需要三次握手？
 >
-> 答案：如果只有两次握手，假设前两次就可以建立连接，假设一个场景：客户端发送一个请求建立连接，但是由于网络延迟很久之后才到服务器，服务器这边也就不会立马ack，此时客户端以为丢失所以就是重传，这时很快就完成了前两次的握手过程，然后传输数据释放连接。**但是之后服务器有收到之前那个请求，又给客户端这边ack，又会建立连接（本来不需要了），所以就造成了不必要的资源浪费。但是如果是三次握手，客户端这边收到ack之后就不会给服务器那边ACK**
+> 答案：如果只有两次握手，假设前两次就可以建立连接，假设一个场景：客户端发送一个请求建立连接，但是由于网络延迟很久之后才到服务器，服务器这边也就不会立马ack，此时客户端以为丢失所以就是重传，这时很快就完成了前两次的握手过程，然后传输数据释放连接。**但是之后服务器有收到之前那个请求，又给客户端这边ack，又会建立连接（本来不需要了），所以就造成了不必要的[资源浪费](https://blog.csdn.net/wwl012345/article/details/90261423?utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&dist_request_id=&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control)。但是如果是三次握手，客户端这边收到ack之后才会给服务器那边ACK**
 >
-> 另外甚至可能发生死锁，客户端这边一直等待服务器发送ack报文
+> 另外甚至可能[发生死锁](https://blog.csdn.net/qq_38950316/article/details/81087809)，客户端这边一直等待服务器发送ack报文
 
 （2）四次挥手
 
@@ -322,7 +322,7 @@ https://blog.csdn.net/qq_34827674/article/details/108608566
 
 #### 3. HTTP相关
 ##### 一次完整的HTTP请求过程
-![在这里插入图片描述](https://img-blog.csdn.net/20180928090731646?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODA0MDA1/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![HTTP请求过程](https://img-blog.csdn.net/20180928090731646?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODA0MDA1/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
 
 > [域名解析过程](https://blog.csdn.net/yipiankongbai/article/details/25031461) 
 >
