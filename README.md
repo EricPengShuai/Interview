@@ -6,8 +6,7 @@
 
 ## 面试题总结
 
-- `interview_summary_with_toc.md`：带目录
-- `interview_summary.md：`不带目录
+- `interview_summary.md：`包括操作系统、计网、数据集以及C++
 
 
 
