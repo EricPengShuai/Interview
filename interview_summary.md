@@ -692,11 +692,11 @@ https://zhuanlan.zhihu.com/p/45338392
 
 #### MySQL三大日志以及使用场景
 
-- binlog：`binlog`用于记录数据库执行的写入性操作(不包括查询)信息，以二进制的形式保存在磁盘中。`binlog`是`mysql`的逻辑日志，并且由`Server`层进行记录，使用任何存储引擎的`mysql`数据库都会记录`binlog`日志
+- **binlog**：`binlog`用于记录数据库执行的写入性操作(不包括查询)信息，以二进制的形式保存在磁盘中。`binlog`是`mysql`的逻辑日志，并且由`Server`层进行记录，使用任何存储引擎的`mysql`数据库都会记录`binlog`日志
 
   >在实际应用中，`binlog`的主要使用场景有两个，分别是**主从复制**和**数据恢复**。
 
-- Redo log：具体来说就是只记录事务对数据页做了哪些修改
+- **Redo log**：具体来说就是只记录事务对数据页做了哪些修改
 
   > 用于保持一致性
 
@@ -990,7 +990,7 @@ class Solution:
 
 
 
-#### 16. 路径总和
+#### 16. 路径总和 [Ⅰ](https://leetcode-cn.com/problems/path-sum/comments/) [Ⅱ](https://leetcode-cn.com/problems/path-sum-ii/)
 
 迭代和递归，递归简洁一点，但是有点费脑子，学会判断出口条件
 
