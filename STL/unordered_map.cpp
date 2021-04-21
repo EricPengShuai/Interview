@@ -52,6 +52,19 @@ int main()
     cout << endl;
     cout << isPossible(nums);
     cout << endl;
+
+    unordered_map<char, int> mp;
+    for(int i = 0; i < 5; ++ i) {
+        mp['a' + i] = i;
+    }
+    for (auto i : mp) {
+        cout << i.first << "->" << i.second << ' ';
+    }
+    cout << endl;
+
+    // unordered_map查找某个键或者同级某个键
+    cout << "find('a')  " << (*mp.find('a')).first << "->" << (*mp.find('a')).second << endl;
+    cout << "count('a') " << mp.count('a') << endl;
     return 0;
 }
 
