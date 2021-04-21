@@ -57,7 +57,7 @@ int main()
     v.erase(iter, v.end());                         // 这才是真正的删除了
     cout << "erase(99):\n";
     showVector(v);
-    
+    cout << endl;    
 
 
     /* 
@@ -66,19 +66,23 @@ int main()
         string s1(s);
         string s2(4,'c');
      */
-    /* 
-    string s3="woshihsui";
+    
+    string s = "woshihsui";
 
     // string find方法查看某个字符或者字符串
-    if (s3.find("shi") != s3.npos) {
-        cout << "\"shi\" first appear in s3: " << s3.find("shi") << endl;
+    if (s.find("shi") != s.npos) {
+        cout << "\"shi\" first appear in s: " << s.find("shi") << endl;
     } else {
         cout << "can't find \"shi\" " << endl;
     }
-    if (s3.find('s') != s3.npos) {
-        cout << "\'s\' first apper in s3: " << s3.find('s') << endl;
+    if (s.find('s') != s.npos) {
+        cout << "\'s\' first apper in s: " << s.find('s') << endl;
     } else {
-        cout << "'s' not in s3" << endl;
+        cout << "'s' not in s" << endl;
     }
-    return 0; */
+
+    // substr方法
+    cout << "s[2:]" << s.substr(2) << endl;
+    cout << "s[:2]" << s.substr(0, 2) << endl;
+    return 0;
 }
