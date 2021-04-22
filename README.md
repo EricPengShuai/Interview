@@ -12,10 +12,14 @@
 
 ## STL
 
-- **C++**一些标准库的常规使用
+- C++一些标准库的常规使用
 
 
 
 ## 其他
 
-- **C++**小技巧
+- `sort_self_define.cpp`：自定义**sort**的比较规则
+- `unique_ptr.cpp`：智能指针
+- `const_volatile.cpp`：通过**volatile**关键字修改**const**常量
+- 待续
+
