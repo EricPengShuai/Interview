@@ -21,5 +21,6 @@
 - `sort_self_define.cpp`：自定义**sort**的比较规则
 - `unique_ptr.cpp`：智能指针
 - `const_volatile.cpp`：通过**volatile**关键字修改**const**常量
-- 待续
+- `static_in_class.cpp`：类中定义的静态成员变量不占类的大小，**在类外分配空间**；静态成员函数不能调用非静态成员，因为缺乏**this**指针
+- 未完待续
 
