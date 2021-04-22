@@ -37,15 +37,14 @@ int main()
         cout << "ptr1 is empty" << endl;
     }
 
-    // 使用 std::make_unique 创建 unique_ptr 对象 / C++14
+    // 使用 std::make_unique 创建 unique_ptr 对象 | C++14
     unique_ptr<Task> ptr2 = make_unique<Task>(34);
     cout <<  "make_unique:" << ptr2->mId << endl;
 
-    // 使用get()·函数获取管理对象的指针
+    // 使用get()函数获取管理对象的指针
     Task *p2 = taskPtr.get();
     cout << "get():" << p2->mId << endl;
 
 
     return 0;
 }
-
