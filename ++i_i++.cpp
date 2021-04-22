@@ -85,3 +85,21 @@ int main()
     // c = &(b++);
     // cout << c << endl;
 }
+
+/* 
+结果输出:
+this is constructor
+
+this is a++:
+this is copy constructor
+this is destructor
+
+this is ++a:
+this is constructor
+
+this is &b: 0x7ffeee9e7618
+
+this is c = &(++b): 0x7ffeee9e7618
+this is destructor
+this is destructor
+*/
