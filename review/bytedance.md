@@ -125,7 +125,7 @@
 
 1. 请求一个网页具体过程
 
-   > 本地DNS服务器之前是查找浏览器、操作系统和路由器的DNS缓存，然后是参考[一次完整的HTTP请求过程图](#####一次完整的HTTP请求过程)
+   > 本地DNS服务器之前是查找浏览器、操作系统和路由器的DNS缓存，然后是参考[一次完整的HTTP请求过程图](https://github.com/EricPengShuai/Interview/blob/main/interview_summary.md#一次完整的http请求过程)
 
 2. 进程通信方式
 
@@ -162,3 +162,4 @@
 #### 反思
 
 很多C++基础问题都不清楚，基础不牢
+
