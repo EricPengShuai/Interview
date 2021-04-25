@@ -10,20 +10,24 @@ https://www.zhihu.com/question/387522517
  */
 int main()
 {
-    
-    class test
-    {
-        
-    public:
-        int x, y;
-        test(int x, int y): x(x), y(y) {};
-    };
     vector<vector<int> > s;
 
-    // s.emplace_back(1,2);
-    // s.emplace_back(vector<int>{3,2,1});
-    // s.emplace_back<vector<int>>({1,2,3});
-    s.emplace_back({1,2,3});
+    s.push_back(vector<int>{2,1});
+    // s.push_back<vector<int>>({2,1}); // error
+
+    s.emplace_back(2);
+    s.emplace_back(vector<int>{3,2,1});
+    s.emplace_back<vector<int>>({1,2,3});
+    // s.emplace_back({1,2,3});         // error
+    int i = 0;
+    for(auto vt: s) {
+        cout << "vt[" << i << "]" << ' ';
+        for(auto v: vt) {
+            cout << v << ' ';
+        }
+        ++ i;
+        cout << endl;
+    }
     cout << endl;
     return 0;
 }
