@@ -1,14 +1,20 @@
 # C++ STL
 **C++ STL** 之所以得到广泛的赞誉，也被很多人使用，不只是提供了像`vector`, `string`, `list`等方便的容器，更重要的是**STL**封装了许多复杂的数据结构算法和大量常用数据结构操作。
 
-- `vector`封装数组: 便于随机访问
-
-- `list`封装了链表: 便于插入和删除
-
-- `map`和`set`封装了二叉树等 
-    - `map` 底层是一个红黑树，有序的，一般处理有序的情况
-    - `unordered_map` 底层是一个哈希表，便于查找，但是内存占用比较高
-    - `map` 和 `unordered_map` 外部操作都是一样的，只是内部实现不一样
+- *vector.cpp*：**vector**封装数组: 便于随机访问
+- *string.cpp*：**string**基本用法
+- **list**封装了链表: 便于插入和删除
+- *priority_queue.cpp*：优先队列用法，默认是大顶推
+- **map**封装了二叉树等 
+    - *mapSTL.cpp*：**map**底层是一个红黑树，有序的，一般处理有序的情况
+    - *unordered_map.cpp*: **unordered_map** 底层是一个哈希表，便于查找，但是内存占用比较高
+    - **map** 和 **unordered_map**外部操作都是一样的，只是内部实现不一样
+- **set**也是封装了二叉树，基于红黑树实现
+    - 和**map**的区别就是将value作为key，map的key和value是分开的；map允许修改value不允许修改key，set的迭代器是const，不允许修改元素的值
+    - *multiset.cpp*：**multiset**用法，和**set**类似，只是前者可以保存元素，后者不保存，默认时升序排列的也就是 **multiset<int, less\<int\>>**
+- *sort.cpp*：自定义**sort**函数
+- *emplace_vs_push.cpp*：**emplace_back**和**push_back**的区别：好像是前者效率高
+- *advance.cpp*：实现迭代器的加减操作
 
 在封装这些数据结构的时候，**STL**按照程序员的使用习惯，以成员函数方式提供的常用操作，如：插入、排序、删除、查找等。让用户在**STL**使用过程中，并不会感到陌生。
 
