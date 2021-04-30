@@ -8,31 +8,31 @@
 
 1. const是啥，[指针常量和常量指针](https://www.jb51.net/article/86519.htm)，怎样改变函数const声明的变量值
 
-> ```c++
-> // 首先应该明白指针就是地址 
-> // p是一个常量指针【指向常量的指针】，指向的内容不可以变化，但是可以通过改变地址让它指向另一个常量	
-> const int *p; 或者是 int const *p; 
-> // p是一个指针常量【指针本身是常量】，指向内部存储的内存地址是常量，不可以改变，但是内存地址所对应的内容是可以变化的
-> int *const p;	
-> const int *const p; // 指向常量的常量指针
-> ```
->
+   ```cpp
+   // 首先应该明白指针就是地址 
+   // p是一个常量指针【指向常量的指针】，指向的内容不可以变化，但是可以通过改变地址让它指向另一个常量	
+   const int *p; 或者是 int const *p; 
+   // p是一个指针常量【指针本身是常量】，指向内部存储的内存地址是常量，不可以改变，但是内存地址所对应的内容是可以变化的
+   int *const p;	
+   const int *const p; // 指向常量的常量指针
+   ```
+
 > - void function(const int Var);   //传递过来的参数在函数内不可以改变(无意义，该函数以传值的方式调用)
 > - void function(const char* Var);  //参数指针所指内容为常量不可变
 > - void function(char* const Var);  //参数指针本身为常量不可变(也无意义，var本身也是通过传值的形式赋值的)
 > - void function(const Class& Var); //引用参数在函数内不可以改变
->
+> 
 > volatile关键字：http://www.cppblog.com/mzty/archive/2006/08/08/10959.html
->
+> 
 > ```c++
-> // 修改construction修饰的变量
+>// 修改construction修饰的变量
 > // https://blog.csdn.net/weixin_41413441/article/details/80860135
 > const volatile int i = 10；
 > 
 > // https://www.cnblogs.com/gylhaut/p/5502583.html
-> # include <iostream>
+># include <iostream>
 > using namespace std;
-> class TestMutable
+>class TestMutable
 > {
 > public:
 >   TestMutable(){i=0;}
@@ -49,48 +49,50 @@
 
 2. static是啥，比较，用在那些场景
 
-> https://www.jianshu.com/p/0b2d9679a9f2
->
-> - **限制符号的作用域只在本程序文件**
-> - **指定变量的存储位置**: 全局的和函数内定义的**static**变量都是存放在数据区的，且只存一份，只在整个程序结束后才自动释放，其他变量都是存储在栈，函数结束之后就释放
-> - **C++类的静态成员变量和函数**：静态成员函数中没有**this**指针，只能调用静态成员变量
+   https://www.jianshu.com/p/0b2d9679a9f2
+
+- **限制符号的作用域只在本程序文件**
+- **指定变量的存储位置**: 全局的和函数内定义的**static**变量都是存放在数据区的，且只存一份，只在整个程序结束后才自动释放，其他变量都是存储在栈，函数结束之后就释放
+- **C++类的静态成员变量和函数**：静态成员函数中没有**this**指针，只能调用静态成员变量
 
 
 
 3. 遍历一个vector所有元素的方法有哪些
 
-> ```c++
-> vector<int> a;
-> // for循坏
-> for(int i = 0; i < a.size(); i++) { 
-> cout << a[i];
-> 	cout << a.at(i);
-> }
-> 
-> // 迭代器iterator  cbegin()  cend()
-> // auto也可以换成vector<int>::const_iterator
-> for (auto iter = valList.begin(); iter != valList.end(); iter++)
-> {
-> cout << (*iter) << endl;
-> }
-> 
-> // for_each  cbegin()  cend()
-> template<typename T>
-> void printer(const T& val)
-> {
-> 	cout << val << endl;
-> }
-> void ShowVec(const vector<int>& valList)
-> {
-> 	for_each(valList.begin(), valList.end(), printer<int>);
-> }
-> 
-> // 直接for auto遍历
-> for (auto& val : valList)
-> {
->  cout << val << endl;
-> }
-> ```
+```cpp
+vector<int> a;
+// for循坏
+for(int i = 0; i < a.size(); i++) { 
+  cout << a[i];
+	cout << a.at(i);
+}
+
+// 迭代器iterator  cbegin()  cend()
+// auto也可以换成vector<int>::const_iterator
+for (auto iter = valList.begin(); iter != valList.end(); iter++)
+{
+  cout << (*iter) << endl;
+}
+
+// for_each  cbegin()  cend()
+template<typename T>
+void printer(const T& val)
+{
+	cout << val << endl;
+}
+void ShowVec(const vector<int>& valList)
+{
+	for_each(valList.begin(), valList.end(), printer<int>);
+}
+
+// 直接for auto遍历
+for (auto& val : valList)
+{
+  cout << val << endl;
+}
+```
+
+
 
 
 
@@ -151,7 +153,7 @@
 
 1. 有环链表的入口节点
 
-   > 双指针，相遇之后，头再起一个指针知道和p1相遇
+   > 双指针，相遇之后，头再起一个指针直到和p1相遇
 
 2. [1, 3, 1, 6]四个数字全部都用，使用加减乘除运算怎么得到24
 
