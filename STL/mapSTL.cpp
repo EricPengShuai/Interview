@@ -33,6 +33,10 @@ int main() {
     map<int, string> mapStu;
     // 插入元素
     mapStu.insert(pair<int, string>(0, "stu_zero"));
+    // 这个插入无效，但是不会报错
+    mapStu.insert(pair<int, string>(0, "STU_zero"));
+    // 这个才会修改之前key对应的value
+    mapStu[0] =  "STU_ZERO";
     mapStu.insert(map<int, string>::value_type(1, "stu_one"));
     mapStu[2] = "stu_two";
     mapStu[-1] = "test";
