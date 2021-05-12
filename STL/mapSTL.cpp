@@ -44,9 +44,14 @@ int main() {
     mapStu[-1] = "test";
     mapStu[3] = "shengxu";
     // 输出map
-    cout << "输出map:" << endl << "-----------" << endl;
+    cout << "输出map:" << endl << "iterator-----------" << endl;
     for (map<int, string>::iterator i = mapStu.begin(); i != mapStu.end(); ++ i) {
         cout << i->first << ' ' << i->second << endl;
+    }
+    cout << "-----------" << endl;
+    cout << "auto &[key, vlaue]-----------" << endl;
+    for (auto &[key, value]: mapStu) {
+        cout << key << ' ' << value << endl;
     }
     cout << "-----------" << endl;
 
