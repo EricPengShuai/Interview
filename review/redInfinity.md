@@ -100,6 +100,8 @@ D. delete a[3];
 
 7. 看图找规律__C__。 (4 分)
 
+   <img src="https://i.loli.net/2021/05/17/nhaxb6Ri8KvHg3c.png" />
+
 ![找规律](https://i.loli.net/2021/05/17/nhaxb6Ri8KvHg3c.png)
 
 
