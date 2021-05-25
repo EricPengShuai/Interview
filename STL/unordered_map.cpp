@@ -65,6 +65,11 @@ int main()
     // unordered_map查找某个键或者同级某个键
     cout << "find('a')  " << (*mp.find('a')).first << "->" << (*mp.find('a')).second << endl;
     cout << "count('a') " << mp.count('a') << endl;
+
+
+    // 初始化unordered_map
+    unordered_map<int, int> mpa;
+    cout << "test: " << mpa[0] << endl;
     return 0;
 }
 
