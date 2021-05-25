@@ -43,7 +43,7 @@
       int *p = (int*)malloc(2 * sizeof(double));//编译无错误
       ```
 
-    - new封装了malloc，直接free不会包括，但是只是释放内存，而不会析构对象
+    - new封装了malloc，直接free不会报错，但是只是释放内存，而不会析构对象
 
     - new调用名为**operator new的标准库函数**分配足够空间并调用相关对象的构造函数，delete对指 针所指对象运行适当的析构函数；然后通过调用名为**operator delete的标准库函数**释放该对象所 用内存。后者均没有相关调用
 
