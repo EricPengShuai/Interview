@@ -33,7 +33,7 @@ int cmp2(int x, int y) {
 
 int main()
 {
-    vector<int> vt = {6, 2, 1};
+    vector<int> vt = {6, 2, 1, 3, 5, 4, 9};
     int left = 0;
     int right = vt.size() - 1;
     while(left <= right) {
@@ -56,6 +56,7 @@ int main()
 
     sort(vt.begin(), vt.begin()+left);
     sort(vt.begin()+left, vt.end(), cmp1<int>());
+    // sort(vt.begin()+left, vt.end(), cmp2);
     // 逆序greater 顺序less
     // sort(vt.begin()+left, vt.end(), greater<int>());
     
