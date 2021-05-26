@@ -184,7 +184,7 @@ for (auto& val : valList)
 
   1. 存储分配方式总体分为：**连续内存分配和离散内存分配**
 
-     <img src="http://img.blog.csdn.net/20131031074819750?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd2FuZzM3OTI3NTYxNA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" style="zoom: 70%"/>
+     <img src="https://urlify.cn/BNJZ7v" style="zoom: 70%"/>
 
   2. 离散分配原因：由于连续分配方式会形成许多内存碎片，虽可通过“紧凑”功能将碎片合并，但会付出很大开销。于是出现离散分配方式：将一个进程直接分散地装入到许多**不相邻**的内存分区中。
 
