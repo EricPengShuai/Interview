@@ -45,9 +45,9 @@
 
     - new封装了malloc，直接free不会报错，但是只是释放内存，而不会析构对象
 
-    - new调用名为**operator new的标准库函数**分配足够空间并调用相关对象的构造函数，delete对指 针所指对象运行适当的析构函数；然后通过调用名为**operator delete的标准库函数**释放该对象所 用内存。后者均没有相关调用
+    - new调用名为**operator new的标准库函数**分配足够空间并调用相关对象的构造函数，delete对指针所指对象运行适当的析构函数；然后通过调用名为**operator delete的标准库函数**释放该对象所用内存。后者均没有相关调用
 
-    - malloc仅仅分配内存空间，free仅仅回收空间，不具备调用构造函数和析构函数功能，用malloc分 配空间存储类的对象存在风险；new和delete除了分配回收功能外，还会调用构造函数和析构函 数。
+    - malloc仅仅分配内存空间，free仅仅回收空间，不具备调用构造函数和析构函数功能，用malloc分配空间存储类的对象存在风险；new和delete除了分配回收功能外，还会调用构造函数和析构函 数。
 
     - malloc和free返回的是void类型指针（必须进行类型转换），new和delete返回的是具体类型指针。
 
@@ -84,7 +84,7 @@
 
 - [x] **乐观锁和悲观锁了解吗**
 
-  参考[interview_summary.md](https://github.com/EricPengShuai/Interview/blob/main/interview_summary.md#5-简述乐观锁以及悲观锁的区别以及使用场景)
+  参考[ByteDanceGuide.md](https://github.com/EricPengShuai/Interview/blob/main/Guide/ByteDanceGuide.md#5-简述乐观锁以及悲观锁的区别以及使用场景)
 
 
 
