@@ -22,3 +22,72 @@
 
 面试官人超好，提示算法题，虽然刚开始迟到了
 
+
+
+### 2021.5.27 二面
+
+#### 项目
+
+一上来还是问一问项目
+
+
+
+#### 算法
+
+1. 股票问题，[简单的一次买卖](https://leetcode-cn.com/problems/gu-piao-de-zui-da-li-run-lcof/)
+
+   ```cpp
+   // 不持有状态
+   dp[i][0] = max(dp[i-1][0], dp[i-1][1] + prices[i]);
+   // 持有状态，注意这里：只允许交易一次，因此手上的现金数就是当天的股价的相反数，参考liweiwei
+   dp[i][1] = max(dp[i-1][1], - prices[i]);
+
+   - 进阶1：[可以多次买卖](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/submissions/)：
+
+     - 可以用比较好理解的DP，注意和只有一次买卖问题的区别
+
+       ```cpp
+       // 不持有状态
+       dp[i][0] = max(dp[i-1][0], dp[i-1][1] + prices[i]);
+       // 持有状态
+       dp[i][1] = max(dp[i-1][1], dp[i-1][0] - prices[i]);
+       ```
+
+     - 另外也可以是使用贪心：只要比前一天大就买
+
+   - 进阶2：[最多两次买卖](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/)：
+
+     - 有点难度的三维DP
+
+     - 牛逼的Trick：
+
+       ```cpp
+       class Solution {
+       public:
+          	/**
+             对于任意一天考虑四个变量:
+             fstBuy: 在该天第一次买入股票可获得的最大收益 
+             fstSell: 在该天第一次卖出股票可获得的最大收益
+             secBuy: 在该天第二次买入股票可获得的最大收益
+             secSell: 在该天第二次卖出股票可获得的最大收益
+             分别对四个变量进行相应的更新, 最后secSell就是最大
+             收益值(secSell >= fstSell)
+           **/
+           int maxProfit(vector<int>& prices) {
+               int fstBuy = INT_MIN, fstSell = 0;
+               int secBuy = INT_MIN, secSell = 0;
+               for(int p: prices) {
+                   fstBuy = max(fstBuy, -p);
+                   fstSell = max(fstSell, fstBuy + p);
+                   secBuy = max(secBuy, fstSell - p);
+                   secSell = max(secSell, secBuy + p);
+               }
+               return secSell;
+           }
+       };
+       ```
+
+       
+
+2. 二叉树的前序遍历，[非迭代](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
+
