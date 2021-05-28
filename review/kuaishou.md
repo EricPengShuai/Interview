@@ -41,6 +41,7 @@
    dp[i][0] = max(dp[i-1][0], dp[i-1][1] + prices[i]);
    // 持有状态，注意这里：只允许交易一次，因此手上的现金数就是当天的股价的相反数，参考liweiwei
    dp[i][1] = max(dp[i-1][1], - prices[i]);
+   ```
 
    - 进阶1：[可以多次买卖](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/submissions/)：
 
@@ -90,4 +91,30 @@
        
 
 2. 二叉树的前序遍历，[非迭代](https://leetcode-cn.com/problems/binary-tree-preorder-traversal/)
+
+
+
+### 2021.5.28 三面
+
+#### 简历
+
+- pytorch实现过一个RNN，那个one-hot和embedding相比，有什么区别
+
+
+
+#### 智力题
+
+- 绳子：砍两刀成三段，可以组成三角形的概率是？
+
+  - 初中的[线性规划](https://urlify.cn/v2eMvm)
+
+    <img src="https://img-blog.csdn.net/20180906163902428?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hlZmVuZ2xpYW4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" style="zoom:60%" />
+
+- 随机数生成器：randn()随机生成1~n
+
+  - 怎样通过rand10()得到rand7()
+
+    通过rand10()得到1~10，我直接舍弃大于7的数 就可以了
+
+  - 怎样通过[rand7()得到rand10()](https://urlify.cn/BZ3Q7z)
 
