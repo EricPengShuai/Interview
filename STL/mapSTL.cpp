@@ -71,6 +71,9 @@ int main() {
         cout << "不存在";
     }
 
+    // count: 某个key存在就返回1，否则就返回0
+    cout<<"count(1):";
+    cout<<mapStu.count(1)<<endl;
 
     // 查找元素
     map<int, string>::iterator iter = mapStu.find(1);
