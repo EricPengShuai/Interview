@@ -401,7 +401,7 @@ https://www.cnblogs.com/kubidemanong/p/9390021.html
 >
 > 这些就被我们成为DNS劫持，DNS劫持对于网络访问的影响和体验是非常严重的，除了DNS服务器，你的路由器同样可以这么干，所以在买路由器的时候也有人会关注这个路由器是否会进行DNS劫持。
 
-- [ ] 具体看一下自己的DNS服务器项目
+- [x] 具体看一下自己的DNS服务器项目
 
 - 多个client请求问题需要进行ID转换
 - 三种类型：本地服务器解析、屏蔽、中继解析
@@ -773,7 +773,7 @@ https://zhuanlan.zhihu.com/p/45338392
 #### 10. hash_map和map区别
 
 - 构造函数。**hash_map需要hash函数，等于函数**；map只需要比较函数(小于函数).
-- 存储结构。**hash_map采用hash表存储**，map一般采用[红黑树(RB Tree)](http://stl.winterxy.com/html/000039.html)实现。因此其memory数据结构是不一样的
+- 存储结构。**hash_map采用hash表存储**，map一般采用红黑树(RB Tree)实现。因此其memory数据结构是不一样的
 
 ---
 
