@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <algorithm>
 #include <functional>
 using namespace std;
@@ -89,5 +90,33 @@ int main()
     */
     s.erase(s.begin());
     cout << s << endl;
+
+
+    /*
+    <sstream> 定义了三个类：
+    istringstream、ostringstream 和 stringstream，分别用来进行流的输入、输出和输入输出操作.
+    参考: https://urlify.cn/vMrYzm
+    */
+    stringstream sstream;
+    // 输入到stringstream
+    sstream << "first  string," << " second string";
+    cout << "strResult is: " << sstream.str() << endl;
+
+    // good(): checks if no error has occurred i.e. I/O operations are available
+    cout << "stringstream.good(): " << sstream.good() << endl;
+    
+    // 清空sstream
+    sstream.str("");
+    sstream << "third string";
+    cout << "After clear, strResult is: " << sstream.str() << endl;
+
+    // 类型转换
+    char c;
+    int num1, num2;
+    sstream.str("");
+    sstream << "1.002";
+    cout << sstream.str() << endl;
+    sstream >> num1 >> c >> num2;
+    cout << "输入输出转换：" << num1 << ' ' << c << ' ' << num2 << ' ' << sstream.good() << endl;
     return 0;
 }
