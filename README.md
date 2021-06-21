@@ -8,7 +8,7 @@
 
 - [ByteDanceGuide.md](https://github.com/EricPengShuai/Interview/blob/main/Guide/ByteDanceGuide.md)：字节面试指南
 - [KuaishowGuide.md](https://github.com/EricPengShuai/Interview/blob/main/Guide/KuaishowGuide.md)：快手面试指南
-- [Baidu.md](https://github.com/EricPengShuai/Interview/blob/main/Guide/BaiduGuide.md)：百度面试指南
+- [Baidu.md](https://github.com/EricPengShuai/Interview/blob/main/Guide/baiduGuide.md)：百度面试指南
 
 
 
