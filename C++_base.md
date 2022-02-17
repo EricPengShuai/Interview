@@ -99,3 +99,29 @@
   - const对象只能访问const成员函数
   - 非const对象可以访问所有的成员函数
 
+### 2. static
+
+- 静态变量：静态变量的空间只分配一次；类中的静态变量被实例化对象共享，所以类中的静态变量不能使用构造函数初始化
+
+- 静态成员：类对象为静态时，一直到程序结束时才会被销毁；类中静态函数可以访问静态成员数据以及其他静态成员函数，无法访问类的非静态数据成员或成员函数，**注意一下访问方式**
+
+  ```c++
+  #include<iostream> 
+  using namespace std; 
+  
+  class Apple 
+  { 
+      public: 
+          static void printMsg() 
+          {
+              cout<<"Welcome to Apple!"; 
+          }
+  }; 
+  
+  int main() 
+  { 
+      Apple::printMsg(); // invoking a static member function 
+  } 
+  ```
+
+  
