@@ -198,13 +198,15 @@
 
 :fire: 虚函数的调用取决于指向或者引用的对象的类型，而不是指针或者引用自身的类型
 
+> 参考代码：[/base_code/vtable_vptr/main.cpp](/base_code/vtable_vptr/main.cpp)
+
 
 
 **虚函数默认参数**
 
 默认参数是静态绑定的，虚函数是动态绑定的。默认参数的使用需要看指针或者引用本身的类型，而不是对象的类型。
 
-> 参考代码：
+> 参考代码：[/base_code/vtable_vptr/default_arg.cpp](/base_code/vtable_vptr/default_arg.cpp)
 
 
 
@@ -237,7 +239,7 @@
 - 基类指针指向继承类对象，则调用继承类对象的函数
 - int main() 必须声明为Base类的友元，否则编译失败。编译器报错：ptr无法访问私有函数。
 
-> 代码参考：
+> 代码参考：[/base_code/vtable_vptr/virtual_function.cpp](/base_code/vtable_vptr/virtual_function.cpp)
 
 
 
@@ -248,7 +250,7 @@
 - 虚函数可以是内联函数，内联是可以修饰虚函数的，但是当虚函数表现多态性的时候不能内联
 - 内联是在编译器建议编译时内联，而虚函数的多态性是在运行期表现，编译器无法知道运行调用哪个代码，因此虚函数表现为多态性时不可以内联
 
-> 代码学习： 
+> 代码学习： [/base_code/vtable_vptr/virtual_inline.cpp](/base_code/vtable_vptr/virtual_inline.cpp)
 
 
 
@@ -258,7 +260,7 @@
 
 - dynamic_cast 提供了类型安全检查，是一种基于能力查询的转换，所以在多态类型间进行转换更提倡采用dynamic_cast。
 
-> 代码参考：
+> 代码参考：[/base_code/vtable_vptr/rtti.cpp](/base_code/vtable_vptr/rtti.cpp)
 
 
 
