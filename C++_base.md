@@ -262,6 +262,23 @@
 
 > 代码参考：[/base_code/vtable_vptr/rtti.cpp](/base_code/vtable_vptr/rtti.cpp)
 
+### 8. volatile
+
+- `volatile`关键字是一种类型修饰符，用它声明的类型变量表示可以被某些编译器未知的因素（操作系统、硬件、其他线程）更改。所以使用`volatile`告诉编译器不应对这样的对象进行优化。
+- `volatile` 关键字声明的变量，每次访问时都必须从**内存**中取出值（没有被`volatile`修饰的变量，可能由于编译器的优化，从**CPU寄存器**中取值）
+
+:one: 一个参数既可以是const也可以是volatile吗？
+
+可以。只读的状态寄存器可以是volatile，因为它可能被意想不到地改变，可以是const，因为程序不应该去修改它。
+
+:two: 一个指针可以是volatile吗？
+
+可以。当一个中断服务子程序修改一个指向buffer的指针时。
+
+> 代码参考：
+
+
+
 
 
 
