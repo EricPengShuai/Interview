@@ -148,7 +148,7 @@
 
 > 虚函数可以是内联函数，但是当虚函数表现多态性时不能内联（因为多态性是在运行期，内存是在编译期）
 >
-> 参考代码：[/base_code/inline.cpp](/base_code/inline.cpp)
+> 参考代码：[/base_code/inline.cpp](./base_code/inline.cpp)
 
 - [ ] 修改文件名称
 
@@ -160,7 +160,7 @@
 - 类中的虚函数、成员函数、静态数据成员都不占用类对象的存储空间，**即使类中有多个虚函数，但是只有一个虚指针**
 - 虚函数继承都是继承基类的vptr
 
-> 参考代码 ：[/base_code/sizeof.cpp](/base_code/sizeof.cpp)
+> 参考代码 ：[/base_code/sizeof.cpp](./base_code/sizeof.cpp)
 
 
 
@@ -198,7 +198,7 @@
 
 :fire: 虚函数的调用取决于指向或者引用的对象的类型，而不是指针或者引用自身的类型
 
-> 参考代码：[/base_code/virtual.cpp](/base_code/virtual.cpp)
+> 参考代码：[/base_code/virtual.cpp](./base_code/virtual.cpp)
 
 
 
@@ -206,7 +206,7 @@
 
 默认参数是静态绑定的，虚函数是动态绑定的。默认参数的使用需要看指针或者引用本身的类型，而不是对象的类型。
 
-> 参考代码：[/base_code/default_arg.cpp](/base_code/default_arg.cpp)
+> 参考代码：[/base_code/default_arg.cpp](./base_code/default_arg.cpp)
 
 
 
@@ -239,7 +239,7 @@
 - 基类指针指向继承类对象，则调用继承类对象的函数
 - int main() 必须声明为Base类的友元，否则编译失败。编译器报错：ptr无法访问私有函数。
 
-> 代码参考：[/base_code/virtual_function.cpp](/base_code/virtual_function.cpp)
+> 代码参考：[/base_code/virtual_function.cpp](./base_code/virtual_function.cpp)
 
 
 
@@ -250,7 +250,7 @@
 - 虚函数可以是内联函数，内联是可以修饰虚函数的，但是当虚函数表现多态性的时候不能内联
 - 内联是在编译器建议编译时内联，而虚函数的多态性是在运行期表现，编译器无法知道运行调用哪个代码，因此虚函数表现为多态性时不可以内联
 
-> 代码学习： [/base_code/virtual_inline.cpp](/base_code/virtual_inline.cpp)
+> 代码学习： [/base_code/virtual_inline.cpp](./base_code/virtual_inline.cpp)
 
 
 
@@ -260,7 +260,7 @@
 
 - dynamic_cast 提供了类型安全检查，是一种基于能力查询的转换，所以在多态类型间进行转换更提倡采用dynamic_cast。
 
-> 代码参考：[/base_code/rtti.cpp](/base_code/rtti.cpp)
+> 代码参考：[/base_code/rtti.cpp](./base_code/rtti.cpp)
 
 ### 8. volatile
 
@@ -275,7 +275,7 @@
 
 可以。当一个中断服务子程序修改一个指向buffer的指针时。
 
-> 代码参考：[/base_code/volatile.cpp](/base_code/volatile.cpp)
+> 代码参考：[/base_code/volatile.cpp](./base_code/volatile.cpp)
 
 
 
@@ -285,7 +285,7 @@
 
 可以通过`NDEBUG`来关闭`assert`，但是需要在源代码的开头引入`assert`之前使用
 
-> 参考代码：[/base_code/assert.cpp](/base_code/assert.cpp)
+> 参考代码：[/base_code/assert.cpp](./base_code/assert.cpp)
 
 
 
