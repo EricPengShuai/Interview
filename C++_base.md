@@ -289,7 +289,81 @@
 
 
 
+### 10. extern
+
+虽然C++兼容C，但是C++文件中函数编译后生成的符号与C语言生成的不同。因为C++虽然支持函数重载，C++函数编译之后生成的符号带有函数类型的信息，而C则没有。
+
+> `int add(int a, int b)`函数经过C++编译器生成`.o`文件后，`add`会变成形如`add_int_int`，而C则会变成形如`_add`，所以相同的函数在C和C++中编译后生成的符号不同
+
+如果C++中使用C语言实现的函数，我们使用`extern "C"`，在编译链接的时候就会告诉链接器去寻找C语言符号，而不是经过C++修饰的符号。
 
 
 
+**C++调用C函数**
+
+```cpp
+//add.h
+#ifndef ADD_H
+#define ADD_H
+int add(int x,int y);
+#endif
+
+//add.c
+#include "add.h"
+
+int add(int x,int y) {
+    return x+y;
+}
+
+//add.cpp
+#include <iostream>
+using namespace std;
+extern "C" {
+    #include "add.h"
+}
+int main() {
+    add(2,3);
+    return 0;
+}
+```
+
+编译时先通过gcc生成中间文件add.o：`gcc -c add.c`
+
+然后编译：`g++ add.cpp add.o -o main`
+
+
+
+**C调用C++函数**
+
+:warning: `extern "C"`需要放在C++头文件中，放在C的头文件会报错
+
+```cpp
+// add.h
+#ifndef ADD_H
+#define ADD_H
+extern "C" {
+    int add(int x,int y);
+}
+#endif
+
+// add.cpp
+#include "add.h"
+
+int add(int x,int y) {
+    return x+y;
+}
+
+// add.c
+extern int add(int x,int y);
+int main() {
+    add(2,3);
+    return 0;
+}
+```
+
+编译时先通过gcc生成中间文件add.o：`g++ -c add.cpp`
+
+然后编译：`gcc add.c add.o -o main`
+
+> 不过与C++调用C接口不同，C++确实是能够调用编译好的C函数，而这里C调用C++，不过是把C++代码当成C代码编译后调用而已。也就是说，C并不能直接调用C++库函数。
 
