@@ -377,7 +377,7 @@ int main() {
 - C 的结构体不能继承
 - 结构体的名字可以和函数名字相同
 
-> 代码参考：
+> 代码参考：[base_code/struct_func.c](base_code/struct_func.c)
 
 
 
@@ -387,7 +387,7 @@ int main() {
 - C++结构体定义时可以直接使用不用带struct，但是如果有同名函数需要加struct（C中不管是否有同名函数都必须要加struct）
 - C++中的结构体可以继承
 
-> 代码参考：
+> 代码参考：[base_code/struct_function.cpp](base_code/struct_function.cpp)
 
 
 
