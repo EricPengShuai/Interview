@@ -441,15 +441,11 @@ C++中的多态：在C++中会维护一张虚函数表
 
 可以访问某个类的私有或者保护成员，不是这个类的成员函数，可以在任何位置调用
 
-> 代码参考：
-
-
-
 #### 友元类
 
 类A中的成员函数可以访问另一个类B的私有或者保护成员，友元类A的声明在类B的声明中，而具体实现在类B外面
 
-> 代码参考：
+> 代码参考：[base_code/friend_func_class.cpp](base_code/friend_func_class.cpp)
 
 
 
@@ -462,15 +458,15 @@ C++中的多态：在C++中会维护一张虚函数表
 
 - 基本使用
 
-  > 代码参考：
+  > 代码参考：[base_code/using_global.cpp](base_code/using_global.cpp)
 
 - 改变访问性：访问父类的私有成员
 
-  > 代码参考：
+  > 代码参考：[base_code/derived_base.cpp](base_code/derived_base.cpp)
 
 - 函数重载
 
-  > 代码参考：
+  > 代码参考：[base_code/using_derived.cpp](base_code/using_derived.cpp)
 
 - 取代typedef
 
@@ -487,7 +483,7 @@ C++中的多态：在C++中会维护一张虚函数表
 - 类作用域：`class::name`
 - 命名空间作用域符：`namespace::name`
 
-> 代码参考：
+> 代码参考：[base_code/colon.cpp](base_code/colon.cpp)
 
 
 
