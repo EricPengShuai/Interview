@@ -1,4 +1,4 @@
-#define NDEBUG
+#define NDEBUG  // assert 只有在Debug版本中才有效，因此如果加这句话会忽略 assert 语句
 #include <cassert>
 
 using namespace std;
