@@ -10,13 +10,13 @@
 
 > 不同公司的面试总结
 
-- [ByteDanceGuide.md](https://github.com/EricPengShuai/Interview/blob/main/Guide/ByteDanceGuide.md)：字节面试指南
-- [KuaishowGuide.md](https://github.com/EricPengShuai/Interview/blob/main/Guide/KuaishowGuide.md)：快手面试指南
-- [Baidu.md](https://github.com/EricPengShuai/Interview/blob/main/Guide/baiduGuide.md)：百度面试指南
+- [ByteDanceGuide.md](./Guide/ByteDanceGuide.md)：字节面试指南
+- [KuaishowGuide.md](./Guide/KuaishowGuide.md)：快手面试指南
+- [Baidu.md](./Guide/baiduGuide.md)：百度面试指南
 
 
 
-## review dir
+## Review dir
 
 > 不同公司的面经
 
@@ -85,7 +85,16 @@
 - [lambda.cpp](./c++2.0/lambda.cpp)：lambda表达式基本使用
 - [variadic.cpp](./c++2.0/variadic.cpp)：数量不定的模板参数
 
+  
 
+## memo dir
+
+> 处理链表二叉树等数据结构以及输入处理技巧
+
+- [listnode.cpp](./memo/listnode.cpp): 链表
+- [treenode.cpp](./memo/treenode.cpp): 二叉树
+
+  
 
 ## 其他
 
