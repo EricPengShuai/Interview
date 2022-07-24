@@ -554,7 +554,7 @@ C++11 提供的正则表达式库操作 std::string 对象，模式 std::regex (
 
 另 一 种 常 用 的 形 式 就 是 依 次 传 入 `std::string/std::smatch/std::regex` 三 个 参 数， 其 中 std::smatch 的本质其实是 `std::match_results`。 在标准库中，std::smatch 被定义为了 `std::match_results<std::string::const_iterator>`，也就是一个子串迭代器类型的 match_results。 使用 std::smatch 可以方便的对匹配的结果进行获取，例如：
 
-代码参考：[regexEx.cpp](./regexEx.cpp)
+代码参考：[regex.cpp](./regex.cpp)
 
   
 
