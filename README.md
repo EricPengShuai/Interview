@@ -68,14 +68,15 @@
 
 > C++实战代码和一些备忘知识点
 
-- [unique_ptr.cpp](./practice/unique_ptr.cpp)：智能指针
+- [unique_ptr.cpp](./practice/unique_ptr_ex.cpp)：智能指针
 - [const_volatile.cpp](./practice/const_volatile.cpp)：通过**volatile**关键字修改**const**常量
 - [static_in_class.cpp](./practice/static_in_class.cpp)：类中定义的静态成员变量不占类的大小，**在类外分配空间**；静态成员函数不能调用非静态成员，因为缺乏**this**指针
 - [++i_i++.cpp](./practice/++i_i++.cpp)：**++i**和**i++**的[区别](https://www.php.cn/csharp-article-443596.html)，**++i**可以作为左值，`i++`不能作为左值（需要调用拷贝构造函数，测试之后只有一次？）
 - [regexEx.cpp](./practice/regexEx.cpp)：C++正则表达式**regex**的用法
 - [tieTuple.cpp](./practice/tieTuple.cpp)：C++标准库函数**tie**和**tuple**的用法
-- ……
-
+- [small_big_end.cpp](./practice/small_big_end.cpp): 大小端问题，“大端正着看，小端反着看”
+- [accumulate.cpp](./practice/accumulate.cpp)：标准库的求和模板函数
+- ......
 
 
 ## c++2.0 dir
