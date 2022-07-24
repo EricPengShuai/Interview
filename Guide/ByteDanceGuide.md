@@ -814,7 +814,7 @@ https://zhuanlan.zhihu.com/p/45338392
 1. 首先分8组，每组8匹马，跑8轮，淘汰每组的后4名（这样还剩32匹）
 2. 将之前8个组的第一名拿出来继续比，淘汰后4名马所在组的所有马（这样还剩16匹）
 3. 目前可以得到跑的最快的马，*然后淘汰一些*，得到9匹马
-4. [最后选择除开$B_2$的其他8匹马比一下](https://blog.csdn.net/qq_44756792/article/details/103851500?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param)
+4. [最后选择除开$B_2$的其他8匹马比一下](https://urlify.cn/Zzummq)
 
 > 最少10轮，最多11轮
 
@@ -825,38 +825,35 @@ https://zhuanlan.zhihu.com/p/45338392
 #### 5. 实现快速排序
 
 ```c++
-int Partition(int a[], int low, int high)
-{
-	int pivotkey = a[low];
-  while(low < high) 
-  {
-    while(low < high && a[high] >= pivotkey)
-      -- high;
-    a[low] = a[high];
-    while(low < high && a[low] <= pivotkey)
-      ++ low;
-    a[high] = a[low];
-	}
-  a[low] = pivotkey;
-  return low;
-}
-
 void QuickSort(int a[], int low, int high)
 {
-  int pivotkey;
-  if (low < high)
-  {
-    pivotkey = Partition(a, low, high);
-    QuickSort(a, low, pivotkey - 1);
-    QuickSort(a, pivotkey + 1, high);
-  }
+	int pivotkey;
+    if (low  >= high) {
+        return;
+    }
+    
+    int i = low, j = high;
+    int key = a[i];
+	while(i < j) 
+	{
+		while(i < j && a[j] >= key)
+		  -- j;
+		a[i] = a[j];
+		while(i < j && a[i] <= key)
+		  ++ i;
+		a[j] = a[i];
+	}
+	a[i] = key;
+	
+    QuickSort(a, low, i - 1);
+    QuickSort(a, i + 1, high);
 }
 
 int main()
 {
-  int a[] = {5, 1, 4, 2, 3, 8};
-  QuickSort(a, 0, 5);
-  return 0;
+	int a[] = {5, 1, 4, 2, 3, 8};
+	QuickSort(a, 0, 5);
+	return 0;
 }
 ```
 [215. 数组中的第K个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
@@ -869,7 +866,7 @@ int main()
 
 #### 7. [搜索旋转排序数组leetcode33](https://leetcode-cn.com/problems/search-in-rotated-sorted-array/) [搜索旋转排序数组 II leetcode81](https://leetcode-cn.com/problems/search-in-rotated-sorted-array-ii/)
 
-> 如何判断是左半边有序还是右半边有序，直接`a[left] >= a[0]`
+> 如何判断是左半边有序还是右半边有序：`a[left] <= a[mid] ? 左半边有序 : 右半边有序`
 >
 > 如果有重复的就直接`left += 1`，相当于去掉一个重复的干扰项。
 
@@ -975,9 +972,10 @@ class Solution:
 
 
 
-#### 11.给定一个 foo 函数，60%的概率返回0，40%的概率返回1，如何利用 foo 函数实现一个 50% 返回 0 的函数
+#### 11.给定一个 foo 函数，60%的概率返回0，40%的概率返回1，如何利用 foo 函数实现一个 50% 返回 0 或 1 的函数
 
 ```c++
+// 调用foo两次即可，连续两次，出现 0 1 和 1 0 的概率是一样的，于是就能构造出50%（两次返回 0 0 或 1 1的结果丢掉，重新调用）
 int half01()
 {
   while(1)
