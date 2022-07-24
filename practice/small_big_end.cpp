@@ -19,7 +19,7 @@ int main() {
         if (un.c[0] == 1 && un.c[1] == 2) {
             cout << "大端" << endl;
         } else if (un.c[1] == 1 && un.c[0] == 2) {
-            cout << "小端" << endl;
+            cout << "小端 " << un.s << endl;
         } else {
             cout << "unknown" << endl;
         }
