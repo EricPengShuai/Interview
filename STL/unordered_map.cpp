@@ -7,36 +7,36 @@ bool isPossible(vector<int>& nums)
 {
     unordered_map<int, int> nc, tail;
     // 遍历vector
-    for(vector<int>::iterator it = nums.begin(); it != nums.end(); ++ it) {
-        nc[*it] ++;
+    for(int & num : nums) {
+        nc[num] ++;
     }
     // 遍历unordered_map
-    for(unordered_map<int, int>::iterator it = nc.begin(); it != nc.end(); ++ it) {
-        cout << "nc.first: " << (*it).first << " nc.second: " << (*it).second << endl;
+    for(auto & it : nc) {
+        cout << "nc.first: " << it.first << " nc.second: " << it.second << endl;
     }
     
     // LeetCode 659:https://leetcode-cn.com/problems/split-array-into-consecutive-subsequences/
-    for(vector<int>::iterator it = nums.begin(); it != nums.end(); ++ it) {
-        if (nc[(*it)] == 0) {
+    for(int & num : nums) {
+        if (nc[num] == 0) {
             continue;
         } 
         // 这个else if顺序不能调换
-        else if (nc[(*it)] > 0 && nc[(*it)+1] > 0 && nc[(*it)+2] > 0) {
-            nc[(*it)] --;
-            nc[(*it)+1] --;
-            nc[(*it)+2] --;
-            tail[(*it)+2] ++;
-        } else if (nc[(*it)] > 0 && tail[(*it)-1] > 0) {
-            tail[(*it)-1] --;
-            tail[(*it)] ++;  
-            nc[(*it)] --;
+        else if (nc[num] > 0 && nc[num+1] > 0 && nc[num+2] > 0) {
+            nc[num] --;
+            nc[num+1] --;
+            nc[num+2] --;
+            tail[num+2] ++;
+        } else if (nc[num] > 0 && tail[num-1] > 0) {
+            tail[num-1] --;
+            tail[num] ++;
+            nc[num] --;
         } else {
             return false;
         }
     }
     // 遍历unordered_map
-    for(unordered_map<int, int>::iterator it = tail.begin(); it != tail.end(); ++ it) {
-        cout << "tail.first: " << (*it).first << " tail.second: " << (*it).second << endl;
+    for(auto & it : tail) {
+        cout << "tail.first: " << it.first << " tail.second: " << it.second << endl;
     }
     return true;
 }
