@@ -505,6 +505,7 @@ int main () {
 
 
 - std::shared_ptr 可以通过 get() 方法来获取原始指针，通过 reset() 来减少一个引用计数，并 通过 use_count() 来查看一个对象的引用计数。
+- 根据 [cppreference](https://cplusplus.com/reference/memory/shared_ptr/)：`shared_ptr` 对象可以共享指针的所有权，同时指向另一个对象。这种能力被称为 `aliasing`，通常用于指向成员对象，同时拥有它们所属的对象。因此，shared_ptr 可能与两个指针有关：① **stored pointer**: is said to point to, and the one it dereferences with operator; ② **owned pointer**: is the pointer the ownership group is in charge of  deleting at some point
 
 代码参考：[shared_ptr.cpp](./shared_ptr.cpp)
 
@@ -521,6 +522,15 @@ std::unique_ptr<int> pointer2 = pointer; // 非法
 ```
 
 既然是独占， 换句话说就是不可复制。 但是， 我们可以利用 std::move 将其转移给其他的 unique_ptr，例如：[unique_ptr.cpp](./unique_ptr.cpp)
+
+
+
+**注意📢：一般来说，unique_ptr 比 shared_ptr 性能更好**
+
+`sizeof(unique_ptr<T>) = sizeof(void*)`, `sizeof(shared_ptr<T>) = sizeof(weak_ptr<T>) = sizeof(void*)*2`，前者能做到几乎零花销，很多情况下开-O1能做到跟new-delete相同的效率，且**能保证异常安全**；后者多出来一个指向引用计数控制块的指针，当不使用`make_shared`时，两块资源的内存是分开的，即会多一次内存分配。
+日常开发很少需要资源共享，只是需要实现 RAII 而已，使用`unique_ptr`足矣。
+
+参考：https://github.com/LeetCode-Feedback/LeetCode-Feedback/issues/8693#issuecomment-1218950002
 
 
 
