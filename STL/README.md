@@ -24,6 +24,9 @@
 
 ## queue vs deque
 
+- 两者最主要的区别是：具体参考 [queue_vs_deque.md](queue_vs_deque.md)
+  - deque支持push_front、pop_front、push_back、pop_back
+  - queue支持push（实际上就是pop_back）、pop（实际上就是pop_front）
 - *[priority_queue.cpp](./priority_queue.cpp)*：优先队列用法，默认是大顶推
 
 

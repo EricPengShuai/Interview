@@ -22,4 +22,4 @@
 和queue最主要的区别是
 
 - deque支持push_front、pop_front、push_back、pop_back
-- queue支持push_back、pop_front
+- queue支持push（实际上就是pop_back）、pop（实际上就是pop_front）
