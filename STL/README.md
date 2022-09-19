@@ -34,7 +34,7 @@
 ## map vs set
 
 - **map**封装了二叉树等 
-    - *[mapSTL.cpp](./mapSTL.cpp)*：**map**底层是一个红黑树，有序的，一般处理有序的情况
+    - *[mapSTL.cpp](./mapSTL.cpp)*：**map**底层是一个红黑树，有序的（按照key排序），一般处理有序的情况
     - *[unordered_map.cpp](./unordered_map.cpp)*: **unordered_map** 底层是一个哈希表，便于查找，但是内存占用比较高
     - **map** 和 **unordered_map**外部操作都是一样的，只是内部实现不一样
 - **set**也是封装了二叉树，基于红黑树实现
