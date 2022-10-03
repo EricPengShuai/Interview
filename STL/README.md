@@ -12,7 +12,10 @@
 
 ## list
 
-- **list**封装了链表: 便于插入和删除
+- forward_list 是单向链表，list 是双向链表
+- 两者都是序列容器，可以在 O(1) 时间内插入和删除元素
+- *[list](./list.cpp)*：list 和 forward_list 的基本用法
+  - splice 转移函数，LeetCode LRU 经典题目用法：[146. LRU 缓存](https://leetcode.cn/problems/lru-cache/)
 
 
 
