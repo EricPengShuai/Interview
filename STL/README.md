@@ -42,7 +42,7 @@
     - **map** 和 **unordered_map**外部操作都是一样的，只是内部实现不一样
 - **set**也是封装了二叉树，基于红黑树实现
     - 和**map**的区别就是将value作为key，map的key和value是分开的；map允许修改value不允许修改key，set的迭代器是const，不允许修改元素的值
-    - *[setSTL.cpp](./setSTL.cpp)*：**multiset**用法，和**set**类似，只是前者可以保存元素，后者不保存，默认时升序排列的也就是 **multiset<int, less\<int\>>**
+    - *[setSTL.cpp](./setSTL.cpp)*：**multiset**用法，和**set**类似，只是前者可以保存重复元素，后者不保存，默认时升序排列的也就是 **multiset<int, less\<int\>>**
 
 
 
