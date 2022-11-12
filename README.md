@@ -100,6 +100,7 @@
 ## 其他
 
 - [CMakeLists.txt](./CMakeLists.txt)：方便CLion同时编译多个文件的配置文件
+- [CPPhelper.md](./CPPhelper.md)：一些关于 CPP 的零碎知识，例如 g++, CMakeLists.txt, makefile 等
 - [C++\_base.md_](./C++_base.md)：来自北邮《C++面向对象程序设计实践》课程知识点和基础关键字代码
 
 - [C_C++.md](./C_C++.md)：摘自[拓跋阿秀](https://github.com/forthespada/InterviewGuide)
