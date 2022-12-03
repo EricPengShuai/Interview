@@ -36,13 +36,29 @@
 
 ## map vs set
 
-- **map**封装了二叉树等 
-    - *[mapSTL.cpp](./mapSTL.cpp)*：**map**底层是一个红黑树，有序的（按照key排序），一般处理有序的情况
-    - *[unordered_map.cpp](./unordered_map.cpp)*: **unordered_map** 底层是一个哈希表，便于查找，但是内存占用比较高
-    - **map** 和 **unordered_map**外部操作都是一样的，只是内部实现不一样
-- **set**也是封装了二叉树，基于红黑树实现
-    - 和**map**的区别就是将value作为key，map的key和value是分开的；map允许修改value不允许修改key，set的迭代器是const，不允许修改元素的值
-    - *[setSTL.cpp](./setSTL.cpp)*：**multiset**用法，和**set**类似，只是前者可以保存重复元素，后者不保存，默认时升序排列的也就是 **multiset<int, less\<int\>>**
+- **map** 封装了二叉树等 
+    
+    - *[mapSTL.cpp](./mapSTL.cpp)*：`map`底层是一个红黑树，有序的（按照`key`排序），一般处理有序的情况
+    - *[unordered_map.cpp](./unordered_map.cpp)*: `unordered_map` 底层是一个哈希表，便于查找，但是内存占用比较高
+    - `map` 和 `unordered_map` 外部操作都是一样的，只是内部实现不一样
+    
+- **set** 也是封装了二叉树，基于红黑树实现
+    
+    - 和 `map` 的区别就是将 `value` 作为 `key`，`map` 的 `key` 和 `value` 是分开的；`map`允许修改 `value` 不允许修改 `key`，`set` 的迭代器是 `const`，不允许修改元素的值
+    
+    - *[setSTL.cpp](./setSTL.cpp)*：`multiset` 用法，和 `set` 类似，只是前者可以保存重复元素，后者不保存，默认时升序排列的也就是 `multiset<int, less<int>>`
+    
+      ```cpp
+      set<int> st;
+      
+      int a = *st.begin();
+      int b = *(++st.begin());
+      int c = *(st.begin()+1); 	// error 
+      
+      vector<int> vt(3);
+      int d = *(vt.begin()+1);	// ok
+      int e = *(++vt.begin());	// ok
+      ```
 
 
 
