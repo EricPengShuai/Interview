@@ -37,13 +37,13 @@
 ## map vs set
 
 - **map** 封装了二叉树等 
-    
+  
     - *[mapSTL.cpp](./mapSTL.cpp)*：`map`底层是一个红黑树，有序的（按照`key`排序），一般处理有序的情况
     - *[unordered_map.cpp](./unordered_map.cpp)*: `unordered_map` 底层是一个哈希表，便于查找，但是内存占用比较高
     - `map` 和 `unordered_map` 外部操作都是一样的，只是内部实现不一样
     
 - **set** 也是封装了二叉树，基于红黑树实现
-    
+  
     - 和 `map` 的区别就是将 `value` 作为 `key`，`map` 的 `key` 和 `value` 是分开的；`map`允许修改 `value` 不允许修改 `key`，`set` 的迭代器是 `const`，不允许修改元素的值
     
     - *[setSTL.cpp](./setSTL.cpp)*：`multiset` 用法，和 `set` 类似，只是前者可以保存重复元素，后者不保存，默认时升序排列的也就是 `multiset<int, less<int>>`
@@ -113,6 +113,29 @@
        ```
 
 > :warning: 注意这里自定义的函数**不能加等号**！！！
+
+
+
+## thread
+
+> C++ 11 引入 <thread> 头文件，主要用于实现多线程编程，并结合互斥类 <mutex> 实现临界区的访问
+
+代码参考 [thread.cpp](./thread.cpp)，主要的成员函数有
+
+- `get_id()`：获取线程ID，返回一个类型为`std::thread::id`的对象
+- `joinable()`：检查线程是否可被 join 。检查 thread 对象是否标识一个活动 (active) 的可行性线程。缺省构造的 thread 对象、已经完成 join 的 thread 对象、已经 detach 的 thread 对象都不是 joinable
+- `join()`：调用该函数会**阻塞当前线程**。阻塞调用者 (caller) 所在的线程直至被 join 的 std::thread 对象标识的线程执行结束
+- `detach()`：将当前线程对象所代表的执行实例与该线程对象分离，**使得线程的执行可以单独进行**。一旦线程执行完毕，它所分配的资源将会被释放
+- `native_handle()`：该函数返回与 `std::thread` 具体实现相关的线程句柄。`native_handle_type` 是连接thread 类和操作系统 SDK API 之间的桥梁，如在 Linux g++(libstdc++) 里，native_handle_type 其实就是pthread 里面的 pthread_t 类型，当 thread 类的功能不能满足我们的要求的时候 (比如改变某个线程的优先级)，可以通过 thread 类实例的 `native_handle()` 返回值作为参数来调用相关的 pthread 函数达到目的
+- `swap(t1, t2)`：交换两个线程对象所代表的底层句柄
+- `operator=`：moves the thread object
+- `hardware_concurrency()`：静态成员函数，返回当前计算机最大的硬件并发线程数目。基本上可以视为处理器的核心数目
+
+**参考：**
+
+1. [C++ thread用法总结(整理)](https://blog.csdn.net/sevenjoin/article/details/82187127)
+2. [C++ std::thread | 菜鸟教程 (runoob.com)](https://www.runoob.com/w3cnote/cpp-std-thread.html)
+3. [C++ 多线程 | 菜鸟教程 (runoob.com)](https://www.runoob.com/cplusplus/cpp-multithreading.html)
 
 
 
