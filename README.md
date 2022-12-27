@@ -10,9 +10,11 @@
 
 > 不同公司的面试总结
 
-- [ByteDanceGuide.md](./Guide/ByteDanceGuide.md)：字节面试指南
-- [KuaishowGuide.md](./Guide/KuaishowGuide.md)：快手面试指南
-- [Baidu.md](./Guide/baiduGuide.md)：百度面试指南
+1. [ByteDanceGuide.md](./Guide/ByteDanceGuide.md)：字节面试指南
+
+2. [KuaishowGuide.md](./Guide/KuaishowGuide.md)：快手面试指南
+
+3. [Baidu.md](./Guide/baiduGuide.md)：百度面试指南
 
 
 
@@ -20,17 +22,20 @@
 
 > 不同公司的面经
 
-- [百度面经](./review/baidu.md)
-- [字节面经](./review/bytedance.md)
-- [快手面经](./review/kuaishou.md)
-- [红海无线](./review/redInfinity.md)
+1. [百度面经](./review/baidu.md)
+
+2. [字节面经](./review/bytedance.md)
+
+3. [快手面经](./review/kuaishou.md)
+
+4. [红海无线](./review/redInfinity.md)
 
 
 
 ## STL Dir
 
 - C++一些**标准库**的常规使用
-- 具体参考[README.md](./STL)
+- 具体参考 [STL/README.md](./STL)
 
 
 
@@ -38,9 +43,17 @@
 
 > 常见的LeetCode算法总结
 
-- [背包问题](./algorithm/backpack.md)
-- [二叉树迭代遍历方式](./algorithm/二叉树迭代遍历.md)
-- [回溯算法](./algorithm/回溯算法.md)
+1. [背包问题](./algorithm/backpack.md)
+2. [二分查找](./algorithm/二分查找.md)
+3. [回溯算法](./algorithm/回溯算法.md)
+4. [差分数组](./algorithm/差分数组.md)
+5. [单调栈](./algorithm/单调栈.md)
+6. [并查集](./algorithm/并查集.md)
+7. [二叉树遍历方式](./algorithm/二叉树遍历方式.md)
+8. [二叉树路径问题](./algorithm/二叉树路径问题.md)
+9. [排序](./algorithm/排序.md)
+10. [线段树](./algorithm/线段树.md)
+11. [字典树](./algorithm/字典树.md)
 
 
 
@@ -48,19 +61,16 @@
 
 > C++基础关键字的用法，[C++_base.md](./C++_base.md) 中第二部分有相关描述
 
-- [assert.cpp](./base_code/assert.cpp)：断言语句，只有在Debug版本才有效
+1. [assert.cpp](./base_code/assert.cpp)：断言语句，只有在Debug版本才有效
+2. [c_polymorphism.c](c_polymorphism.c), [c++_polymorphism.cpp](./base_code/c++_polymorphism.cpp)：多态在c和c++中的实现
 
-- [c_polymorphism.c](c_polymorphism.c), [c++_polymorphism.cpp](./base_code/c++_polymorphism.cpp)：多态在c和c++中的实现
+> c中使用函数指针，`typedef void (*pf) ();  // 重定义一个函数指针的类型`
+>
+> c++中使用虚函数，`virtual override`
 
-  > c中使用函数指针，`typedef void (*pf) ();  // 重定义一个函数指针的类型`
-  >
-  > c++中使用虚函数，`virtual override`
-
-- [colon.cpp](./base_code/colon.cpp)：c++中冒号的使用，包括全局变量、类成员定义
-
-- [decltype.cpp](./base_code/decltype.cpp)：推导表达式类型，与using/typedef联合使用定义类型
-
-- ……
+3. [colon.cpp](./base_code/colon.cpp)：c++中冒号的使用，包括全局变量、类成员定义
+4. [decltype.cpp](./base_code/decltype.cpp)：推导表达式类型，与using/typedef联合使用定义类型
+5. 更多参考 [base_code文件夹](./base_code) ...
 
 
 
@@ -68,23 +78,22 @@
 
 > C++实战代码和一些备忘知识点
 
-- [unique_ptr.cpp](./practice/unique_ptr_ex.cpp)：智能指针
-- [const_volatile.cpp](./practice/const_volatile.cpp)：通过**volatile**关键字修改**const**常量
-- [static_in_class.cpp](./practice/static_in_class.cpp)：类中定义的静态成员变量不占类的大小，**在类外分配空间**；静态成员函数不能调用非静态成员，因为缺乏**this**指针
-- [++i_i++.cpp](./practice/++i_i++.cpp)：**++i**和**i++**的[区别](https://www.php.cn/csharp-article-443596.html)，**++i**可以作为左值，`i++`不能作为左值（需要调用拷贝构造函数，测试之后只有一次？）
-- [regexEx.cpp](./practice/regexEx.cpp)：C++正则表达式**regex**的用法
-- [tieTuple.cpp](./practice/tieTuple.cpp)：C++标准库函数**tie**和**tuple**的用法
-- [small_big_end.cpp](./practice/small_big_end.cpp): 大小端问题，“大端正着看，小端反着看”
-- [accumulate.cpp](./practice/accumulate.cpp)：标准库的求和模板函数
-- ......
+1. [unique_ptr.cpp](./practice/unique_ptr_ex.cpp)：智能指针
+2. [const_volatile.cpp](./practice/const_volatile.cpp)：通过**volatile**关键字修改**const**常量
+3. [static_in_class.cpp](./practice/static_in_class.cpp)：类中定义的静态成员变量不占类的大小，**在类外分配空间**；静态成员函数不能调用非静态成员，因为缺乏**this**指针
+4. [++i_i++.cpp](./practice/++i_i++.cpp)：**++i**和**i++**的[区别](https://www.php.cn/csharp-article-443596.html)，**++i**可以作为左值，`i++`不能作为左值（需要调用拷贝构造函数，测试之后只有一次？）
+5. [regexEx.cpp](./practice/regexEx.cpp)：C++正则表达式**regex**的用法
+6. [tieTuple.cpp](./practice/tieTuple.cpp)：C++标准库函数**tie**和**tuple**的用法
+7. [small_big_end.cpp](./practice/small_big_end.cpp): 大小端问题，“大端正着看，小端反着看”
+8. [accumulate.cpp](./practice/accumulate.cpp)：标准库的求和模板函数
+9. 更多参考 [practice文件夹](./practice) ...
+
 
 
 ## c++2.0 dir
 
-> C++11/14/17/20新特性
-
-- [lambda.cpp](./c++2.0/lambda.cpp)：lambda表达式基本使用
-- [variadic.cpp](./c++2.0/variadic.cpp)：数量不定的模板参数
+- C++11/14/17/20新特性
+- 具体参考 [c++2.0/README.md](./c++2.0)
 
   
 
@@ -92,16 +101,16 @@
 
 > 处理链表二叉树等数据结构以及输入处理技巧
 
-- [listnode.cpp](./memo/listnode.cpp): 链表
-- [treenode.cpp](./memo/treenode.cpp): 二叉树
+1. [listnode.cpp](./memo/listnode.cpp): 链表
+2. [treenode.cpp](./memo/treenode.cpp): 二叉树
 
-  
+
 
 ## 其他
 
 - [CMakeLists.txt](./CMakeLists.txt)：方便CLion同时编译多个文件的配置文件
 - [CPPhelper.md](./CPPhelper.md)：一些关于 CPP 的零碎知识，例如 g++, CMakeLists.txt, makefile 等
-- [C++\_base.md_](./C++_base.md)：来自北邮《C++面向对象程序设计实践》课程知识点和基础关键字代码
+- [C++\_base.md](./C++_base.md)：来自北邮《C++面向对象程序设计实践》课程知识点和基础关键字代码
 
 - [C_C++.md](./C_C++.md)：摘自[拓跋阿秀](https://github.com/forthespada/InterviewGuide)
 
