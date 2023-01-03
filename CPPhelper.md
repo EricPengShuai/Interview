@@ -208,3 +208,5 @@ clean:
 - [[收藏\]跟我一起写 Makefile (共 14 篇)](https://blog.csdn.net/coofucoo/article/details/446111)
 
 - [:star2: Make 命令教程 - 阮一峰的网络日志 (ruanyifeng.com)](https://www.ruanyifeng.com/blog/2015/02/make.html)
+
+- [Make Options -- GNU Make Manual](https://www.gnu.org/software/make/manual/html_node/Options-Summary.html#Options-Summary)
