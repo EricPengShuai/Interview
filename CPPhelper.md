@@ -23,10 +23,9 @@ C++  可变参数：[C++函数可变参数-C++函数参数三个点](https://hai
 
 ### CMakeLists && Makefile
 
-<img src="https://img-blog.csdnimg.cn/b09e5d64b63f4f2594aed9910d776916.png" style="zoom:80%;" align="left"/>
+<img src="https://img-blog.csdnimg.cn/b09e5d64b63f4f2594aed9910d776916.png" style="zoom:80%;"/>
 
   
-
 #### 1. CMakeLists
 
 CMake是一种跨平台编译工具，比make更为高级，使用起来要方便得多。CMake主要是编写CMakeLists.txt文件，然后用cmake命令将CMakeLists.txt文件转化为make所需要的makefile文件，最后用make命令编译源码生成可执行程序或共享库（so(shared object)）。因此CMake的编译基本就两个步骤：cmake 和 make
