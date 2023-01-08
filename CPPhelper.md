@@ -25,7 +25,7 @@ C++  可变参数：[C++函数可变参数-C++函数参数三个点](https://hai
 
 <img src="https://img-blog.csdnimg.cn/b09e5d64b63f4f2594aed9910d776916.png" style="zoom:80%;"/>
 
-  
+
 #### 1. CMakeLists
 
 CMake是一种跨平台编译工具，比make更为高级，使用起来要方便得多。CMake主要是编写CMakeLists.txt文件，然后用cmake命令将CMakeLists.txt文件转化为make所需要的makefile文件，最后用make命令编译源码生成可执行程序或共享库（so(shared object)）。因此CMake的编译基本就两个步骤：cmake 和 make
@@ -88,8 +88,17 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} m)
 # ${PROJECT_NAME}：本CMakeLists.txt的project名称
 project(xxx)
 
+# 控制编译流程，相当于C语言中的宏条件编译
+# https://blog.csdn.net/lhl_blog/article/details/123553686
+option(<variable> "<help_text>" [value]))
+
 # 获取路径下所有的.cpp/.c/.cc文件，并赋值给变量中
 aux_source_directory(路径 变量)
+
+# 查找对应的库
+# https://www.jianshu.com/p/8a64c77343cb
+# https://blog.csdn.net/comedate/article/details/109684446
+find_library(<VAR> name [path1 path2 ...])
 
 # 给文件名/路径名或其他字符串起别名，用${变量}获取变量内容
 set(变量 文件名/路径/...)
