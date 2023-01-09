@@ -15,7 +15,25 @@
 
 
 
-**可变参数**
+### 静态库和动态库
+
+**gcc/g++ 链接 .so/.a 文件**
+
+- .so 是 linux 的动态库，对应 windows 上的 .dll
+- .a 是 linux 的静态库，对应 windows 上的 .lib
+
+```shell
+# 当前文件夹下面有库文件 libsource.a/libsource.so
+g++ app.cc -L. -lsource -o app
+```
+
+参考：https://blog.csdn.net/FenDouZuoQingChun/article/details/103185861
+
+
+
+### C++ Tips
+
+**1. 可变参数**
 
 C++  可变参数：[C++函数可变参数-C++函数参数三个点](https://haicoder.net/cpp/cpp-function-varlist.html)
 
@@ -88,6 +106,11 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} m)
 # ${PROJECT_NAME}：本CMakeLists.txt的project名称
 project(xxx)
 
+# CMAKE_CXX_FLAGS
+# https://blog.csdn.net/u013250861/article/details/127935119
+# 编译选项：https://blog.csdn.net/zhizhengguan/article/details/111743586
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -D__const__=__unused__")
+
 # 控制编译流程，相当于C语言中的宏条件编译
 # https://blog.csdn.net/lhl_blog/article/details/123553686
 option(<variable> "<help_text>" [value]))
@@ -134,20 +157,6 @@ target_link_libraries(库文件名称/可执行文件名称 链接的库文件�
 
 - https://blog.csdn.net/afei__/article/details/81201039
 - [CMake Reference Documentation — CMake 3.25.0-rc4 Documentation](https://cmake.org/cmake/help/v3.25/)
-
-
-
-**gcc/g++ 链接 .so/.a 文件**
-
-- .so 是 linux 的动态库，对应 windows 上的 .dll
-- .a 是 linux 的静态库，对应 windows 上的 .lib
-
-```shell
-# 当前文件夹下面有库文件 libsource.a/libsource.so
-g++ app.cc -L. -lsource -o app
-```
-
-参考：https://blog.csdn.net/FenDouZuoQingChun/article/details/103185861
 
 
 
