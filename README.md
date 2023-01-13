@@ -43,7 +43,7 @@
 
 > 常见的LeetCode算法总结
 
-1. [背包问题](./algorithm/backpack.md)
+1. [背包问题](./algorithm/背包问题.md)
 2. [二分查找](./algorithm/二分查找.md)
 3. [回溯算法](./algorithm/回溯算法.md)
 4. [差分数组](./algorithm/差分数组.md)
@@ -54,6 +54,10 @@
 9. [排序](./algorithm/排序.md)
 10. [线段树](./algorithm/线段树.md)
 11. [字典树](./algorithm/字典树.md)
+12. [双指针](./algorithm/双指针.md)
+13. [最长上升子序列](./algorithm/最长上升子序列.md)
+14. [数位DP](./algorithm/数位DP.md)
+15. [其他算法](./algorithm/others.md)
 
 
 
