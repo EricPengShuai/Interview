@@ -46,18 +46,19 @@
 1. [背包问题](./algorithm/背包问题.md)
 2. [二分查找](./algorithm/二分查找.md)
 3. [回溯算法](./algorithm/回溯算法.md)
-4. [差分数组](./algorithm/差分数组.md)
-5. [单调栈](./algorithm/单调栈.md)
-6. [并查集](./algorithm/并查集.md)
-7. [二叉树遍历方式](./algorithm/二叉树遍历方式.md)
-8. [二叉树路径问题](./algorithm/二叉树路径问题.md)
-9. [排序](./algorithm/排序.md)
-10. [线段树](./algorithm/线段树.md)
-11. [字典树](./algorithm/字典树.md)
-12. [双指针](./algorithm/双指针.md)
-13. [最长上升子序列](./algorithm/最长上升子序列.md)
-14. [数位DP](./algorithm/数位DP.md)
-15. [其他算法](./algorithm/others.md)
+4. [搜索算法](./algorithm/搜索算法.md)
+5. [差分数组](./algorithm/差分数组.md)
+6. [单调栈](./algorithm/单调栈.md)
+7. [并查集](./algorithm/并查集.md)
+8. [二叉树遍历方式](./algorithm/二叉树遍历方式.md)
+9. [二叉树路径问题](./algorithm/二叉树路径问题.md)
+10. [排序](./algorithm/排序.md)
+11. [线段树](./algorithm/线段树.md)
+12. [字典树](./algorithm/字典树.md)
+13. [双指针](./algorithm/双指针.md)
+14. [最长上升子序列](./algorithm/最长上升子序列.md)
+15. [数位DP](./algorithm/数位DP.md)
+16. [其他算法](./algorithm/others.md)
 
 
 
@@ -66,11 +67,12 @@
 > C++基础关键字的用法，[C++_base.md](./C++_base.md) 中第二部分有相关描述
 
 1. [assert.cpp](./base_code/assert.cpp)：断言语句，只有在Debug版本才有效
+
 2. [c_polymorphism.c](c_polymorphism.c), [c++_polymorphism.cpp](./base_code/c++_polymorphism.cpp)：多态在c和c++中的实现
 
-> c中使用函数指针，`typedef void (*pf) ();  // 重定义一个函数指针的类型`
->
-> c++中使用虚函数，`virtual override`
+   > c中使用函数指针，`typedef void (*pf) ();  // 重定义一个函数指针的类型`
+   >
+   > c++中使用虚函数，`virtual override`
 
 3. [colon.cpp](./base_code/colon.cpp)：c++中冒号的使用，包括全局变量、类成员定义
 4. [decltype.cpp](./base_code/decltype.cpp)：推导表达式类型，与using/typedef联合使用定义类型
@@ -113,8 +115,7 @@
 ## 其他
 
 - [CMakeLists.txt](./CMakeLists.txt)：方便CLion同时编译多个文件的配置文件
+- [C_C++.md](./C_C++.md)：C/C++八股文，摘自[拓跋阿秀](https://github.com/forthespada/InterviewGuide)
 - [CPPhelper.md](./CPPhelper.md)：一些关于 CPP 的零碎知识，例如 g++, CMakeLists.txt, makefile 等
 - [C++\_base.md](./C++_base.md)：来自北邮《C++面向对象程序设计实践》课程知识点和基础关键字代码
-
-- [C_C++.md](./C_C++.md)：摘自[拓跋阿秀](https://github.com/forthespada/InterviewGuide)
 
