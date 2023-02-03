@@ -12,7 +12,7 @@
 
 1. [ByteDanceGuide.md](./Guide/ByteDanceGuide.md)：字节面试指南
 
-2. [KuaishowGuide.md](./Guide/KuaishowGuide.md)：快手面试指南
+2. [KuaishouGuide.md](./Guide/KuaishouGuide.md)：快手面试指南
 
 3. [Baidu.md](./Guide/baiduGuide.md)：百度面试指南
 

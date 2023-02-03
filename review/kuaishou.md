@@ -107,15 +107,15 @@
 
 - 绳子：砍两刀成三段，可以组成三角形的概率是？
 
-  - 初中的[线性规划](https://urlify.cn/v2eMvm)
+  - 初中的[线性规划](https://blog.csdn.net/hefenglian/article/details/82463746)
 
-    <img src="https://img-blog.csdn.net/20180906163902428?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hlZmVuZ2xpYW4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" style="zoom:60%" />
+    <img src="https://img-blog.csdn.net/20180906163902428" style="zoom:60%" />
 
-- 随机数生成器：randn()随机生成1~n
+- 随机数生成器：randn() 随机生成1~n
 
-  - 怎样通过rand10()得到rand7()
+  - 怎样通过 rand10() 得到 rand7()
 
-    通过rand10()得到1~10，我直接舍弃大于7的数 就可以了
+    通过 rand10() 得到 1~10，我直接舍弃大于7的数 就可以了
 
-  - 怎样通过[rand7()得到rand10()](https://urlify.cn/BZ3Q7z)
+  - 怎样通过 [rand7() 得到 rand10()](https://blog.csdn.net/yunzhongguwu005/article/details/9191609)
 
