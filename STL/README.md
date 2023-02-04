@@ -30,7 +30,10 @@
 - 两者最主要的区别是：具体参考 [queue_vs_deque.md](queue_vs_deque.md)
   - deque支持push_front、pop_front、push_back、pop_back
   - queue支持push（实际上就是pop_back）、pop（实际上就是pop_front）
-- *[priority_queue.cpp](./priority_queue.cpp)*：优先队列用法，默认是大顶推
+- *[priority_queue.cpp](./priority_queue.cpp)*：优先队列用法
+  - 默认是 `less<int>`：大顶堆，为什么升序确是大顶堆呢，[因为堆排序一个最大堆才会得到升序](https://www.zhihu.com/question/343715076)
+  - [数据结构与算法--排序算法：堆排序 最大堆（大顶堆）和 最小堆（小顶堆）](https://blog.csdn.net/storyfull/article/details/102925462)
+
 
 
 
