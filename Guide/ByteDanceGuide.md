@@ -782,7 +782,35 @@ https://zhuanlan.zhihu.com/p/45338392
 
 
 
-### 👱算法
+### :star2: 算法:star2:
+
+| 题目                                                         | 说明                                                         | 题解                                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [21. 合并两个有序链表](https://leetcode.cn/problems/merge-two-sorted-lists/) | [递归](https://leetcode.cn/submissions/detail/122687963/)注意出口，迭代使用一个 dummy 节点 | [通过](https://leetcode.cn/submissions/detail/337567705/)    |
+| [215. 数组中的第K个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/) | 掌握[快速排序](https://github.com/EricPengShuai/Interview/blob/main/algorithm/%E6%8E%92%E5%BA%8F.md#12-%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F)，截止 partition 的思想递归求得第 k 大元素，最小堆也可 | [快排](https://leetcode.cn/submissions/detail/399440993/) [小顶堆](https://leetcode.cn/submissions/detail/399454576/) |
+| [445. 两数相加 II](https://leetcode.cn/problems/add-two-numbers-ii/) | 链表元素入栈，然后弹出过程就相当于从后面相加，**注意进位**   | [通过](https://leetcode.cn/submissions/detail/337603420/)    |
+| [33. 搜索旋转排序数组](https://leetcode.cn/problems/search-in-rotated-sorted-array/) | 执行 `nums[mid] >= nums[left] ? 左边有序 : 右边有序`，然后二分 | [通过](https://leetcode.cn/submissions/detail/399463997/)    |
+| [81. 搜索旋转排序数组 II](https://leetcode.cn/problems/search-in-rotated-sorted-array-ii/) | 在 LC.33 基础上通过 while 比较临近元素去重                   | [通过](https://leetcode.cn/submissions/detail/399466035/)    |
+| [300. 最长递增子序列](https://leetcode.cn/problems/longest-increasing-subsequence/) | 常规 DP 复杂度 O(N^2)，贪心+二分 O(NlogN)                    | [LIS](https://github.com/EricPengShuai/Interview/blob/main/algorithm/%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97.md) |
+| [剑指 Offer 11. 旋转数组的最小数字](https://leetcode.cn/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/) | 只能比较 nums[mid] > nums[right] 得出 mid 在哪边排序数组中   | [K神](https://leetcode.cn/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/solution/mian-shi-ti-11-xuan-zhuan-shu-zu-de-zui-xiao-shu-3/) |
+| [剑指 Offer 42. 连续子数组的最大和](https://leetcode.cn/problems/lian-xu-zi-shu-zu-de-zui-da-he-lcof/) | 很常规的 DP，另外可以使用两个变量压缩空间                    | [通过](https://leetcode.cn/submissions/detail/126954195/)    |
+| [25. K 个一组翻转链表](https://leetcode.cn/problems/reverse-nodes-in-k-group/) | [递归](https://leetcode.cn/submissions/detail/399578801/)比较繁琐，每 k 个节点入栈比较清晰，但是也要注意细节，比为尾结点之后为空 | [通过](https://leetcode.cn/submissions/detail/399583186/)    |
+| [剑指 Offer 68 - II. 二叉树的最近公共祖先](https://leetcode.cn/problems/er-cha-shu-de-zui-jin-gong-gong-zu-xian-lcof/) | 在 root 的左右子树上面递归，注意返回的条件                   | [通过](https://leetcode.cn/submissions/detail/377104965/)    |
+| [155. 最小栈](https://leetcode.cn/problems/min-stack/)       | 两个栈：一个保存数据，一个保存当前最小值，也可以一个`stack<pair<int, int>>` | [通过](https://leetcode.cn/submissions/detail/170474366/)    |
+| [264. 丑数 II](https://leetcode.cn/problems/ugly-number-ii/) | 暴力，`set<long>`，三指针                                    | [通过](https://leetcode.cn/submissions/detail/399607399/)    |
+| [112. 路径总和](https://leetcode.cn/problems/path-sum/)      | 常规 DFS，[BFS](https://leetcode.cn/submissions/detail/123368565/) 都可以 | [通过](https://leetcode.cn/submissions/detail/358318248/)    |
+| [113. 路径总和 II](https://leetcode.cn/problems/path-sum-ii/) | DFS 回溯写法，BFS 需要弄一个记录父节点的哈希表得到路径       | [BFS](https://leetcode.cn/submissions/detail/399616187/) [DFS](https://leetcode.cn/submissions/detail/358323283/) |
+| [103. 二叉树的锯齿形层序遍历](https://leetcode.cn/problems/binary-tree-zigzag-level-order-traversal/) | 很常规的 BFS，注意下标处理                                   | [通过](https://leetcode.cn/submissions/detail/399617939/)    |
+| [189. 轮转数组](https://leetcode.cn/problems/rotate-array/)  | 三次翻转就可以，可以手写 reverse，也可以直接调库             | [通过](https://leetcode.cn/submissions/detail/338099191/)    |
+| [剑指 Offer 48. 最长不含重复字符的子字符串](https://leetcode.cn/problems/zui-chang-bu-han-zhong-fu-zi-fu-de-zi-zi-fu-chuan-lcof/) | DP，哈希表记录字符最后一次出现的位置                         | [通过](https://leetcode.cn/submissions/detail/370443446/)    |
+| [141. 环形链表](https://leetcode.cn/problems/linked-list-cycle/) | 双指针，注意细节，快指针指向头的下一个位置                   | [通过](https://leetcode.cn/submissions/detail/399627788/)    |
+| [142. 环形链表 II](https://leetcode.cn/problems/linked-list-cycle-ii/) | fast = slow * 2, fast = slow + n*b, 走a+nb步一定是在环入口   | [通过](https://leetcode.cn/submissions/detail/174241823/)    |
+
+---
+
+
+
+### :dizzy:智力题:dizzy:
 
 #### 1. 10亿个数中如何高效地找到最大的一个数以及最大的第 K 个数
 
@@ -819,345 +847,25 @@ https://zhuanlan.zhihu.com/p/45338392
 
 
 
-#### 4. [合并两个有序链表 LC21](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
-
-#### 5. 实现快速排序
+#### 4. 给定一个 foo 函数，60%的概率返回0，40%的概率返回1，如何利用 foo 函数实现一个 50% 返回 0 或 1 的函数
 
 ```c++
-void QuickSort(int a[], int low, int high)
+// 调用foo两次即可，连续两次，出现 0 1 和 1 0 的概率是一样的
+// 于是就能构造出50%（两次返回 0 0 或 1 1的结果丢掉，重新调用）
+int half01() 
 {
-	int pivotkey;
-    if (low  >= high) {
-        return;
+    while(1) {
+        int a = foo();
+        int b = foo();
+
+        if(a != b) return a;
     }
-    
-    int i = low, j = high;
-    int key = a[i];
-	while(i < j) 
-	{
-		while(i < j && a[j] >= key)
-		  -- j;
-		a[i] = a[j];
-		while(i < j && a[i] <= key)
-		  ++ i;
-		a[j] = a[i];
-	}
-	a[i] = key;
-	
-    QuickSort(a, low, i - 1);
-    QuickSort(a, i + 1, high);
-}
-
-int main()
-{
-	int a[] = {5, 1, 4, 2, 3, 8};
-	QuickSort(a, 0, 5);
-	return 0;
-}
-```
-[215. 数组中的第K个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
-
-#### 6. [两数相加 II leetcode445](https://leetcode-cn.com/problems/add-two-numbers-ii/)
-
-> 栈解决
-
-#### 7. [搜索旋转排序数组 LC33](https://leetcode-cn.com/problems/search-in-rotated-sorted-array/) [搜索旋转排序数组II LC81](https://leetcode-cn.com/problems/search-in-rotated-sorted-array-ii/)
-
-> 如何判断是左半边有序还是右半边有序：`a[left] <= a[mid] ? 左半边有序 : 右半边有序`
->
-> 如果有重复的就直接`left += 1`，相当于去掉一个重复的干扰项。
-
-#### 8. 判断有环链表的环长度 最长连续子序列
-
-[最长上升子序列](https://github.com/EricPengShuai/Interview/blob/main/algorithm/%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97.md)
-
-
-
-#### 9. [旋转数组的最小数字](https://leetcode-cn.com/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/)
-
-二分法：
-
-```c++
-class Solution {
-public:
-    int findMin(vector<int>& nums) {
-        int low = 0;
-        int high = nums.size() - 1;
-        while (low < high) {
-            int pivot = low + (high - low) / 2;
-            if (nums[pivot] < nums[high]) {
-                high = pivot;
-            }
-            else if (nums[pivot] > nums[high]) {
-                low = pivot + 1;
-            }
-            else {
-                high -= 1;
-            }
-        }
-        return nums[low];
-    }
-};
-```
-
-
-
-#### 10. [连续子数组的最大和](https://leetcode-cn.com/problems/lian-xu-zi-shu-zu-de-zui-da-he-lcof/)
-
-```python
-# 动态规划
-class Solution:
-    def maxSubArray(self, nums: List[int]) -> int:
-        for i in range(1, len(nums)):
-            nums[i] += max(nums[i - 1], 0)
-        return max(nums)
-```
-
-
-
-#### 11.给定一个 foo 函数，60%的概率返回0，40%的概率返回1，如何利用 foo 函数实现一个 50% 返回 0 或 1 的函数
-
-```c++
-// 调用foo两次即可，连续两次，出现 0 1 和 1 0 的概率是一样的，于是就能构造出50%（两次返回 0 0 或 1 1的结果丢掉，重新调用）
-int half01()
-{
-  while(1)
-  {
-    int a = foo();
-    int b = foo();
-
-    if(a != b) return a;
-  }
 }
 ```
 
 > 有个函数foo，返回0和1的概率都是50%，让你自己写一个函数，使返回0和1的概率分别是30%和70%。
 >
 > 这道题乍一看不知道咋下手，其实还很简单的，相当于利用了遗传算法的思想，每次产生一个数字，然后以为，一共产生四个数字，这样就可以得到一个四位的数字，**即`[0,15]`，只要这个数字大于等于10就抛弃，这样产生`0~9`的数字，而且`0~9`的数字出现的概率是随机的，这样，`0~2`返回0, `3~9`返回1，这样，就满足了题目要求**
-
-
-
-#### 12. [K 个一组翻转链表](https://leetcode-cn.com/problems/reverse-nodes-in-k-group/)
-
-==首先学会反转链表，然后反转每组K个的链表==
-
-这个最好自己比划一下
-
-
-
-#### 13. [二叉树的最近公共祖先](https://leetcode-cn.com/problems/er-cha-shu-de-zui-jin-gong-gong-zu-xian-lcof/)
-
-递归烧脑
-
-```c++
-class Solution {
-public:
-    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        if (root == NULL or root == p or root == q) {
-            return root;
-        }
-        TreeNode* left = lowestCommonAncestor(root->left, p, q);
-        TreeNode* right = lowestCommonAncestor(root->right, p, q);
-      	// 说明左右子树不含有pq
-        if (left == NULL and right == NULL) {
-            return NULL;
-        }
-      	// 右子树含有pq
-        else if (left == NULL) {
-            return right;
-        }
-      	// 左子树还有pq
-        else if (right == NULL) {
-            return left;
-        }
-      	// pq分别在两侧
-        else{
-            return root;
-        } 
-    }
-};
-```
-
-#### 14. [最小栈](https://leetcode-cn.com/problems/min-stack/)
-
-维护两个栈就可以
-
-#### 15. ==丑数==
-
-```python
-class Solution:
-    def nthUglyNumber(self, n: int) -> int:
-        i2 = i3 = i5 = 0
-        nums = [1]
-        if n == 1:
-            return 1
-        for i in range(1, n):
-            ugly = min(nums[i2]*2, nums[i3]*3, nums[i5]*5)
-            nums.append(ugly)
-						# 注意不是elif，只要有相等的都需要前移动
-            if ugly == nums[i2]*2:
-                i2 += 1
-            if ugly == nums[i3]*3:
-                i3 += 1
-            if ugly == nums[i5]*5:
-                i5 += 1
-    
-        return nums[-1]
-```
-
-
-
-#### 16. 路径总和 [Ⅰ](https://leetcode-cn.com/problems/path-sum/comments/) [Ⅱ](https://leetcode-cn.com/problems/path-sum-ii/)
-
-迭代和递归，递归简洁一点，但是有点费脑子，学会判断出口条件
-
-```python
-class Solution:
-    def hasPathSum(self, root: TreeNode, sum: int) -> bool:
-        # 错误
-        # if sum == root.val:
-        #     return True
-        # if root.left:
-        #     return self.hasPathSum(root.left, sum - root.val)
-        # if root.right:
-        #     return self.hasPathSum(root.right, sum - root.val)
-        if root == None:
-            return False
-        if root.left == None and root.right == None:
-            return sum - root.val == 0
-        # 对于某个样例返回null
-        # if self.hasPathSum(root.left, sum - root.val) or self.hasPathSum(root.right, sum - root.val):
-        #     return True
-        return self.hasPathSum(root.left, sum - root.val) or self.hasPathSum(root.right, sum - root.val)
-      
-      
-# 也可以使用BFS求出路径
-class Solution:
-    def pathSum(self, root: TreeNode, sum: int) -> List[List[int]]:
-        res = []
-        # BFS
-        que = collections.deque()
-        que.append((root, [], 0))
-        
-        while que:
-            node, path, total = que.popleft()
-            if node == None:
-                continue
-
-            if not node.left and not node.right and total+node.val == sum:
-                res.append(path[:]+[node.val])
-            
-            que.append((node.left, path+[node.val], total+node.val))
-            que.append((node.right, path+[node.val], total+node.val))
-
-        return res
-```
-
-#### 17. [二叉树的锯齿形层次遍历](https://leetcode-cn.com/problems/binary-tree-zigzag-level-order-traversal/)
-
-```c++
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
- * };
- */
-class Solution {
-public:
-    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
-        vector<vector<int>> res;
-        queue<TreeNode *> q;
-
-        if(root) q.push(root);
-
-        bool lr = true;
-      	// 标准的BFS
-        while(!q.empty()) {
-            int size = q.size();
-            vector<int> level(size, 0);
-            for(int i = 0; i < size; i ++) {
-                TreeNode* node = q.front();
-                q.pop();
-                if(lr == false) {
-                    level[size - i - 1] = node->val;
-                } else {
-                    level[i] = node->val;
-                }
-               
-                if (node->left) {
-                    q.push(node->left);
-                }
-                if (node->right) {
-                    q.push(node->right);
-                }
-            }
-            res.push_back(move(level));
-            lr = !lr;
-        }
-        return res;
-    }
-};
-```
-
-#### 18. [旋转数组](https://leetcode-cn.com/problems/rotate-array/)
-
-```c++
-class Solution {
-public:
-  	// 反转数组的begin到end段
-    void reverse(vector<int>& nums, int begin, int end) {
-        int temp;
-        while(begin < end) {
-            temp = nums[begin];
-            nums[begin] = nums[end];
-            nums[end] = temp;
-            begin ++;
-            end --;
-        }
-    }
-  	// 三次反转
-    void rotate(vector<int>& nums, int k) {
-        if(nums.size() < 2) {
-            return;
-        }
-        k %= nums.size();
-        reverse(nums, 0, nums.size() - k - 1);
-        reverse(nums, nums.size() - k, nums.size() - 1);
-        reverse(nums, 0, nums.size() - 1);
-    }
-};
-```
-
-#### 19. [最长不含重复字符的子字符串](https://leetcode-cn.com/problems/zui-chang-bu-han-zhong-fu-zi-fu-de-zi-zi-fu-chuan-lcof/)
-
-```python
-class Solution:
-    def lengthOfLongestSubstring(self, s: str) -> int:
-        if s == "":
-            return 0
-        dp = [0] * len(s)
-        dp[0] = 1
-        for i in range(1, len(s)):
-            l = s[:i]
-            # print(l, s[i], l.find(s[i]), dp)
-            if l.find(s[i]) == -1:
-                dp[i] = dp[i-1] + 1
-            else:
-                for j in range(len(l)-1, -1, -1):
-                    if l[j] == s[i]:
-                        # 以s[i]结尾的最长序列需要dp[i-1]来定
-                        if i - j > dp[i-1]:
-                            dp[i] = dp[i - 1] + 1
-                        # 以s[i]结尾的最长序列还是用i-j来定
-                        else:
-                            dp[i] = i - j
-                        break
-        # print(dp)
-        return max(dp)
-```
 
 ------
 
