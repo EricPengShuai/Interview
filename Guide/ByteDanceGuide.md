@@ -307,8 +307,6 @@ https://blog.csdn.net/qq_34827674/article/details/108608566
 
 <img src="https://img-blog.csdnimg.cn/20191013113757339.png" alt="封装和解封" style="zoom:70%;" />
 
-983  1080  1119  1157  1199
-
 ##### 2.4 TCP拥塞控制算法
 
 - 慢启动和拥塞避免：拥塞时，swnd=cwnd=1，ssthread=拥塞时cwnd的一半
@@ -344,7 +342,7 @@ https://blog.csdn.net/qq_34827674/article/details/108608566
 
 #### 3. HTTP相关
 ##### 3.1 一次完整的HTTP请求过程
-![HTTP请求过程](https://img-blog.csdn.net/20180928090731646?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwODA0MDA1/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![HTTP请求过程](https://img-blog.csdn.net/20180928090731646)
 
 > [域名解析过程](https://blog.csdn.net/yipiankongbai/article/details/25031461) 
 >
