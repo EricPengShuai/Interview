@@ -22,5 +22,25 @@
   >
   > 另外 25 可以提供两个 5，100 / 25 = 4，所以最终可以产生 **20+4 = 24** 个零
 
+> 技术栈不太匹配，二面不想约了
+
+
+
+### Momenta
+
+> https://www.zhipin.com/job_detail/476d83d1c40b8e801XF-3Ni6F1VS.html
+>
+> 时间：2023.02.08
+>
+> 时长：30min
+
+**一面**
+
+- 自我介绍 5min
+- 视野预测的项目：怎样建模，多个用户请求怎么处理（多个模型）
+- 非递归实现二叉树的前序遍历，[参考](https://github.com/EricPengShuai/Interview/blob/main/algorithm/%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86%E6%96%B9%E5%BC%8F.md)
+
+> 反问：部门具体做啥（C++处理已经训练好的模型或者 feature map）
+
 
 
