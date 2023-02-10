@@ -31,14 +31,6 @@ g++ app.cc -L. -lsource -o app
 
 
 
-### C++ Tips
-
-**1. 可变参数**
-
-C++  可变参数：[C++函数可变参数-C++函数参数三个点](https://haicoder.net/cpp/cpp-function-varlist.html)
-
-
-
 ### CMakeLists && Makefile
 
 <img src="https://img-blog.csdnimg.cn/b09e5d64b63f4f2594aed9910d776916.png" style="zoom:80%;"/>
@@ -227,3 +219,34 @@ clean:
 - [:star2: Make 命令教程 - 阮一峰的网络日志 (ruanyifeng.com)](https://www.ruanyifeng.com/blog/2015/02/make.html)
 
 - [Make Options -- GNU Make Manual](https://www.gnu.org/software/make/manual/html_node/Options-Summary.html#Options-Summary)
+
+
+
+### 备忘知识
+
+#### 1. 可变参数
+
+C++  可变参数：[C++函数可变参数-C++函数参数三个点](https://haicoder.net/cpp/cpp-function-varlist.html)
+
+
+
+#### 2. memset
+
+C 库函数 `void *memset(void *str, int c, size_t n)` 复制字符 `c`（一个无符号字符）到参数 `str` 所指向的字符串的前 `n` 个字符。
+
+注意这里是按照**字节赋值**的，对于整形数组的赋值只能实现赋值 0 和 -1，因为它们的补码全是 0 和 1，按照字节赋值不会出错，但是如果赋值 1 或者其他值就会出错，例如：
+
+```cpp
+// 1 的补码为 0000 0001
+// 赋值之后某个元素为 0000 0001 0000 0001 0000 0001 0000 0001，对应十进制就是 16843009
+int a[3];
+memset(a, 1, sizeof a);
+
+// 结果为：
+16843009 16843009 16843009
+```
+
+> [C 库函数 – memset() | 菜鸟教程 (runoob.com)](https://www.runoob.com/cprogramming/c-function-memset.html)
+>
+> [C++：用memset初始化数组-CSDN博客](https://blog.csdn.net/dashumak/article/details/89517073)
+
