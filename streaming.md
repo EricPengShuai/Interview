@@ -373,10 +373,7 @@ rtsp承载与rtp和rtcp之上，rtsp并不会发送媒体数据，而是使用rt
 
 
 
-
-
 #### 参考
 
 - [从零开始写一个RTSP服务器](https://blog.csdn.net/weixin_42462202/category_9293806.html)
 - [最详细的流媒体传输协议-rtsp协议详解](https://blog.csdn.net/m0_60259116/article/details/123401239)
-- 
