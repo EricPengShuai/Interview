@@ -6,7 +6,15 @@
 ## vector
 
 - [*vector.cpp*](./vector.cpp)：**vector**封装数组: 便于随机访问
+
 - [*emplace_vs_push.cpp*](./emplace_vs_push.cpp)：**emplace_back**和**push_back**的区别：好像是前者效率高
+
+  - 在接受 `T, T&, T&&`作为参数时，empalce_back 和 push_back 没有区别，分别调用普通构造函数、拷贝构造函数和移动构造函数
+  - emplace_back 支持传入 class T 的构造函数的参数，并且此时**没有任何临时变量生成**，但是 push_back 不支持
+
+  > 参考1：https://blog.csdn.net/iaibeyond/article/details/119153008
+  >
+  > 参考2：https://ppipp.blog.csdn.net/article/details/84764104
 
 
 
