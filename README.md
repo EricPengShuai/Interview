@@ -18,26 +18,11 @@
 
 
 
-## Review dir
-
-> 不同公司的面经
-
-1. [百度面经](./review/baidu.md)
-
-2. [字节面经](./review/bytedance.md)
-
-3. [快手面经](./review/kuaishou.md)
-
-4. [红海无线](./review/redInfinity.md)
-
-5. [其他面经](./review/others.md)
-
-
-
 ## STL Dir
 
-- C++一些**标准库**的常规使用
-- 具体参考 [STL/README.md](./STL)
+> C++一些**标准库**的常规使用
+
+包括但不限于 vector, map, set, queue, queue_priority, sort 等等，具体参考 [STL/README.md](./STL)
 
 
 
@@ -82,6 +67,33 @@
 
 
 
+## c++2.0 dir
+
+> C++11/14/17/20新特性
+
+包括但不限于：
+
+- 智能指针
+- 引入了 auto 和 decltype 这两个关键字实现了类型推导
+- 基于范围的 for 循环：for(auto& i : res){}
+- 类和结构体的中初始化列表
+- Lambda 表达式（匿名函数）
+- std::forward_list（单向链表）
+- 右值引用和move语义
+
+具体参考 [c++2.0/README.md](./c++2.0)
+
+
+
+## memo dir
+
+> 处理链表二叉树等数据结构以及输入处理技巧
+
+1. [listnode.cpp](./memo/listnode.cpp): 链表
+2. [treenode.cpp](./memo/treenode.cpp): 二叉树
+
+
+
 ## practice dir
 
 > C++实战代码和一些备忘知识点
@@ -98,27 +110,30 @@
 
 
 
-## c++2.0 dir
-
-- C++11/14/17/20新特性
-- 具体参考 [c++2.0/README.md](./c++2.0)
-
-  
-
-## memo dir
-
-> 处理链表二叉树等数据结构以及输入处理技巧
-
-1. [listnode.cpp](./memo/listnode.cpp): 链表
-2. [treenode.cpp](./memo/treenode.cpp): 二叉树
-
-
-
 ## Streaming Media
 
 流媒体相关知识点，常见协议说明，包括 RTMP、RTSP 等
 
 > 参考：[streaming.md](./streaming.md)
+
+
+
+## Review dir
+
+> 不同公司的面经
+
+1. [百度面经](./review/baidu.md)
+
+2. [字节面经](./review/bytedance.md)
+
+3. [快手面经](./review/kuaishou.md)
+
+4. [阿里云](./review/aliyun.md)
+
+5. [红海无线](./review/redInfinity.md)
+
+6. [其他面经](./review/others.md)
+
 
 
 

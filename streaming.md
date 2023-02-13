@@ -373,7 +373,57 @@ rtsp承载与rtp和rtcp之上，rtsp并不会发送媒体数据，而是使用rt
 
 
 
+#### RTSP Interleaved Frame
+
+一般 RTP/RTCP 通过 UDP 传输数据，往往前者传输音视频数据，后者传输控制信息。如果使用 TCP 传输数据，有时候出于安全设计, 防火墙可能要求 RTSP 控制方法（RTCP）和流数据（RTP）公用一个通信通道，进行交错传输。此时就需要区分 RTP 通道和 RTSP 通道，为此在 RTP 上加一层 RTSP Interleaved Frame，如下图
+
+<img src="https://upload-images.jianshu.io/upload_images/1720840-c723a819613748e1.png" alt="RTSP Interleaved Frame" style="zoom:50%;" />
+
 #### 参考
 
 - [从零开始写一个RTSP服务器](https://blog.csdn.net/weixin_42462202/category_9293806.html)
 - [最详细的流媒体传输协议-rtsp协议详解](https://blog.csdn.net/m0_60259116/article/details/123401239)
+- [RTP/AVP & RTP/AVP/TCP - 简书 (jianshu.com)](https://www.jianshu.com/p/7b9793eb2f4e)
+
+
+
+### DASH
+
+DASH 全称是 Dynamic Adaptive Streaming over HTTP，即基于HTTP的动态自适应的比特率流。在2011年底MPEG和ISO共同制定了MPEG-DASH标准，并于2014年成为首个基于HTTP协议的自适应流媒体技术的国际标准。
+
+
+
+#### MPD
+
+DASH 的 Manifest 文件名为 Media Presentation Descrption(MPD)，使用XML格式，对音视频流作了多个维度的划分，下面我们对其**结构和内容**做一个分析。
+
+MPD文件的结构由外向内分别是 **Period（周期）→AdaptationSet（自适应子集）→Representation（码流）→Segment（片段）**
+
+- **Period：**一个 Period 代表一个时间段，在直播中一般只使用一个 Period，多 Period 只有在一些特殊场景下才会使用。
+- **Adaptation Set：**一个 Period 由一个或者多个 Adaptationset 组成，一组可供切换的不同码率的码流组合成一个自适应子集。
+- **Representation：**每个 Adaptation Set 包含了一个或者多个 Representation，每个 Representation 代表一路**音频流或视频流**。同一个 Adaptation Set 的多个 Representation 之间代表他们由同一路源流产生的不同的码率、分辨率、帧率等等的码流。
+- **Segment：**每个 Representation 包含多个 Segment。与 HLS 类似，每个 Segment 代表一小段音频或视频数据，其中 DASH Segment 常用的载体是使用fmp4格式。
+
+
+
+MPD 文件中有用于描述该DASH流特点的字段参数，如maxSegmentDuration、minBufferTime、minimumUpdatePeriod、publishTime、type等等。也有用于描述视频流信息的字段参数，如bandwidth、codecs、width、height等等。比较重要的两个参数是：
+
+- **minimumUpdatePeriod（MPD最低限度更新时间）：**告诉播放器MPD内容更新间隔，播放器会根据此值来控制MPD轮询更新时间，其值过大会导致内容更新不及时导致卡顿。用于直播场景，点播场景应该不存在。
+- **minBufferTime（最小缓存时间）：**播放器最小的缓存音视频时长，其值需要为最小的segment时长。
+
+
+
+**下载流程**
+
+1. 下载MPD文件，解析DASH相关信息；
+2. 下载视频的Initialization Segment和音频的Initialization Segment；
+3. 下载视频的第一个分片，下载音频的第一个分片；
+4. 当视频和音频的第一个分片都下载完，播放器内部再进行一些相关处理后，就可以开始播放出画面。后续就是不断轮询更新MPD文件和下载后续的音频和视频分片。
+
+
+
+#### 参考
+
+- [DASH, MPD文件, 多码率切换](https://cloud.tencent.com/developer/article/1895146)
+- [MPD 文件结构剖析-CSDN博客](https://blog.csdn.net/luoxueqian/article/details/82982188)
+- [目前几种实时视频流协议对比_leadersmallsmile的博客-CSDN博客](https://blog.csdn.net/leadersmallsmile/article/details/105121995)
