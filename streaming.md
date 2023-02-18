@@ -14,19 +14,21 @@ RTMP 全称是 Real Time Messaging Protocol 即**实时消息传输协议**，�
 
 要建立一个有效的 RTMP Connection 链接，首先要“握手”：客户端要向服务器发送 C0,C1,C2（按序）三个chunk，服务器向客户端发送 S0,S1,S2（按序）三个chunk，然后才能进行有效的信息传输。RTMP协议本身并没有规定这6个Message的具体传输顺序，但 RTMP 协议的实现者需要保证这几点如下：
 
-1. 客户端要等收到S1之后才能发送C2
-2. 客户端要等收到S2之后才能发送其他信息（控制信息和真实音视频等数据）
-3. 服务端要等到收到C0之后发送S1
-4. 服务端必须等到收到C1之后才能发送S2
-5. 服务端必须等到收到C2之后才能发送其他信息（控制信息和真实音视频等数据）
+1. 客户端要等收到 S1 之后才能发送 C2
+2. 客户端要等收到 S2 之后才能发送其他信息（控制信息和真实音视频等数据）
+3. 服务端要等到收到 C0 之后发送 S1
+4. 服务端必须等到收到 C1 之后才能发送 S2
+5. 服务端必须等到收到 C2 之后才能发送其他信息（控制信息和真实音视频等数据）
 
-<img src="https://imagepphcloud.thepaper.cn/pph/image/197/119/729.png" style="zoom:35%;"/>
+<img src="https://s2.loli.net/2023/02/17/971BjW2zoAyN3XI.png" alt="729.png" style="zoom:35%;" />
+
+
 
 **总结**
 
-- 握手开始于客户端发送C0、C1块。服务器收到C0或C1后发送S0和S1。
-- 当客户端收齐S0和S1后，开始发送C2。当服务器收齐C0和C1后，开始发送S2。
-- 当客户端和服务器分别收到S2和C2后，握手完成。
+- 握手开始于客户端发送 C0、C1 块。服务器收到 C0 或 C1 后发送 S0 和 S1。
+- 当客户端收齐 S0 和 S1 后，开始发送 C2。当服务器收齐C0和C1后，开始发送S2。
+- 当客户端和服务器分别收到 S2 和 C2后，握手完成。
 
 > RTMP握手的这个过程就是完成了两件事：
 >
@@ -399,24 +401,24 @@ DASH 的 Manifest 文件名为 Media Presentation Descrption(MPD)，使用XML格
 
 MPD文件的结构由外向内分别是 **Period（周期）→AdaptationSet（自适应子集）→Representation（码流）→Segment（片段）**
 
-- **Period：**一个 Period 代表一个时间段，在直播中一般只使用一个 Period，多 Period 只有在一些特殊场景下才会使用。
-- **Adaptation Set：**一个 Period 由一个或者多个 Adaptationset 组成，一组可供切换的不同码率的码流组合成一个自适应子集。
-- **Representation：**每个 Adaptation Set 包含了一个或者多个 Representation，每个 Representation 代表一路**音频流或视频流**。同一个 Adaptation Set 的多个 Representation 之间代表他们由同一路源流产生的不同的码率、分辨率、帧率等等的码流。
-- **Segment：**每个 Representation 包含多个 Segment。与 HLS 类似，每个 Segment 代表一小段音频或视频数据，其中 DASH Segment 常用的载体是使用fmp4格式。
+- **Period:** 一个 Period 代表一个时间段，在直播中一般只使用一个 Period，多 Period 只有在一些特殊场景下才会使用。
+- **Adaptation Set:** 一个 Period 由一个或者多个 Adaptation Set 组成，一组可供切换的不同码率的码流组合成一个自适应子集。
+- **Representation:** 每个 Adaptation Set 包含了一个或者多个 Representation，每个 Representation 代表一路**音频流或视频流**。同一个 Adaptation Set 的多个 Representation 之间代表他们由同一路源流产生的不同的码率、分辨率、帧率等等的码流。
+- **Segment:** 每个 Representation 包含多个 Segment。与 HLS 类似，每个 Segment 代表一小段音频或视频数据，其中 DASH Segment 常用的载体是使用fmp4格式。
 
 
 
 MPD 文件中有用于描述该DASH流特点的字段参数，如maxSegmentDuration、minBufferTime、minimumUpdatePeriod、publishTime、type等等。也有用于描述视频流信息的字段参数，如bandwidth、codecs、width、height等等。比较重要的两个参数是：
 
-- **minimumUpdatePeriod（MPD最低限度更新时间）：**告诉播放器MPD内容更新间隔，播放器会根据此值来控制MPD轮询更新时间，其值过大会导致内容更新不及时导致卡顿。用于直播场景，点播场景应该不存在。
-- **minBufferTime（最小缓存时间）：**播放器最小的缓存音视频时长，其值需要为最小的segment时长。
+- **minimumUpdatePeriod (MPD最低限度更新时间) :** 告诉播放器MPD内容更新间隔，播放器会根据此值来控制MPD轮询更新时间，其值过大会导致内容更新不及时导致卡顿。用于直播场景，点播场景应该不存在。
+- **minBufferTime (最小缓存时间): ** 播放器最小的缓存音视频时长，其值需要为最小的 segment 时长。
 
 
 
 **下载流程**
 
-1. 下载MPD文件，解析DASH相关信息；
-2. 下载视频的Initialization Segment和音频的Initialization Segment；
+1. 下载 MPD 文件，解析 DASH 相关信息；
+2. 下载视频的 Initialization Segment 和音频的 Initialization Segment；
 3. 下载视频的第一个分片，下载音频的第一个分片；
 4. 当视频和音频的第一个分片都下载完，播放器内部再进行一些相关处理后，就可以开始播放出画面。后续就是不断轮询更新MPD文件和下载后续的音频和视频分片。
 
