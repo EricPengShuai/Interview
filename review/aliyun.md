@@ -226,3 +226,57 @@ int main()
 > [网络层中查找路由表的过程（图文详解）路由表查找规则](https://blog.csdn.net/qq1350975694/article/details/106948945)
 >
 > [无分类编址 CIDR（构造超网） - 腾讯云 (tencent.com)](https://cloud.tencent.com/developer/article/1671928)
+
+
+
+#### 二面
+
+> 2023.02.18，整个差不多 55min
+
+- 项目1：**quic 建立连接过程**
+
+  <img src="https://img-blog.csdnimg.cn/20210202171306860.png" style="zoom:67%;" />
+
+  参考：https://blog.csdn.net/fdsafwagdagadg6576/article/details/122437517
+
+- 项目2：视野预测中如何考虑**容灾**情况，WebSocket 处理异步的原理以及**建立连接**的方式
+
+  HTTP 和 WebSocket 都是基于 TCP 的，所以建立连接之前都会有 TCP 三次握手的过程，另外 WebSocket 基于 HTTP 协议握手之后就可以建立一个**全双工**的通信，即服务器可以主动的向客户端发送消息，HTTP 的建立连接也是需要经过三次握手
+
+  > 参考：https://www.jianshu.com/p/25313dbd2e46
+
+##### 八股
+
+**1、一个子网内 A 如何访问到 B，也就是 ping 的机制**
+
+> TTL 字段存放在 IP 头，另外参考 [traceroute 的原理](https://github.com/EricPengShuai/Interview/blob/main/Guide/ByteDanceGuide.md#11-%E7%AE%80%E8%BF%B0-traceroute-%E5%91%BD%E4%BB%A4%E7%9A%84%E5%8E%9F%E7%90%86)
+
+**2、HTTP 了解什么**
+
+**3、HTTPS 如何保证输入 aliyun.com 就可以访问到阿里云的网站**
+
+> 知识点应该是：HTTPS 如何加密传输这块，数字证书
+
+- 服务器得去公证人这里先登记，把自己的公钥、名字等等信息报上去，公证人拿到这些信息后，计算一个Hash值，然后再用公证人的**私钥**把Hash值进行加密，加密后的结果就是**数字签名**。
+- 公证人把登记的信息和这个数字签名合在一起，封装了一个新的文件发给服务器，登记就完成了，而这个新的文件就是**数字证书**。然后发给服务器，通信的时候须要将他们的证书发给浏览器验证。
+- 浏览器拿到证书后，把证书里面的信息也计算一遍Hash，再用**提前记录好的公证人的公钥**把证书里的数字签名进行解密，得到公证人计算的Hash，两个一对比，就知道这证书是不是公证人签发的，以及有没有被篡改过了！
+
+参考：https://www.cnblogs.com/xuanyuan/p/15122294.html
+
+**4、MTU 是什么**
+
+在7层网络协议中，MTU是**数据链路层**的概念。MTU限制的是数据链路层的payload，也就是**上层协议**的大小，例如IP，ICMP等。数据链路层接收来自上层数据的大小进行了限制，这个限制就是MTU。
+
+因特网协议允许IP分片，这样就可以将数据报包分成足够小的片段以通过那些最大传输单元小于该数据报原始大小的链路了。这一**分片过程发生在 IP 层**（OSI模型的第三层，即网络层），它使用的是将分组发送到链路上的网络接口的最大传输单元的值。原始分组的分片都被加上了标记，这样目的主机的 IP 层就能将分组重组成原始的数据报了。
+
+参考：
+
+- [MSS in TCP = MTU - 20 IP Header - 20 TCP Header](https://blog.csdn.net/weixin_45919793/article/details/127608553)
+- https://www.jianshu.com/p/678f5e79dd71
+
+
+
+##### 算法
+
+反转链表后面 n 个节点，如果链表长度不超过 n，直接反转整个链表，最后返回头结点
+

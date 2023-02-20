@@ -288,7 +288,7 @@ cout << strlen(s) << ' ' << sizeof s << endl;       // 4 5
 
 
 
-#### 17、常量指针和指针常量区别？
+#### 17、常量指针和指针常量区别？:fire:
 
 - **指针常量**：指向常量的指针，也就是后面所指明的 int const 和 const int，都是一个常量，可以写作`int const *p`或`const int *p`
 
@@ -384,7 +384,7 @@ int (*p)[10] = &a;
 
 
 
-#### 24、C++中const和static的作用
+#### 24、C++中const和static的作用 :fire:
 
 **static**
 
@@ -413,10 +413,12 @@ int (*p)[10] = &a;
 
   - const 成员变量：不能在类定义外部初始化，只能通过构造函数 **初始化列表** 进行初始化，并且必须有构造函数；不同类对其 const 数据成员的值可以不同，所以不能在类中声明时初始化
   
-  - const 成员函数：**const 对象**不可以调用非 const 成员函数；**非 const 对象都可以调用**；不可以改变非`mutable`数据的值
+  - const 成员函数：实际修饰该成员函数隐含的 this 指针，**表明在该成员函数中不能对类的任何成员进行修改**
   
+    > **const 对象**不可以调用非 const 成员函数；**非 const 对象都可以调用**；不可以改变非`mutable`数据的值
+    >
     > mutable 关键字声明的变量可以在 const 成员函数中被修改
-  
+    
     ```cpp
     class Test
     {
@@ -454,7 +456,7 @@ int (*p)[10] = &a;
         return 0;
     }
     ```
-  
+    
     > const成员只能调用const函数：https://blog.csdn.net/qq_40242197/article/details/118584131
 
 
@@ -2179,7 +2181,7 @@ std::cout << "Max = " << Max(5.5,'a') << std::endl;
 
 其实该模板有个比较隐晦的bug，那就是a、b只有在能进行转型的时候才能进行比较，否则 a > b 这一步是会报错的。这时候往往需要对于`operate>()`进行重载。
 
-> `template<typename  T>`  与 `template<class T>` 基本类似，最好使用前者
+> `template<typename T>`  与 `template<class T>` 基本类似，最好使用前者
 >
 > 参考1：[C++ 模板中 class T 和 typename T 的区别_Anadem](https://blog.csdn.net/Aloneingchild/article/details/105607306)
 >
