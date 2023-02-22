@@ -8,120 +8,107 @@
 
 1. const是啥，[指针常量和常量指针](https://www.jb51.net/article/86519.htm)，怎样改变函数const声明的变量值
 
-   **其实吧，这种翻译比较难以理解甚至会混淆，直接看表达式就可以了，就两种：一个是指针是常量，一个是指向的对象是常量**
-   
-   ```cpp
-   // 首先应该明白指针就是地址 
-   // p是一个指针常量【指向常量的指针】，指向的内容不可以变化，但是可以通过改变地址让它指向另一个常量	
-   const int *p; 或者是 int const *p; 
-   // p是一个常指针【指针本身是常量】，指向内部存储的内存地址是常量，不可以改变，但是内存地址所对应的内容是可以变化的
-   int *const p;	
-   const int *const p; // 指向常量的常量指针
-   ```
 
-> - void function(const int Var);   //传递过来的参数在函数内不可以改变(无意义，该函数以传值的方式调用)
-> - void function(const char* Var);  //参数指针所指内容为常量不可变
-> - void function(char* const Var);  //参数指针本身为常量不可变(也无意义，var本身也是通过传值的形式赋值的)
-> - void function(const Class& Var); //引用参数在函数内不可以改变
-> 
-> volatile关键字：http://www.cppblog.com/mzty/archive/2006/08/08/10959.html
-> 
-> ```c++
->// 修改construction修饰的变量
-> // https://blog.csdn.net/weixin_41413441/article/details/80860135
-> const volatile int i = 10；
-> 
-> // https://www.cnblogs.com/gylhaut/p/5502583.html
-># include <iostream>
-> using namespace std;
->class TestMutable
-> {
-> public:
->   TestMutable(){i=0;}
->   int Output() const
->   {
->     return i++; 
->   }
-> private:
-> 	mutable int i;
-> };
-> ```
+> **其实吧，这种翻译比较难以理解甚至会混淆，直接看表达式就可以了，就两种：一个是指针是常量，一个是指向的对象是常量**
+
+```cpp
+// 首先应该明白指针就是地址 
+// p是一个常量指针【指向常量的指针】，指向的内容不可以变化，但是可以通过改变地址让它指向另一个常量
+const int *p; 或者是 int const *p;
+
+// p是一个指针常量【指针本身是常量】，指向内部存储的内存地址是常量，不可以改变，但是内存地址所对应的内容是可以变化的
+int *const p; // 引用的本质是指针常量
+
+void func(const int var);	// 传递过来的参数在函数内不可以改变(无意义，该函数以传值的方式调用)
+void func(const char* var);	// 参数指针所指内容为常量不可变
+void func(char* const var);	// 参数指针本身为常量不可变(也无意义，var本身也是通过传值的形式赋值的)
+void func(const class& var);// 引用参数在函数内不可以改变
+```
 
 
 
-2. static是啥，比较，用在那些场景
+2. volatile关键字
 
-   https://www.jianshu.com/p/0b2d9679a9f2
+> http://www.cppblog.com/mzty/archive/2006/08/08/10959.html
+
+```cpp
+// 修改construction修饰的变量
+// https://blog.csdn.net/weixin_41413441/article/details/80860135
+const volatile int i = 10；
+
+// https://www.cnblogs.com/gylhaut/p/5502583.html
+# include <iostream>
+using namespace std;
+class TestMutable {
+    mutable int i;
+public:
+    TestMutable() { i=0;}
+    int Output() const {
+        return i++; 
+    }
+};
+```
+
+
+
+3. static是啥，比较，用在那些场景
 
 - **限制符号的作用域只在本程序文件**
 - **指定变量的存储位置**: 全局的和函数内定义的**static**变量都是存放在数据区的，且只存一份，只在整个程序结束后才自动释放，其他变量都是存储在栈，函数结束之后就释放
 - **C++类的静态成员变量和函数**：静态成员函数中没有**this**指针，只能调用静态成员变量
 
+> 参考：https://www.jianshu.com/p/0b2d9679a9f2
 
 
-3. 遍历一个vector所有元素的方法有哪些
+
+4. 遍历一个vector所有元素的方法有哪些
 
 ```cpp
 vector<int> a;
 // for循坏
 for(int i = 0; i < a.size(); i++) { 
-  cout << a[i];
-	cout << a.at(i);
+    cout << a[i] << ' ' << a.at(i);
 }
 
-// 迭代器iterator  cbegin()  cend()
 // auto也可以换成vector<int>::const_iterator
-for (auto iter = valList.begin(); iter != valList.end(); iter++)
-{
-  cout << (*iter) << endl;
+for (auto iter = a.begin(); iter != a.end(); iter++) {
+	cout << (*iter) << endl;
 }
 
 // for_each  cbegin()  cend()
-template<typename T>
-void printer(const T& val)
-{
-	cout << val << endl;
-}
-void ShowVec(const vector<int>& valList)
-{
-	for_each(valList.begin(), valList.end(), printer<int>);
-}
+for_each(a.begin(), a.end(), [](int x) {cout << x << ' ';});
 
 // 直接for auto遍历
 for (auto& val : valList)
-{
-  cout << val << endl;
-}
 ```
 
 
 
 
 
-- `++i` 和 `i++`区别，哪个更快，为什么
+5. `++i` 和 `i++`区别，哪个更快，为什么
 
-> i++ 不能作为左值，而++i 可以。
+- i++ 不能作为左值，而 ++i 可以。
+- a++是先用临时对象保存原来的对象，然后对原对象自增，再返回临时对象，不能作为左值；++a是直接对于原对象进行自增，然后返回原对象的引用，可以作为左值。
+- 由于要生成临时对象，a++需要调用两次拷贝构造函数与析构函数（将原对象赋给临时对象一次，临时对象以值传递方式返回一次）；++a由于不用生成临时变量，且以引用方式返回，故没有构造与析构的开销，效率更高。
+
+```cpp
+int i = 0;
+int *p1 = &(++i); //正确
+int *p2 = &(i++); //错误
+
+++i = 1; //正确
+i++ = 5; //错误
+
+cout << ++(++(++i)) << endl;
+cout << ++ ++i << endl;
+```
+
+> 左值是对应内存中有确定存储地址的对象的表达式的值，而右值是所有不是左值的表达式的值
 >
-> 1. a++是先用临时对象保存原来的对象，然后对原对象自增，再返回临时对象，不能作为左值；++a是直接对于原对象进行自增，然后返回原对象的引用，可以作为左值。
-> 2. 由于要生成临时对象，a++需要调用两次拷贝构造函数与析构函数（将原对象赋给临时对象一次，临时对象以值传递方式返回一次）；++a由于不用生成临时变量，且以引用方式返回，故没有构造与析构的开销，效率更高。
->
-> ```c++
-> int i = 0;
-> int *p1 = &(++i); //正确
-> int *p2 = &(i++); //错误
+> 左值与右值的根本区别在于是否允许取地址&运算符获得对应的内存地址
 > 
-> ++i = 1; //正确
-> i++ = 5; //错误
-> 
-> cout << ++(++(++i)) << endl;
-> cout << ++ ++i << endl;
-> ```
->
-> 左值是对应内存中有确定存储地址的对象的表达式的值，而右值是所有不是左值的表达式的值。
->
-> 左值与右值的根本区别在于是否允许取地址&运算符获得对应的内存地址。
->
-> http://haoqchen.site/2018/10/15/difference-between-++i-i++-i+=1-i=i+1/
+>http://haoqchen.site/2018/10/15/difference-between-++i-i++-i+=1-i=i+1/
 
 
 
@@ -129,7 +116,7 @@ for (auto& val : valList)
 
 1. 请求一个网页具体过程
 
-   > 本地DNS服务器之前是查找浏览器、操作系统和路由器的DNS缓存，然后是参考[一次完整的HTTP请求过程图](https://github.com/EricPengShuai/Interview/blob/main/interview_summary.md#一次完整的http请求过程)
+   > 本地DNS服务器之前是查找浏览器、操作系统和路由器的DNS缓存，然后是参考[一次完整的HTTP请求过程图](https://github.com/EricPengShuai/Interview/blob/main/Guide/ByteDanceGuide.md#31-一次完整的http请求过程)
 
 2. 进程通信方式
 
@@ -143,7 +130,7 @@ for (auto& val : valList)
 
 **附带一点linux**
 
-1. linux中vi模式的查找命令
+1. linux 中 vi 模式的查找命令
 
    > 正则式：命令模式下输入“/字符串”，例如“/hive.sit”
    >
@@ -157,7 +144,7 @@ for (auto& val : valList)
 
    > 双指针，相遇之后，头再起一个指针直到和p1相遇
 
-2. [1, 3, 1, 6]四个数字全部都用，使用加减乘除运算怎么得到24
+2. [1, 3, 1, 6] 四个数字全部都用，使用加减乘除运算怎么得到24
 
    > 3 \* 8 和 4 \* 6
 
@@ -186,7 +173,7 @@ for (auto& val : valList)
 
   1. 存储分配方式总体分为：**连续内存分配和离散内存分配**
 
-     <img src="https://urlify.cn/BNJZ7v" style="zoom: 70%"/>
+     <img src="https://img-blog.csdn.net/20131031074819750" style="zoom: 70%"/>
 
   2. 离散分配原因：由于连续分配方式会形成许多内存碎片，虽可通过“紧凑”功能将碎片合并，但会付出很大开销。于是出现离散分配方式：将一个进程直接分散地装入到许多**不相邻**的内存分区中。
 
@@ -283,7 +270,7 @@ for (auto& val : valList)
   - 数据链路层：将分组数据封装成帧；提供节点到节点方式的传输，传输有地址的帧以及错误检测功能，**PPP、ARP、RARP、MTU**
   - 物理层：以二进制数据形式在物理媒体上传输数据，物理层：中继器、集线器
 
-  <img src="https://urlify.cn/yqeUFz" style="zoom:80%;" />
+  <img src="https://img-blog.csdnimg.cn/20181212222104379.png" style="zoom:70%;" />
 
 - [x] TCP/IP协议
 
@@ -292,7 +279,7 @@ for (auto& val : valList)
   - 网络层：路由器
   - 数据链路层：网桥、以太网交换机、网卡（其实一半工作在物理层一半工作在数据链路层）
 
-  <img src="https://urlify.cn/EBnERj" style="zoom:70%;" />
+  <img src="https://img-blog.csdnimg.cn/20181212222138685.png" style="zoom:70%;" />
 
 - [x] 区别：
 
@@ -310,23 +297,23 @@ for (auto& val : valList)
 
 #### 数据库
 
-1. 隔离级别
+隔离级别
 
-   > 其实我已经说完了，这个面试官还在那……
+> 其实我已经说完了，这个面试官还在那…
 
 
 
 #### 算法
 
-1. 有环链表：不是很了解原理
+有环链表：不是很了解原理
 
-   > 牛客上面定义链表都报错：
-   >
-   > 因为牛客、力扣这些平台他自己内部已经有定义了ListNode，所以会报错。TreeNode同理。
-   >
-   > 本质原因：“都显示重复定义了，那就名字和内部的库重复了呗”
-   >
-   > 如果有的环境连main都报错的话即是不需要主函数只需要实现方式就可以
+> 牛客上面定义链表都报错：
+>
+> 因为牛客、力扣这些平台他自己内部已经有定义了ListNode，所以会报错。TreeNode 同理。
+>
+> 本质原因：“都显示重复定义了，那就名字和内部的库重复了呗”
+>
+> 如果有的环境连main都报错的话即是不需要主函数只需要实现方式就可以
 
 
 
