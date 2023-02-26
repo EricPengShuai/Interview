@@ -1,5 +1,16 @@
 ## 流媒体相关
 
+常用的流媒体协议主要有 **HTTP 渐进下载**和基于 **RTSP/RTP 的实时流媒体协议**，这两种协议是完全不同的实现方式。主要区别如下：
+
+- 一种是分段渐近下载，一种是基于实时流来实现播放；
+- 协议不同，HTTP 协议的渐近下载意味着可以在一台普通的 HTTP 的应用服务器上就可以直接提供视频点播和直播服务；
+- 延迟有差异，HTTP 渐近下载的方式的延迟理论上会略高于实时流媒体协议的播放；
+- 渐近下载会生成索引文件，所以需要考虑存储，对 I/O 要求较高。
+
+常见的 HTTP渐进下载的协议有：DASH、HLS
+
+常见的实时流媒体协议有：RTMP、RTSP
+
 
 
 ### RTMP
@@ -344,6 +355,8 @@ rtsp承载与rtp和rtcp之上，rtsp并不会发送媒体数据，而是使用rt
 
 
 
+**手撸 RTSP 服务器**
+
 1. 首先实现RTSP**建立连接**过程，创建套接字，基于TCP，socket，setsockopt，bind，listen
 
    | 方法     | 描述                                                         |
@@ -377,7 +390,12 @@ rtsp承载与rtp和rtcp之上，rtsp并不会发送媒体数据，而是使用rt
 
 #### RTSP Interleaved Frame
 
-一般 RTP/RTCP 通过 UDP 传输数据，往往前者传输音视频数据，后者传输控制信息。如果使用 TCP 传输数据，有时候出于安全设计, 防火墙可能要求 RTSP 控制方法（RTCP）和流数据（RTP）公用一个通信通道，进行交错传输。此时就需要区分 RTP 通道和 RTSP 通道，为此在 RTP 上加一层 RTSP Interleaved Frame，如下图
+> RTSP 流传输方式有两种，采用哪种方式由客户端决定，客户端在 RTSP 的 SETUP 命令需要确定使用 TCP 还是UDP 建立连接
+>
+> - RTP/AVP[/UDP]
+> - RTP/AVP/TCP
+
+一般 RTP/RTCP 通过 UDP 传输数据，往往前者传输音视频数据，后者传输控制信息。如果使用 TCP 传输数据，有时候出于安全设计, **防火墙可能要求 RTSP 控制方法（RTCP）和流数据（RTP）公用一个通信通道，进行交错传输**。此时就需要区分 RTP 通道和 RTSP 通道，为此在 RTP 上加一层 RTSP Interleaved Frame，如下图
 
 <img src="https://upload-images.jianshu.io/upload_images/1720840-c723a819613748e1.png" alt="RTSP Interleaved Frame" style="zoom:50%;" />
 
@@ -428,4 +446,78 @@ MPD 文件中有用于描述该DASH流特点的字段参数，如maxSegmentDurat
 
 - [DASH, MPD文件, 多码率切换](https://cloud.tencent.com/developer/article/1895146)
 - [MPD 文件结构剖析-CSDN博客](https://blog.csdn.net/luoxueqian/article/details/82982188)
-- [目前几种实时视频流协议对比_leadersmallsmile的博客-CSDN博客](https://blog.csdn.net/leadersmallsmile/article/details/105121995)
+
+
+
+### HLS
+
+HLS 是 Apple 提出并推广的，它的工作原理是把整个流分成一个个小的**基于HTTP的文件**来下载，每次只下载一些。当媒体流正在播放时，客户端可以选择从许多不同的备用源中以不同的速率下载同样的资源，允许流媒体会话适应不同的数据速率。在开始一个流媒体会话时，客户端会下载一个包含元数据的**extended M3U (m3u8)** playlist文件，用于寻找可用的媒体流。 HLS只请求基本的 HTTP 报文，与实时传输协议 (RTP) 不同，HLS可以穿过任何允许HTTP数据通过的防火墙或者代理服务器。它也很容易使用内容分发网络来传输媒体流。
+
+**协议格式要求**
+
+- 视频封装格式为 TS，视频编码格式为 H264（只要 MPEG-TS 支持即可），音频编码格式为 AAC、MP3、AC-3
+- 保存 TS 索引的文件是 m3u8 文件
+
+**优缺点**
+
+- 优势：
+  - 使用 HTTP 传输，具有较好的网路穿透以及防屏蔽性，易于网络分发传输
+  - 支持码率自适应传输，易于实现负载均衡，无状态协议的 HTTP，客户端只要下载即可
+- 劣势：
+  - 延时较大，直播情况很难做到 10s 以内的延时
+  - 内容生成时对编码端性能要求较高
+
+![HLS](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/11837e609d794ad39171ff32d5e50c79~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
+
+
+
+#### HLS 服务端
+
+**多媒体编码器（Media Encoder）**
+
+将原始媒体数据进行编码、封装，编码格式应为 MPEG-TS 支持的格式，最终封装成 TS 文件
+
+**分片工具（Stream Segmenter）**
+
+- 流分片器：处理 MPEG-TS 流
+- 文件分片器：处理 TS 文件
+
+> 将 MPEG-TS 流或者 TS 文件切分成一系列等时长的媒体文件，保证这些分片可以无缝重建，与此同时会创建对应的索引文件（m3u8），索引文件包含指向单独媒体文件的索引信息，直播过程 M3U8 索引文件会根据实际的媒体文件更新，另外也可以加密分片并创建密钥文件
+
+
+
+#### HLS 分发端
+
+接收客户端请求，将处理好的索引文件以及媒体文件发给客户端，实际场景时还需要做负载均衡以及并发的处理
+
+
+
+#### HLS 客户端
+
+通过索引文件获取媒体文件，索引文件往往包含可用的媒体文件、解密秘钥和其他可选流的位置。客户端选定流之后就开始顺序下载媒体文件，**点播场景**的索引文件有一个 `#EXT-X-ENDLIST` 标签，对应播放结束；**直播场景**没有这个标签
+
+> 一级索引文件：包含不同分辨率的 m3u8 文件，自适应码率选择时确定
+>
+> 二级索引文件：索引 ts 文件，`#EXTINF`指定每个流片段(ts)的持续时间（秒），仅对其后面的 URI 有效
+
+
+
+参考：[浅析 HLS 流媒体协议 - 掘金 (juejin.cn)](https://juejin.cn/post/6997951068030107685)
+
+
+
+### 比较
+
+| 协议     | RTMP                              | RTSP                                                         | HLS                                    | DASH                                                      | HTTP-FLV                                                     |
+| -------- | --------------------------------- | ------------------------------------------------------------ | -------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------ |
+| 全称     | Real Time Message Protocol        | Real Time Stream Protocol                                    | HTTP Living Streaming                  | Dynamic Adaptive Streaming over HTTP                      | FLASH VIDEO over HTTP                                        |
+| 传输方式 | TCP长连接                         | TCP/UDP                                                      | HTTP短连接                             | HTTP短连接                                                | HTTP长连接                                                   |
+| 封装格式 | FLV Tag                           | RTP Payload支持的                                            | TS 文件                                | MP4, 3GP, WEBM                                            | FLV                                                          |
+| 原理     | 每个时刻的数据收到后立刻转发      | RTP 传输数据包，RTCP 控制传输                                | m3u8 索引 TS 文件                      | mpd 索引不同的 Segment                                    | 同 RTMP，使用HTTP协议（80端口）                              |
+| 延时     | 低 1-3s                           | 低 1-3s                                                      | 高 5~20s（依切片情况）                 | 高                                                        | 低 1-3s                                                      |
+| 数据分段 | 连续流                            | 连续流                                                       | 切片文件                               | 切片文件                                                  | 连续流                                                       |
+| H5播放   | 不支持?                           | 不支持？                                                     | mpeg-ts.js                             | dash.js（如果dash文件列表是MP4，webm文件，可直接播放）    | flv.js                                                       |
+| 其他     | 跨平台支持较差，需要Flash技术支持 | TCP下，延迟进一步增大，可达3秒；UDP下延迟较低，但是会丢包花屏 | 播放时需要多次请求，对于网络质量要求高 | 可以根据网络情况和设备性能动态调整码率和分辨率，比HLS灵活 | 需要Flash技术支持，不支持多音频流、多视频流，不便于seek（即拖进度条） |
+
+- [目前几种实时视频流协议对比-CSDN博客](https://blog.csdn.net/leadersmallsmile/article/details/105121995)
+- [常见流媒体协议对比](https://blog.csdn.net/huapeng_guo/article/details/124491229)
