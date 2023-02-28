@@ -49,12 +49,12 @@ ListNode* stringToListNode(vector<int> list) {
 
 ```cpp
 struct TreeNode {
-		int val;
-		TreeNode* left;
-  	TreeNode* right;
-  	TreeNode(): val(0), left(nullptr), right(nullptr) {}
-  	TreeNode(int x): val(x), left(nullptr), right(nullptr) {}
-  	TreeNode(int x, TreeNode* left, TreeNode* right): val(x), left(left), right(right) {}
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(): val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x): val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right): val(x), left(left), right(right) {}
 };
 ```
 
@@ -154,7 +154,7 @@ ss.str(input);
 string item;
 char delim = ',';
 while (getline(ss, item, delim)) {
-  output.push_back(stoi(item));
+    output.push_back(stoi(item));
 }
 ```
 
@@ -171,16 +171,16 @@ istream& getline (char* s, streamsize n, char delim );
 using namespace std;
 
 int main () {
-  char name[256], title[256];
+    char name[256], title[256];
 
-  cout << "Please, enter your name: ";
-  cin.getline (name,256);
+    cout << "Please, enter your name: ";
+    cin.getline (name,256);
 
-  cout << "Please, enter your favourite movie: ";
-  cin.getline (title,256);
+    cout << "Please, enter your favourite movie: ";
+    cin.getline (title,256);
 
-  cout << name << "'s favourite movie is " << title;
-  return 0;
+    cout << name << "'s favourite movie is " << title;
+    return 0;
 }
 ```
 

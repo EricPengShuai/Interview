@@ -443,10 +443,64 @@ n-1 = ... 0 111
 **a ^= b; b ^= a; a ^ b**
 
 > 交换 a 和 b
+>
+> 其实位运算是效率非常低的转换方式，[参考](https://blog.csdn.net/Solstice/article/details/5166912)
 
 ```cpp
 a = a ^ b;
 b = b ^ a = b ^ a ^ b = a;	// b = a;
 a = a ^ b = a ^ b ^ a = b;	// a = b;
+```
+
+
+
+### 7. stringsteam
+
+stringstream 通常用来格式化字符串，可以实现 cin 和 cout 的功能， 同时支持C风格字符串的输入输出操作
+
+- ostringstream ： 用于执行C风格字符串的输出操作，只支持 << 操作符
+- istringstream ： 用于执行C风格字符串的输入操作，只支持 >> 操作符
+
+```cpp
+void ostringstream_test()
+{
+    ostringstream oss;
+    oss << "this is test" << 123456;
+ 
+    oss.str("");//清空之前的内容
+    //oss.clear();//并不能清空内存
+ 
+    // 浮点数转换限制
+    double tmp = 123.1234567890123;
+    oss.precision(12);
+    oss.setf(ios::fixed);// 将浮点数的位数限定为小数点之后的位数
+    oss << tmp << "\r\n" << endl;
+}
+
+void istringstream_test()
+{
+    string str = "welcome to china";
+    istringstream iss(str);
+ 
+    // 把字符串中以空格隔开的内容提取出来
+    string out;
+    while(iss >> out) {
+        cout << out << endl;
+    }
+    cout << endl;
+}
+
+// 实现 str.split(' ') 的操作
+vector<string> stringstream_test(string &s, char delim)
+{
+    vector<string> res;
+    string str;
+    stringstream ss(s);
+    
+    while(getline(ss, str, delim)) {
+        res.push_back(str);
+    }
+    return res;
+}
 ```
 
