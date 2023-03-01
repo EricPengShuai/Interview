@@ -10,7 +10,7 @@
 
 ```cpp
 bool isPrime(int x) {
-    if (x == 1) return 
+    if (x == 1) return false;
     for (int i = 2; i * i <= x; ++ i) {
         if (x % i == 0) {
             return false;
@@ -32,7 +32,8 @@ bool isPrime(int x) {
 
 ```cpp
 // x 是待分解的数，分解出来的质因数存储在 primes 中
-void getPrimeFactor(long x, vector<long>& primes) {
+// 时间复杂度 O(n)
+void getPrimeFactor1(long x, vector<long>& primes) {
     long p = 2;
     while (x != 1) {
         // p 一定是第一个可以整除 x 的最小质因数
@@ -47,7 +48,8 @@ void getPrimeFactor(long x, vector<long>& primes) {
     }
 }
 
-void getPrimeFactor(long x, vector<long>& primes) {
+// 时间复杂度 O(n)
+void getPrimeFactor2(long x, vector<long>& primes) {
     long p = 2;
     for (p = 2; p <= x; ++ p) {
         // 找到 x 的一个质因子 p 之后就不断的除以 p，将 x 中所有的 p 全部找出
@@ -57,6 +59,17 @@ void getPrimeFactor(long x, vector<long>& primes) {
             x /= p;
         }
     }
+}
+
+// 时间复杂度 O(n^1/2)
+int getPrimeFactor3(long x, vector<long>& primes) {
+    for (int p = 2; p*p <= x; ++ p) {
+        while (x % p == 0) {
+            primes.push_back(x);
+            x /= p;
+        }
+    }
+    if (x > 1) primes.push_back(x);
 }
 ```
 
@@ -71,7 +84,7 @@ void getPrimeFactor(long x, vector<long>& primes) {
     while (p <= x) {
         if (x % p == 0 && isPrime(p)) {
             primes.push_back(p);
-            if (x % p == 0) {
+            if (x == p) {
                 return;
             }
             x /= p;
