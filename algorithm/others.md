@@ -453,11 +453,19 @@ n-1 = ... 0 111
 (n & (n-1)) == 0
 ```
 
+**n&(-n)**
+
+> 负数用补码（反码+1）表示，所以 n&(-n) 相当于保存右侧第一个1及其右侧的数，例如:
+
+```cpp
+ n = 10 1000
+-n = 01 1000
+ & = 00 1000   
+```
+
 **a ^= b; b ^= a; a ^ b**
 
-> 交换 a 和 b
->
-> 其实位运算是效率非常低的转换方式，[参考](https://blog.csdn.net/Solstice/article/details/5166912)
+> 交换 a 和 b，其实位运算是效率非常低的转换方式，[参考](https://blog.csdn.net/Solstice/article/details/5166912)
 
 ```cpp
 a = a ^ b;

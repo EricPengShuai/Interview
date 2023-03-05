@@ -38,7 +38,7 @@ clang++ 1.1.cpp foo.o -o 1.1
 
 - C++11 使用 nullptr 代替 NULL，传统 C++ 会将 NULL、0 视为同一种东西，取决于编译器。**尽量使用 nullptr**
 
-- C++11 引入 constexpr 让用户显式的声明函数或者对象构造函数在编译期会成为**常量表达式**，因而可以强化 const 意思
+- C++17 引入 constexpr 让用户显式的声明函数或者对象构造函数在编译期会成为**常量表达式**，因而可以强化 const 意思
 
   ```cpp
   int len = 1;
@@ -96,7 +96,7 @@ clang++ 1.1.cpp foo.o -o 1.1
   decltype(x+y) z;	// z 就是整形
   ```
 
-- C++11 还引入了一个叫做尾返回类型（trailing return type），利用 auto 关键字将返回类型后置
+- C++11 还引入了一个叫做尾返回类型`->`（tailing return type），利用 auto 关键字将返回类型后置
 
   ```cpp
   template<typename T, typename U>
@@ -178,17 +178,26 @@ clang++ 1.1.cpp foo.o -o 1.1
   
   template<typename... Ts>
   void magic(Ts... args) {
-  	std::cout << sizeof...(args) << std::endl;	// sizeof... 计算参数的个数
+      std::cout << sizeof...(args) << std::endl;	// sizeof... 计算参数的个数
   }
   ```
 
   **解包1：递归模板函数**
 
   ```cpp
+  #include <iostream>
+  template<typename T0>
+  void printf1(T0 value) {
+      std::cout << value << std::endl;
+  }
   template<typename T, typename... Ts>
   void printf1(T value, Ts... args) {
       std::cout << value << std::endl;
       printf1(args...);
+  }
+  int main() {
+      printf1(1, 2, "123", 1.1);
+      return 0;
   }
   ```
 
@@ -197,8 +206,8 @@ clang++ 1.1.cpp foo.o -o 1.1
   ```cpp
   template<typename T0, typename... T>
   void printf2(T0 t0, T... t) {
-  	std::cout << t0 << std::endl;
-  	if constexpr (sizeof...(t) > 0) printf2(t...);
+      std::cout << t0 << std::endl;
+      if constexpr (sizeof...(t) > 0) printf2(t...);
   }
   ```
 
@@ -207,18 +216,19 @@ clang++ 1.1.cpp foo.o -o 1.1
   ```cpp
   #include <iostream>
   template<typename ... T>
-      auto sum(T ... t) {
+  auto sum(T ... t) {
       return (t + ...);
   }
   int main() {
-  	std::cout << sum(1, 2, 3, 4, 5, 6, 7, 8, 9, 10) << std::endl;
+      std::cout << sum(1, 2, 3, 4, 5, 6, 7, 8, 9, 10) << std::endl;
   }
   ```
 
 - **非类型模板参数推导**：在 C++11 引入了类型推导这一特性后，我们会很自然的问，既然此处的模板参数以具体的字面量进行传递，能否让编译器辅助我们进行类型推导，通过使用占位符 auto 从而不再需要明确指明类型？幸运的是， C++17 引入了这一特性，我们的确可以 auto 关键字，让编译器辅助完成具体类型的推导
 
   ```cpp
-  template <auto value> void foo() {
+  template <auto value> 
+  void foo() {
   	std::cout << value << std::endl;
       return;
   }
@@ -226,7 +236,7 @@ clang++ 1.1.cpp foo.o -o 1.1
   	foo<10>(); // value 被推导为 int 类型
   }
   ```
-
+  
   
 
 ### 2.6 面向对象
@@ -263,7 +273,7 @@ clang++ 1.1.cpp foo.o -o 1.1
       typename std::enable_if<std::is_enum<T>::value,
       std::ostream>::type& stream, const T& e)
   {
-  return stream << static_cast<typename std::underlying_type<T>::type>(e);
+      return stream << static_cast<typename std::underlying_type<T>::type>(e);
   }
   ```
 
@@ -333,11 +343,11 @@ auto add = [](auto x, auto y) {
 
 ### 3.3 右值引用
 
-- **左值** (lvalue, left value)，就是赋值符号左边的值。准确来说，左值是表达式（不一定是 赋值表达式）后依然存在的持久对象。
+- **左值** (lvalue, left value)，就是赋值符号左边的值。准确来说，左值是表达式（不一定是赋值表达式）后依然存在的持久对象。
 
 - **右值** (rvalue, right value)，右边的值，是指表达式结束后就不再存在的临时对象。C++11 将右值划分为纯右值和将亡值。
 
-  - **纯右值** (prvalue, pure rvalue)：要么是纯粹的字面量，例如 10, true；要么是求值 结果相当于字面量或匿名临时对象，例如 1+2。**非引用返回的临时变量、运算表达式产生的临时变量、原 始字面量、Lambda 表达式都属于纯右值**。
+  - **纯右值** (prvalue, pure rvalue)：要么是纯粹的字面量，例如 10, true；要么是求值 结果相当于字面量或匿名临时对象，例如 1+2。**非引用返回的临时变量、运算表达式产生的临时变量、原始字面量、Lambda 表达式都属于纯右值**。
 
     > 字符串字面量只有在类中才是右值，当其位于普通函数中是左值。
 
@@ -350,15 +360,22 @@ auto add = [](auto x, auto y) {
   C++11 提供了 std::move 这个方法将左值参数无条件的转换为右值
 
   ```cpp
-  void reference(std::string& str) 
-  { 
+  void reference(std::string& str) { 
       std::cout << " 左值" << std::endl; 
   } 
   
-  void reference(std::string&& str) 
-  {
+  void reference(std::string&& str) {
       std::cout << " 右值" << std::endl; 
   }
+  
+  string lv1 = "string,", lv2 = "string,"
+  string&& rv2 = lv1;			// 非法, 右值引用不能引用左值
+  string&& rv2 = lv1 + lv2; 	// 合法, 右值引用延长临时对象生命周期
+  rv2 += "Test"; 				// 合法, 非常量引用能够修改临时变量
+  cout << rv2 << endl; 		// string,string,string,Test
+  
+  // rv2 虽然引用了一个右值，但由于它是一个引用，所以 rv2 依然是一个左值
+  reference(rv2); 	// 输出" 左值"
   ```
 
   
@@ -386,9 +403,9 @@ auto add = [](auto x, auto y) {
 
   
 
-- 完美转发：std::forward, 具体参考pdf
+- 完美转发：std::forward, 具体参考pdf，有点难 :dizzy:
 
-  > 在使用循环语句时 auto && 就是基于坍缩组合原则的完美转发
+  > 在使用循环语句时 `auto &&` 是最安全的方式，因为当 `auto` 被推导为不同的左右引用时，与 `&&` 的坍缩组合是完美转发
 
   
 
@@ -398,7 +415,7 @@ auto add = [](auto x, auto y) {
 
 - std::array
 
-  与 std::vector 不同，std::array 对象的大小是固定的，如果容器大小是固 定的，那么可以优先考虑使用 std::array 容器。另外由于 std::vector 是自动扩容的，当存入大量的 数据后，并且对容器进行了删除操作，容器并不会自动归还被删除元素相应的内存，这时候就需要手动 运行 shrink_to_fit() 释放这部分内存
+  与 std::vector 不同，std::array 对象的大小是固定的，如果容器大小是固定的，那么可以优先考虑使用 std::array 容器。另外由于 std::vector 是自动扩容的，当存入大量的数据后，并且对容器进行了删除操作，容器并不会自动归还被删除元素相应的内存，这时候就需要手动 运行 shrink_to_fit() 释放这部分内存
 
 - std::forward_list
 
@@ -412,7 +429,10 @@ auto add = [](auto x, auto y) {
 
 无序容器中的元素是不进行排序的， 内部通过 Hash 表实现， 插入和搜索元素的平均复杂度为 O(constant)，在不关心容器内部元素顺序时，能够获得显著的性能提升。
 
-C++ 11新引入两组无序容器：① std::unordered_map/std::unordered_multimap；② std::unordered_set/std::unordered_multiset
+C++ 11新引入两组无序容器：
+
+- std::unordered_map/std::unordered_multimap
+- std::unordered_set/std::unordered_multiset
 
   
 
@@ -439,6 +459,7 @@ C++11 引入 std::tuple, 他有三个核心函数：
 通过使用 std::variant<>（C++ 17 引入），提供给 variant<> 的类型模板 参数可以让一个 variant<> 从而容纳提供的几种类型的变量
 
 ```cpp
+// tuple_index 是自己定义的函数，参考原pdf
 int i = 1; 
 std::cout << tuple_index(t, i) << std::endl;	// i 是索引变量
 ```
@@ -457,6 +478,10 @@ std::cout << tuple_index(t, i) << std::endl;	// i 是索引变量
 - 遍历
 
   ```cpp
+  template <typename T>
+  auto tuple_len(T &tpl) {
+      return std::tuple_size<T>::value;
+  }
   for(int i = 0; i != tuple_len(new_tuple); ++i) {
     	std::cout << tuple_index(new_tuple, i) << std::endl;
   }
@@ -468,7 +493,7 @@ std::cout << tuple_index(t, i) << std::endl;	// i 是索引变量
 
 #### 5.1 RAII与引用计数
 
-在传统 C++ 中，『记得』手动释放资源，总不是最佳实践。因为我们很有可能就忘记了去释放资源 而导致泄露。所以通常的做法是对于一个对象而言，我们在构造函数的时候申请空间，而在析构函数（在 离开作用域时调用）的时候释放空间，也就是我们常说的 RAII (Resource Acquisition is Initialization) 资源获取即初始化技术。
+在传统 C++ 中，『记得』手动释放资源，总不是最佳实践。因为我们很有可能就忘记了去释放资源 而导致泄露。所以通常的做法是对于一个对象而言，我们在构造函数的时候申请空间，而在析构函数（在离开作用域时调用）的时候释放空间，也就是我们常说的 RAII (Resource Acquisition is Initialization) 资源获取即初始化技术。
 
 C++11 引入智能指针，使用引用计数的思想，头文件为 \<memory\>，包括std::shared_ptr/std::unique_ptr/std::weak_ptr
 
@@ -485,26 +510,24 @@ C++11 引入智能指针，使用引用计数的思想，头文件为 \<memory\>
 #include <memory>
 
 int main () {
+    std::shared_ptr<int> foo = std::make_shared<int> (10);
+    // same as:
+    std::shared_ptr<int> foo2 (new int(10));
 
-  std::shared_ptr<int> foo = std::make_shared<int> (10);
-  // same as:
-  std::shared_ptr<int> foo2 (new int(10));
+    auto bar = std::make_shared<int> (20);
+    auto baz = std::make_shared<std::pair<int,int>> (30,40);
 
-  auto bar = std::make_shared<int> (20);
+    std::cout << "*foo: " << *foo << '\n'; // 10
+    std::cout << "*bar: " << *bar << '\n'; // 20
+    std::cout << "*baz: " << baz->first << ' ' << baz->second << '\n'; // 30 40
 
-  auto baz = std::make_shared<std::pair<int,int>> (30,40);
-
-  std::cout << "*foo: " << *foo << '\n';	// 10
-  std::cout << "*bar: " << *bar << '\n';	//20
-  std::cout << "*baz: " << baz->first << ' ' << baz->second << '\n';	// 30 40
-
-  return 0;
+    return 0;
 }
 ```
 
 
 
-- std::shared_ptr 可以通过 get() 方法来获取原始指针，通过 reset() 来减少一个引用计数，并 通过 use_count() 来查看一个对象的引用计数。
+- std::shared_ptr 可以通过 get() 方法来获取原始指针，通过 reset() 来减少一个引用计数，并通过 use_count() 来查看一个对象的引用计数。
 - 根据 [cppreference](https://cplusplus.com/reference/memory/shared_ptr/)：`shared_ptr` 对象可以共享指针的所有权，同时指向另一个对象。这种能力被称为 `aliasing`，通常用于指向成员对象，同时拥有它们所属的对象。因此，shared_ptr 可能与两个指针有关：① **stored pointer**: is said to point to, and the one it dereferences with operator; ② **owned pointer**: is the pointer the ownership group is in charge of  deleting at some point
 
 代码参考：[shared_ptr.cpp](./shared_ptr.cpp)

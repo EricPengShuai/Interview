@@ -59,9 +59,9 @@
   ```cpp
   void TestDate2()
   {
-  	Date d1(2022, 5, 18);
-  	Date d2(2022, 4, 18);
-  	Date d3 = d1;	// 等价于 Date d3(d1); 所以这里调用的是拷贝构造函数
+      Date d1(2022, 5, 18);
+      Date d2(2022, 4, 18);
+      Date d3 = d1;	// 等价于 Date d3(d1); 所以这里调用的是拷贝构造函数
       d2 = d1;		// 这里调用的是赋值构造函数
   }
   ```
@@ -110,7 +110,7 @@ void func(const string& str, const char c)
 ```cpp
 // const 修饰是就近原则
 const char* p; char const *p;	// 常量指针：指向常量的指针，const 修饰 *p
-char * const p;					// 指针常量：指针本身是常量，const 修饰 p
+char * const p;	// 指针常量：指针本身是常量，const 修饰 p
 ```
 
 
@@ -150,7 +150,7 @@ typename std::remove_reference<T>::type&& move( T&& t ) noexcept;
 // 可以自己实现
 template <class _Ty>
 constexpr std::remove_reference_t<_Ty>&& move(_Ty&& _Arg) noexcept { // forward _Arg as movable
-	return static_cast<std::remove_reference_t<_Ty>&&>(_Arg);
+    return static_cast<std::remove_reference_t<_Ty>&&>(_Arg);
 }
 ```
 
@@ -174,14 +174,13 @@ using namespace std;
 template <typename T>    // 函数模板
 void myfunc(T&& val)     // 万能引用
 {
-	cout << val << endl;
-	return;
+    cout << val << endl;
+    return;
 }
 
 int main()
 {
-	myfunc(120); // ok，自动类型推导，120是右值，T为int类型，val为int&&类型
-
+    myfunc(120); // ok，自动类型推导，120是右值，T为int类型，val为int&&类型
 	int i = 180;
 	myfunc(i); // ok，自动类型推导，i是左值，T为int&类型，val为int&类型
     return 0;
