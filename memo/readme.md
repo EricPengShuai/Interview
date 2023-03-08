@@ -1,4 +1,4 @@
-## 构造数据结构以及处理输入技巧
+## 应试技巧
 
 > 有的公司面试你需要自己处理输入输出，长时间刷力扣容易忽略这点，在牛客网上面试往往需要自己处理输入输出，这个时候需要注意常见结构体的构造以及相关输入处理技巧
 
@@ -149,8 +149,7 @@ void trimRightTrailingSpaces(string &input) {
 // ss 是输入流，item 是读取的字符串，delim 是分隔符(默认是'\n')
 string = "1,2,3,4,5,6,7";
 vector<int> output;
-stringstream ss;
-ss.str(input);
+stringstream ss(string);
 string item;
 char delim = ',';
 while (getline(ss, item, delim)) {
@@ -184,3 +183,13 @@ int main () {
 }
 ```
 
+
+
+### 4. TLE
+
+- 往往就是空间换时间：根据题意选择合适数据结构
+  - 大顶堆：`priority_queue<int, vector<int>, lese<int>>`，堆顶是最大元素，插入元素 $O(\log N)$
+  - 红黑数：`set<int>` `map<int, int>`，默认是按照 key 升序（set 中是 value），插入删除 $O(\log N)$
+  - 哈希表：`unordered_set<int>` `unordered_map<int, int>`，查找比较快
+
+- 有些牛客上的题目卡输入输出：`cout << x << endl;` 如果输出次数比较多，由于 endl 会刷新输出流缓冲区，多行输出会导致刷新缓冲区过于频繁，非常耗时间，例如：[公司食堂](https://www.nowcoder.com/questionTerminal/601815bea5544f389bcd20fb5ebca6a8)

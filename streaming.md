@@ -31,7 +31,7 @@ RTMP 全称是 Real Time Messaging Protocol 即**实时消息传输协议**，�
 4. 服务端必须等到收到 C1 之后才能发送 S2
 5. 服务端必须等到收到 C2 之后才能发送其他信息（控制信息和真实音视频等数据）
 
-<img src="https://s2.loli.net/2023/02/17/971BjW2zoAyN3XI.png" alt="729.png" style="zoom:35%;" />
+<img src="https://segmentfault.com/img/remote/1460000018582527?w=547&h=662" alt="729.png" style="zoom:60%;" />
 
 
 
@@ -92,9 +92,7 @@ RTMP 全称是 Real Time Messaging Protocol 即**实时消息传输协议**，�
 
 > 通过拆分，数据量较大的 Message 可以被拆分成较小的 “Message”，这样就可以**避免优先级低的消息持续发送阻塞优先级高的数据**，比如在视频的传输过程中，会包括**视频帧，音频帧和RTMP控制信息**，如果持续发送音频数据或者控制数据的话可能就会造成视频帧的阻塞，然后就会造成看视频时最烦人的卡顿现象。同时对于数据量较小的Message，可以通过对 Chunk Header 的字段来压缩信息，从而减少信息的传输量。
 
-
-
-<img src="https://images2015.cnblogs.com/blog/693621/201706/693621-20170627103318493-1240078246.png" alt="Chunk" style="zoom:90%;" align="left"/>
+<img src="https://images2015.cnblogs.com/blog/693621/201706/693621-20170627103318493-1240078246.png" alt="Chunk" style="zoom:90%;"/>
 
 Chunk 由 Header + Data 组成，Header 由 Basic Header + Message Header [+ Extended Timestamp] 组成
 
@@ -305,9 +303,9 @@ Data Tag / Script TagBody：script 类型的 tag 通常会更在 FLVHEADER 后�
 
 **FLV完整的封装结构如下：**
 
-<img src="https://leisure_chn.gitee.io/blog/figure/containers/flv.jpg" alt="FLV" style="zoom:80%;" align="left"/>
+<img src="https://leisure_chn.gitee.io/blog/figure/containers/flv.jpg" alt="FLV" style="zoom:80%;"/>
 
-
+  
 
 #### 参考
 
@@ -467,7 +465,7 @@ HLS 是 Apple 提出并推广的，它的工作原理是把整个流分成一个
   - 延时较大，直播情况很难做到 10s 以内的延时
   - 内容生成时对编码端性能要求较高
 
-![HLS](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/11837e609d794ad39171ff32d5e50c79~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
+<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/11837e609d794ad39171ff32d5e50c79~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp" alt="HLS" style="zoom:50%;" />
 
 
 
