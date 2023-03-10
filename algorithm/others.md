@@ -475,9 +475,9 @@ a = a ^ b = a ^ b ^ a = b;	// a = b;
 
 
 
-### 7. stringsteam
+### 7. Split
 
-stringstream 通常用来格式化字符串，可以实现 cin 和 cout 的功能， 同时支持C风格字符串的输入输出操作
+stringstream 通常用来格式化字符串，可以实现 cin 和 cout 的功能， 同时支持C风格字符串的输入输出操作，相关头文件是 `<sstream>`
 
 - ostringstream ： 用于执行C风格字符串的输出操作，只支持 << 操作符
 - istringstream ： 用于执行C风格字符串的输入操作，只支持 >> 操作符
@@ -524,4 +524,36 @@ vector<string> stringstream_test(string &s, char delim)
     return res;
 }
 ```
+
+
+
+另外 getline 还有如下用法：
+
+```cpp
+istream& getline (char* s, streamsize n );
+istream& getline (char* s, streamsize n, char delim );
+```
+
+
+
+### 8. 模运算
+
+涉及到取模的题目，通常会用到如下等式
+
+```bash
+(a+b) mod p = (a mod p + b mod p) mod p 
+
+# 例如
+# (16 + 26) mod 10 = (16 mod 10 + 26 mod 10) mod 10 = (6+6) mod 10= 2
+```
+
+证明：根据**带余除法**，任意整数 $a$ 都可以表示为 $a=kp+r$，这里 $r$ 相当于 $a\bmod p$
+
+那么设 $a=k_1p+r_1,\ b=k_2p+r_2$，有
+
+$$ \begin{aligned} &(a+b) \bmod p\ =((k_1+k_2) p+r_1+r_2)\bmod p\ =(r_1+r_2)\bmod p\ =(a\bmod p + b\bmod p) \bmod p \end{aligned} $$
+
+> 处理负数（a < 0）：a mod p = (a mod p + p)  mod p = b mod p
+>
+> 参考：[0x3F - 前缀和+哈希表](https://leetcode.cn/problems/make-sum-divisible-by-p/solution/tao-lu-qian-zhui-he-ha-xi-biao-pythonjav-rzl0/)
 

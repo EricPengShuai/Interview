@@ -141,47 +141,97 @@ void trimRightTrailingSpaces(string &input) {
 
 
 
-#### 3.2 getline
-
-**#include <string\>**
+#### 3.2 输入数组中带有括号
 
 ```cpp
-// ss 是输入流，item 是读取的字符串，delim 是分隔符(默认是'\n')
-string = "1,2,3,4,5,6,7";
-vector<int> output;
-stringstream ss(string);
-string item;
-char delim = ',';
-while (getline(ss, item, delim)) {
-    output.push_back(stoi(item));
-}
-```
-
-
-
-**#include <istream\>**
-
-```cpp
-istream& getline (char* s, streamsize n );
-istream& getline (char* s, streamsize n, char delim );
-
-// istream::getline example
-#include <iostream>     // std::cin, std::cout
+#include <iostream>
+#include <vector>
+#include <string>
+#include <cstring> // char *strtok(char *str, const char *delim);
+#include <sstream>
 using namespace std;
 
-int main () {
-    char name[256], title[256];
-
-    cout << "Please, enter your name: ";
-    cin.getline (name,256);
-
-    cout << "Please, enter your favourite movie: ";
-    cin.getline (title,256);
-
-    cout << name << "'s favourite movie is " << title;
+int main() {
+    // 处理没有给出矩阵的行列数，例如输入为：
+    // 3 2 3
+    // 1 6 5
+    // 7 8 9
+    vector<vector<int>> arr;
+    string input;
+    while (getline(cin, input)) {
+        if (input.size() > 0) {
+            stringstream stringin(input);
+            int num;
+            vector<int> a;
+            while (stringin >> num) {
+                a.push_back(num);
+            }
+            arr.push_back(a);
+        } else {
+            break;
+        }
+    }
+    
+    // 输入中带括号，例如输入为：
+    // [[3, 2, 3],
+    // [1, 6, 5],
+    // [7, 8, 9]]
+    vector<vector<int>> arr;
+    string input;
+    char *tok;
+    while (getline(cin, input)) {
+        // 其实这里如果不是输入文件，还需要 break，但是牛客上都是文件形式有 EOF
+        if (input.size() > 0) {
+            vector<int> a;
+            tok = strtok((char *)input.c_str(), " ,[]");
+            while (tok != NULL) {
+                a.push_back(stoi(tok));
+                tok = strtok(NULL, " ,[]");
+            }
+            arr.push_back(a);
+        }
+    }
     return 0;
 }
 ```
+
+**注意 strtok 的用法**
+
+> 在第一次调用时，strtok函数需要将要分解的字符串指针作为第一个参数传递进去。在这之后，每次调用strtok函数时，第一个参数应该为NULL，以便函数知道应该从上一次调用的位置继续分解字符串。这个位置会被记录下来，并存储在内部的静态变量中。
+>
+> 传递NULL的作用是告诉strtok函数继续从上一次的位置继续分解字符串。因此，如果您在同一个字符串上多次调用strtok函数，则它将继续从上次分解的位置开始进行分解。这是因为strtok函数使用一个静态变量来存储上次分解的位置，而这个静态变量会在每次调用strtok函数时更新。
+>
+> 需要注意的是，如果你想使用strtok函数分解多个字符串，你需要为每个新字符串调用一次strtok函数
+
+```cpp
+#include <cstring>
+#include <iostream>
+
+int main()
+{
+    char str1[] = "Hello world";
+    char str2[] = "How are you?";
+    char *token;
+
+    // 分解第一个字符串
+    token = std::strtok(str1, " ");
+    while (token != NULL) {
+        std::cout << token << '\n';
+        token = std::strtok(NULL, " ");
+    }
+
+    // 分解第二个字符串
+    token = std::strtok(str2, " ");
+    while (token != NULL) {
+        std::cout << token << '\n';
+        token = std::strtok(NULL, " ");
+    }
+
+    return 0;
+}
+```
+
+
 
 
 
@@ -192,4 +242,7 @@ int main () {
   - 红黑数：`set<int>` `map<int, int>`，默认是按照 key 升序（set 中是 value），插入删除 $O(\log N)$
   - 哈希表：`unordered_set<int>` `unordered_map<int, int>`，查找比较快
 
-- 有些牛客上的题目卡输入输出：`cout << x << endl;` 如果输出次数比较多，由于 endl 会刷新输出流缓冲区，多行输出会导致刷新缓冲区过于频繁，非常耗时间，例如：[公司食堂](https://www.nowcoder.com/questionTerminal/601815bea5544f389bcd20fb5ebca6a8)
+- 有些牛客上的题目卡输入输出：`cout << x << endl;` 如果输出次数比较多，由于 endl 会刷新输出流缓冲区，多行输出会导致刷新缓冲区过于频繁，非常耗时间，可以使用 '\n' 代替 endl，例如：[公司食堂](https://www.nowcoder.com/questionTerminal/601815bea5544f389bcd20fb5ebca6a8)
+
+
+
