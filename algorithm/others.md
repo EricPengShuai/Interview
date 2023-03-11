@@ -475,7 +475,30 @@ a = a ^ b = a ^ b ^ a = b;	// a = b;
 
 
 
-### 7. Split
+### 7. 模运算
+
+涉及到取模的题目，通常会用到如下等式
+
+```bash
+(a+b) mod p = (a mod p + b mod p) mod p 
+
+# 例如
+# (16 + 26) mod 10 = (16 mod 10 + 26 mod 10) mod 10 = (6+6) mod 10= 2
+```
+
+证明：根据**带余除法**，任意整数 $a$ 都可以表示为 $a=kp+r$，这里 $r$ 相当于 $a\bmod p$
+
+那么设 $a=k_1p+r_1,\ b=k_2p+r_2$，有
+
+$$ (a+b) \bmod p\ =((k_1+k_2) p+r_1+r_2)\bmod p\ =(r_1+r_2)\bmod p\ =(a\bmod p + b\bmod p) \bmod p $$
+
+> 处理负数（a < 0）：a mod p = (a mod p + p)  mod p = b mod p
+>
+> 参考：[0x3F - 前缀和+哈希表](https://leetcode.cn/problems/make-sum-divisible-by-p/solution/tao-lu-qian-zhui-he-ha-xi-biao-pythonjav-rzl0/)
+
+
+
+### 8. Split
 
 stringstream 通常用来格式化字符串，可以实现 cin 和 cout 的功能， 同时支持C风格字符串的输入输出操作，相关头文件是 `<sstream>`
 
@@ -536,24 +559,32 @@ istream& getline (char* s, streamsize n, char delim );
 
 
 
-### 8. 模运算
+### 9. 前缀和
 
-涉及到取模的题目，通常会用到如下等式
+对于数组 nums，定义前缀和 s[0] = 0,  $s[i+1]=\Sigma_{j=0}^i nums[j]$
 
-```bash
-(a+b) mod p = (a mod p + b mod p) mod p 
+根据这个定义：`s[i+1] = s[i] + nums[i]`，例如 nums = [1, 2, -1, 2]，对应前缀和数组为 s = [0, 1, 3, 2, 4]
 
-# 例如
-# (16 + 26) mod 10 = (16 mod 10 + 26 mod 10) mod 10 = (6+6) mod 10= 2
-```
+通过前缀和可以把 **子数组的元素和转换成两个前缀和的差**，具体如下：
+$$
+\Sigma_{j=left}^{right}nums[j]=\Sigma_{j=0}^{right}nums[j]-\Sigma_{j=0}^{left-1}nums[j]=s[right+1]-s[left] \nonumber
+$$
+例如 nums 的子数组 [2, -1, 2] 的和就可以使用 s[4] - s[1] = 4 -1 = 3 计算
 
-证明：根据**带余除法**，任意整数 $a$ 都可以表示为 $a=kp+r$，这里 $r$ 相当于 $a\bmod p$
-
-那么设 $a=k_1p+r_1,\ b=k_2p+r_2$，有
-
-$$ \begin{aligned} &(a+b) \bmod p\ =((k_1+k_2) p+r_1+r_2)\bmod p\ =(r_1+r_2)\bmod p\ =(a\bmod p + b\bmod p) \bmod p \end{aligned} $$
-
-> 处理负数（a < 0）：a mod p = (a mod p + p)  mod p = b mod p
+> 📢：这里相当于左闭右开区间 [left, right) 表示 nums[left] 到 nums[right-1] 的子数组，此时子数组的和为 s[right] - s[left]，子数组的长度为 right - left 
 >
-> 参考：[0x3F - 前缀和+哈希表](https://leetcode.cn/problems/make-sum-divisible-by-p/solution/tao-lu-qian-zhui-he-ha-xi-biao-pythonjav-rzl0/)
+> 📢：s[0] = 0 表示一个空数组的元素和，当要计算的子数组恰好是一个从 nums[0] 开始的前缀时，使用 s[right+1] - s[0] 就可以轻松表示 nums[0] 到 nums[right] 的元素之和
 
+
+
+**前缀和 + 哈希表**
+
+| 题目                                                         | 说明                                                         | 答案                                                         |
+| :----------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [560. 和为 K 的子数组](https://leetcode.cn/problems/subarray-sum-equals-k/) | 哈希表记录前缀和出现次数                                     | [通过](https://leetcode.cn/submissions/detail/411641447/)    |
+| [974. 和可被 K 整除的子数组](https://leetcode.cn/problems/subarray-sums-divisible-by-k/) | 哈希表记录前缀和余数出现次数                                 | [通过](https://leetcode.cn/submissions/detail/411649367/)    |
+| [1590. 使数组和能被 P 整除](https://leetcode.cn/problems/make-sum-divisible-by-p/) | 哈希表记录前缀和余数首次出现下标，主要 mod 运算技巧避免出现负数 | [通过](https://leetcode.cn/problems/make-sum-divisible-by-p/solution/tao-lu-qian-zhui-he-ha-xi-biao-pythonjav-rzl0/) |
+| [523. 连续的子数组和](https://leetcode.cn/problems/continuous-subarray-sum/) | 哈希表记录前缀和余数首次出现下标                             | [通过](https://leetcode.cn/submissions/detail/410920353/)    |
+| [525. 连续数组](https://leetcode.cn/problems/contiguous-array/) | 0 看成 -1，哈希表记录前缀和首次出现下标                      |                                                              |
+
+> 如果是在循环里面直接记录前缀和需要注意哈希表的初始化，一般有两种：一是记录 s 首次出现**下标**；二是记录 s 出现**次数**
