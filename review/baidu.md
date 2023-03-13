@@ -1,3 +1,67 @@
+## 2023—暑期实习
+
+### 笔试
+
+输入一个整数 n（1 <= n <= 1e9），输出一个字符串 s（任意符合要求的都可）
+
+- 要求1：s 的字符只能从 {'r', 'e', 'd'} 中选择
+
+- 要求2：s 的回文子串个数为 n
+
+```bash
+例如：
+输入 n = 3
+输出 s = "rr"（"red"也可以）
+```
+
+
+
+贪心构造：(rrr...)(eee...)(ddd...)(rrr...)(eee...)(ddd...)...这样构造，长度从长到短
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+// 1 --> r
+// 3 --> rr
+// 6 --> rrr
+// 10 --> rrrr
+// n(n+1) / 2 --> n = ans.size()
+
+string ans = "";
+vector<char> vt = {'r', 'e', 'd'};
+
+void help(int n, int id) {
+    if (n == 0) return;
+
+    // 找到最大的 x : (x+1)x < 2n
+    int x = sqrt(2*n);
+    if (x * (x+1) > 2*n) {
+        x = x - 1;
+    }
+    // cout << x << ' ';
+
+    // 贪心构造
+    ans += string(x, vt[id % 3]);
+    id += 1;
+
+    // 递归构造 ans
+    help(n - (x+1) * x / 2, id);
+}
+
+int main()
+{
+    int n; cin >> n;
+    help(n, 0);
+    cout << ans << endl;
+    return 0;
+}
+```
+
+
+
 ## 搜索架构
 
 ### 2021.4.26一面
