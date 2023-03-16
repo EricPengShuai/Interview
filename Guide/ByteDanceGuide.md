@@ -219,7 +219,7 @@ https://blog.csdn.net/qq_34827674/article/details/108608566
    
 2. **HTTPS**：是以安全为目标的 HTTP 通道，是 HTTP 的安全版。HTTPS 的安全基础是 SSL。SSL 协议位于TCP/IP 协议与各种应用层协议之间，为数据通讯提供安全支持。**端口号是443**
 
-   SSL 协议可分为两层：**SSL 记录协议（SSL Record Protocol）**建立在可靠的传输协议（如TCP）之上，为高层协议提供数据封装、压缩、加密等基本功能的支持。**SSL 握手协议（SSL Handshake Protocol）**建立在 SSL 记录协议之上，用于在实际的数据传输开始前，通讯双方进行身份认证、协商加密算法、交换加密密钥等。
+   SSL 协议可分为两层：**SSL 记录协议（SSL Record Protocol）** 建立在可靠的传输协议（如TCP）之上，为高层协议提供数据封装、压缩、加密等基本功能的支持。**SSL 握手协议（SSL Handshake Protocol）** 建立在 SSL 记录协议之上，用于在实际的数据传输开始前，通讯双方进行身份认证、协商加密算法、交换加密密钥等。
    
    <img src="https://img-blog.csdnimg.cn/20200707084720409.png" alt="img" style="zoom:75%;" />
    
@@ -229,7 +229,7 @@ https://blog.csdn.net/qq_34827674/article/details/108608566
    
    ① 客户端发起SSL handshake protocol消息给服务器
    
-   ② 服务端将证书颁发给客户端
+   ② 服务端将「证书=签名+原信息」发给给客户端验证
    
    ③ 客户端检查服务端证书，合规就认证了服务端
    
@@ -345,7 +345,7 @@ https://blog.csdn.net/qq_34827674/article/details/108608566
 - 停止等待协议：每发完一个分组就- 停止发送，等待对方确认。在收到确认后再发下一个分组。
 - 有RTO重传计时器
 
-> 另外可以参考：[阿秀GitHub](https://github.com/forthespada/InterviewGuide)
+> 参考：https://cloud.tencent.com/developer/article/1591989
 
 
 
@@ -377,6 +377,8 @@ https://blog.csdn.net/qq_34827674/article/details/108608566
 - **401** : 发送的请求需要有通过HTTP认证的认证信息
 - **403** : 对请求资源的访问被服务器拒绝了
 
+> 参考：https://www.runoob.com/http/http-status-codes.html
+
 
 
 ##### 3.3 简述 HTTPS 的加密与认证过程
@@ -395,7 +397,7 @@ https://blog.csdn.net/qq_34827674/article/details/108608566
 
 - 浏览器从一个域名的网页去请求另一个域名的资源时，域名、端口、协议任一不同，都是跨域
 
-> **在前后端分离的模式下，前后端的域名是不一致的**，此时就会发生跨域访问问题。在请求的过程中我们要想回传数据一般都是post/get请求，所以..跨域问题出现
+> **在前后端分离的模式下，前后端的域名是不一致的**，此时就会发生跨域访问问题。在请求的过程中我们要想回传数据一般都是post/get请求，所以跨域问题出现
 >
 > **跨域问题来源于JavaScript的同源策略，即只有 协议+主机名+端口号(如存在)相同，则允许相互访问**。也就是说JavaScript只能访问和操作自己域下的资源，不能访问和操作其他域下的资源。跨域问题是针对JS和ajax的，html本身没有跨域问题，比如a标签、script标签、甚至form标签（可以直接跨域发送数据并接收数据）等
 
@@ -431,7 +433,7 @@ https://blog.csdn.net/qq_34827674/article/details/108608566
 >
 > 这些就被我们成为DNS劫持，DNS劫持对于网络访问的影响和体验是非常严重的，除了DNS服务器，你的路由器同样可以这么干，所以在买路由器的时候也有人会关注这个路由器是否会进行DNS劫持。
 
-- [x] 具体看一下自己的DNS服务器项目
+- [x] ~~具体看一下自己的DNS服务器项目~~
 
 - 多个client请求问题需要进行ID转换
 - 三种类型：本地服务器解析、屏蔽、中继解析
@@ -661,7 +663,7 @@ https://zhuanlan.zhihu.com/p/45338392
 
   > 用于保持一致性
 
-- Undo log：**原子性** 底层就是通过 `undo log` 实现的。`undo log`主要记录了数据的逻辑变化，比如一条 `INSERT` 语句，对应一条`DELETE` 的 `undo log` ，对于每个 `UPDATE` 语句，对应一条相反的 `UPDATE` 的 `undo log` ，这样在发生错误时，就能回滚到事务之前的数据状态。
+- **Undo log**：「原子性」底层就是通过 `undo log` 实现的。`undo log`主要记录了数据的逻辑变化，比如一条 `INSERT` 语句，对应一条`DELETE` 的 `undo log` ，对于每个 `UPDATE` 语句，对应一条相反的 `UPDATE` 的 `undo log` ，这样在发生错误时，就能回滚到事务之前的数据状态。
 
 
 ***
