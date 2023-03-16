@@ -579,12 +579,19 @@ $$
 
 **前缀和 + 哈希表**
 
-| 题目                                                         | 说明                                                         | 答案                                                         |
+| 题目                                                         | 说明                                                         | 题解                                                         |
 | :----------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [560. 和为 K 的子数组](https://leetcode.cn/problems/subarray-sum-equals-k/) | 哈希表记录前缀和出现次数                                     | [通过](https://leetcode.cn/submissions/detail/411641447/)    |
 | [974. 和可被 K 整除的子数组](https://leetcode.cn/problems/subarray-sums-divisible-by-k/) | 哈希表记录前缀和余数出现次数                                 | [通过](https://leetcode.cn/submissions/detail/411649367/)    |
 | [1590. 使数组和能被 P 整除](https://leetcode.cn/problems/make-sum-divisible-by-p/) | 哈希表记录前缀和余数首次出现下标，主要 mod 运算技巧避免出现负数 | [通过](https://leetcode.cn/problems/make-sum-divisible-by-p/solution/tao-lu-qian-zhui-he-ha-xi-biao-pythonjav-rzl0/) |
 | [523. 连续的子数组和](https://leetcode.cn/problems/continuous-subarray-sum/) | 哈希表记录前缀和余数首次出现下标                             | [通过](https://leetcode.cn/submissions/detail/410920353/)    |
-| [525. 连续数组](https://leetcode.cn/problems/contiguous-array/) | 0 看成 -1，哈希表记录前缀和首次出现下标                      |                                                              |
+| [525. 连续数组](https://leetcode.cn/problems/contiguous-array/) | 转化：0 看成 -1，哈希表记录前缀和首次出现下标                | [通过](https://leetcode.cn/submissions/detail/411657620/)    |
+| [面试题 17.05.  字母与数字](https://leetcode.cn/problems/find-longest-subarray-lcci/) | 等价转换：数字-->1，字符-->-1 :fire:                         | [0x3F](https://leetcode.cn/problems/find-longest-subarray-lcci/solution/tao-lu-qian-zhui-he-ha-xi-biao-xiao-chu-3mb11/) |
+| [2488. 统计中位数为 K 的子数组](https://leetcode.cn/problems/count-subarrays-with-median-k/) | 等价转换：＋左侧小于 -左侧大于（+1）== ＋右侧大于 - 右侧小于 :fire: | [0x3F](https://leetcode.cn/problems/count-subarrays-with-median-k/solution/deng-jie-zhuan-huan-pythonjavacgo-by-end-5w11/) |
 
-> 如果是在循环里面直接记录前缀和需要注意哈希表的初始化，一般有两种：一是记录 s 首次出现**下标**；二是记录 s 出现**次数**
+> 如果是在循环里面直接记录前缀和需要注意哈希表的初始化，一般有两种：
+>
+> - 记录 s 首次出现**下标**
+> - 记录 s 出现**次数**
+>
+> 另外有些题目需要**等价转换**，例如：LC.525, LC.2488 等，遇到这些关键词：**总和为 0、数量相等、轴对称、元素具有 01 二分性**，就可以考虑分别给「0元素」「1元素」赋权值 `-1`、`1` 求和处理
