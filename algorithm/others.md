@@ -595,3 +595,95 @@ $$
 > - 记录 s 出现**次数**
 >
 > 另外有些题目需要**等价转换**，例如：LC.525, LC.2488 等，遇到这些关键词：**总和为 0、数量相等、轴对称、元素具有 01 二分性**，就可以考虑分别给「0元素」「1元素」赋权值 `-1`、`1` 求和处理
+
+
+
+### 10. KMP
+
+> 目标串 s = "BBCXABCDABXABCDABCDABDE"，模式串 p = "ABCDABD"
+
+**next 数组**
+
+- 理解前缀和后缀的概念，ABCA 的前缀为 **A**、AB、ABC，后缀为 **A**、CA、BCA，最大公共元素长度为 1
+- next 数组相当于“最大长度值” 整体向右移动一位，然后初始值赋为 -1
+- 有的博客将 next 记为 [-1 -1 -1 -1 0 1 -1]，这个相当于 “最大长度值” - 1，注意在 kmp 中的使用即可
+
+![next](https://img-blog.csdn.net/20140728110939595)
+
+
+
+**优化点**
+
+- 传统的暴力匹配，s[i] != p[j] 时需要回退 `i = i - (j-1), j = 0`，KMP 算法在 next 数组的辅助下，当出现元素不匹配时，只需要回退 j (j != -1)，并且 `j = next[j]`，相当模式串于**整体右移 j - next[j] 位**
+
+- next[j] = k 表示 j 之前的字符串中有最大长度为 k 的相同前缀后缀
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void GetNext(string &p, vector<int> &next)
+{
+    int pLen = p.size();
+    next[0] = -1;
+    int k = -1, j = 0;
+    while (j < pLen - 1) {
+        // p[k]表示前缀，p[j]表示后缀
+        if (k == -1 || p[j] == p[k]) {
+            ++k;
+            ++j;
+            next[j] = k;
+        } else {
+            k = next[k];
+        }
+    }
+}
+
+int KmpSearch(string &s, string &p, vector<int> &next)
+{
+    int i = 0, j = 0;
+    int sLen = s.size(), pLen = p.size();
+    while (i < sLen && j < pLen) {
+        // ①如果j = -1，或者当前字符匹配成功（即S[i] == P[j]），都令i++，j++    
+        if (j == -1 || s[i] == p[j]) {
+            i++, j++;
+        } else {
+            // ②如果j != -1，且当前字符匹配失败（即S[i] != P[j]），则令 i 不变，j = next[j]    
+            // next[j]即为j所对应的next值      
+            j = next[j];
+        }
+    }
+    
+    // 完全匹配则返回 s 中起始下标 i-j
+    return j == pLen ?  i-j : -1;
+}
+
+int main() {
+    string s = "BBCXABCDABXABCDABCDABDE";
+    string p = "ABCDABD";
+
+    vector<int> next(p.size());
+    GetNext(p, next);
+    for (int x: next) {
+        cout << x << ' ';
+    }
+    cout << endl;
+
+    int t = KmpSearch(s, p, next);
+    if (t != -1) {
+        cout << t << ' ' << s.substr(t, p.size()) << endl;    
+    }
+
+    return 0;
+}
+```
+
+
+
+参考：
+
+- [KMP简单大致流程—阮一峰](http://www.ruanyifeng.com/blog/2013/05/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm.html)
+- [如何理解kmp算法中的next数组—zhihu](https://www.zhihu.com/question/21474082)
+- [next 数组的求法—CSDN](https://blog.csdn.net/buppt/article/details/78531384)
+- [从头到尾理解KMP—CSDN](https://blog.csdn.net/v_july_v/article/details/7041827)
