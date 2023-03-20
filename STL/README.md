@@ -1,13 +1,13 @@
-# C++ STL
+## C++ STL
 **C++ STL** 之所以得到广泛的赞誉，也被很多人使用，不只是提供了像`vector`, `string`, `list`等方便的容器，更重要的是**STL**封装了许多复杂的数据结构算法和大量常用数据结构操作。
 
 
 
-## vector
+### vector
 
-- [*vector.cpp*](./vector.cpp)：**vector**封装数组: 便于随机访问
+- [*vector.cpp*](vector.cpp)：**vector**封装数组: 便于随机访问
 
-- [*emplace_vs_push.cpp*](./emplace_vs_push.cpp)：**emplace_back**和**push_back**的区别：好像是前者效率高
+- [*emplace_vs_push.cpp*](emplace_vs_push.cpp)：**emplace_back**和**push_back**的区别：好像是前者效率高
 
   - 在接受 `T, T&, T&&`作为参数时，empalce_back 和 push_back 没有区别，分别调用普通构造函数、拷贝构造函数和移动构造函数
   - emplace_back 支持传入 class T 的构造函数的参数，并且此时**没有任何临时变量生成**，但是 push_back 不支持
@@ -18,46 +18,46 @@
 
 
 
-## list
+### list
 
 - forward_list 是单向链表，list 是双向链表
 - 两者都是序列容器，可以在 O(1) 时间内插入和删除元素
-- *[list](./list.cpp)*：list 和 forward_list 的基本用法
+- *[list](list.cpp)*：list 和 forward_list 的基本用法
   - splice 转移函数，LeetCode LRU 经典题目用法：[146. LRU 缓存](https://leetcode.cn/problems/lru-cache/)
 
 
 
-## string
+### string
 
-- *[string.cpp](./string.cpp)*：**string**基本用法
+- *[string.cpp](string.cpp)*：**string**基本用法
 
 
 
-## queue vs deque
+### queue vs deque
 
 - 两者最主要的区别是：具体参考 [queue_vs_deque.md](queue_vs_deque.md)
   - deque支持push_front、pop_front、push_back、pop_back
   - queue支持push（实际上就是pop_back）、pop（实际上就是pop_front）
-- *[priority_queue.cpp](./priority_queue.cpp)*：优先队列用法
+- *[priority_queue.cpp](priority_queue.cpp)*：优先队列用法
   - 默认是 `less<int>`：大顶堆，为什么升序却是大顶堆呢，[因为堆排序一个最大堆才会得到升序](https://www.zhihu.com/question/343715076)
   - [数据结构与算法--排序算法：堆排序 最大堆（大顶堆）和 最小堆（小顶堆）](https://blog.csdn.net/storyfull/article/details/102925462)
 
 
 
 
-## map vs set
+### map vs set
 
 - **map** 封装了二叉树等 
   
-    - *[mapSTL.cpp](./mapSTL.cpp)*：`map`底层是一个红黑树，有序的（按照`key`排序），一般处理有序的情况
-    - *[unordered_map.cpp](./unordered_map.cpp)*: `unordered_map` 底层是一个哈希表，便于查找，但是内存占用比较高
+    - *[mapSTL.cpp](mapSTL.cpp)*：`map`底层是一个红黑树，有序的（按照`key`排序），一般处理有序的情况
+    - *[unordered_map.cpp](unordered_map.cpp)*: `unordered_map` 底层是一个哈希表，便于查找，但是内存占用比较高
     - `map` 和 `unordered_map` 外部操作都是一样的，只是内部实现不一样
     
 - **set** 也是封装了二叉树，基于红黑树实现
   
     - 和 `map` 的区别就是将 `value` 作为 `key`，`map` 的 `key` 和 `value` 是分开的；`map`允许修改 `value` 不允许修改 `key`，`set` 的迭代器是 `const`，不允许修改元素的值
     
-    - *[setSTL.cpp](./setSTL.cpp)*：`multiset` 用法，和 `set` 类似，只是前者可以保存重复元素，后者不保存，默认时升序排列的也就是 `multiset<int, less<int>>`
+    - *[setSTL.cpp](setSTL.cpp)*：`multiset` 用法，和 `set` 类似，只是前者可以保存重复元素，后者不保存，默认时升序排列的也就是 `multiset<int, less<int>>`
     
       ```cpp
       set<int> st;
@@ -73,9 +73,9 @@
 
 
 
-## sort
+### sort
 
-- 自定义sort函数：*[sort1.cpp](./sort1.cpp)*：使用**lambda表达式**和**函数**；*[sort2.cpp](./sort2.cpp)*：使用**模板**和**函数**
+- 自定义sort函数：*[sort1.cpp](sort1.cpp)*：使用**lambda表达式**和**函数**；*[sort2.cpp](sort2.cpp)*：使用**模板**和**函数**
 
 - 主要有三种自定义比较方式的写法：
 
@@ -127,11 +127,11 @@
 
 
 
-## thread
+### thread
 
 > C++ 11 引入 <thread> 头文件，主要用于实现多线程编程，并结合互斥类 <mutex> 实现临界区的访问
 
-代码参考 [thread.cpp](./thread.cpp)，主要的成员函数有
+代码参考 [thread.cpp](thread.cpp)，主要的成员函数有
 
 - `get_id()`：获取线程ID，返回一个类型为`std::thread::id`的对象
 - `joinable()`：检查线程是否可被 join 。检查 thread 对象是否标识一个活动 (active) 的可行性线程。缺省构造的 thread 对象、已经完成 join 的 thread 对象、已经 detach 的 thread 对象都不是 joinable
@@ -150,13 +150,41 @@
 
 
 
-## advance
+#### unique
 
-- *[advance.cpp](./advance.cpp)*：实现迭代器的加减操作
+该函数的作用是“去除”容器或者数组中相邻元素的重复出现的元素，注意
+
+(1) 这里的去除并非真正意义的erase，而是将重复的元素放到容器的**末尾**，返回值是去重之后的尾地址。
+
+(2) unique 针对的是相邻元素，所以对于顺序顺序错乱的数组成员，或者容器成员，需要先进行排序，可以调用std::sort()函数
+
+```cpp
+std::vector<int> vt;
+std::sort(vt.begin(), vt.end());	// 排序
+vt.erase(unique(vt.begin(), vt.end()), vt.end());	// 去重
+```
 
 
 
-## __builtin（GCC 内建函数）
+### iterator
+
+#### 定义
+
+- 正向迭代器：`容器类名::iterator 迭代器名;`
+- 常量正向迭代器：`容器类名::const_iterator 迭代器名;`
+- 反向迭代器，`容器类名::reverse_iterator 迭代器名;`
+- 常量反向迭代器，`容器类名::const_reverse_iterator 迭代器名;`
+
+#### 移动
+
+- [advance.cpp](advance.cpp)：实现迭代器的加减操作，没有返回值
+- [prev_next.cpp](prev_next.cpp)：prev 原意为“上一个”，next 原意为“下一个”，是有返回值的
+- `distance(p, q)`：计算两个迭代器之间的距离，即迭代器 p 经过多少次 + + 操作后和迭代器 q 相等。如果调用时 p 已经指向 q 的后面，则这个函数会陷入死循环
+- `iter_swap(p, q)`：用于交换两个迭代器 p、q 指向的值
+
+
+
+### __builtin（GCC 内建函数）
 
 - `__builtin_ctz()` / `__builtin_ctzll()`：返回括号内数的二进制表示形式中末尾0的个数
 - `__buitlin_clz()`  / `__buitlin_clzll()`：返回括号内数的二进制表示形式中前导0的个数（leading zero）
@@ -168,6 +196,8 @@
 :warning:所有带 `ll` 的名字，均为 `long long` 类型下运算，否则将当作 `int` 来算。
 
 
+
+### 后继
 
 在封装这些数据结构的时候，**STL**按照程序员的使用习惯，以成员函数方式提供的常用操作，如：插入、排序、删除、查找等。让用户在**STL**使用过程中，并不会感到陌生。
 
