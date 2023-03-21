@@ -56,13 +56,11 @@
 1. [assert.cpp](base_code/assert.cpp)：断言语句，只有在Debug版本才有效
 
 2. [c_polymorphism.c](c_polymorphism.c), [c++_polymorphism.cpp](base_code/c++_polymorphism.cpp)：多态在c和c++中的实现
+   - C 中使用函数指针，`typedef void (*pf) ();` 表示重定义一个函数指针的类型
+   - C++ 中使用虚函数，`virtual override`
 
-   > c中使用函数指针，`typedef void (*pf) ();  // 重定义一个函数指针的类型`
-   >
-   > c++中使用虚函数，`virtual override`
-
-3. [colon.cpp](base_code/colon.cpp)：c++中冒号的使用，包括全局变量、类成员定义
-4. [decltype.cpp](base_code/decltype.cpp)：推导表达式类型，与using/typedef联合使用定义类型
+3. [colon.cpp](base_code/colon.cpp)：C++ 中冒号的使用，包括全局变量、类成员定义
+4. [decltype.cpp](base_code/decltype.cpp)：推导表达式类型，与 using/typedef 联合使用定义类型
 5. 更多参考 [base_code文件夹](base_code) ...
 
 
