@@ -210,7 +210,7 @@ FLV 是一种封装格式，主要用于流媒体系统，体积轻巧、封装�
 
 ```cpp
 typedef struct {
-	UI8 Signature;	// 'F'(0x46)
+    UI8 Signature;	// 'F'(0x46)
     UI8 Signature;	// 'L'(0x4C)
     UI8 Signature;	// 'V'(0x56)
     UI8 Version;	// FLV 版本号
@@ -244,14 +244,14 @@ typedef struct {
 
 ```cpp
 typedef struct {
-    UB[2] Reserved;	// 0，保留字段
-    UB[1] Filter;	// 表示 packet 是否需要预处理：0-不需要，1-需要
-    UB[5] TagType;	// 数据类型：8-音频，9-视频，18-脚本数据
-    UI24 DataSize;	// Header + Data 字段长度?
-    UI24 Timestamp;	// 解码时间戳 DTS(ms)，第一个 Tag 的 DTS 为0
+    UB[2] Reserved;		// 0，保留字段
+    UB[1] Filter;		// 表示 packet 是否需要预处理：0-不需要，1-需要
+    UB[5] TagType;		// 数据类型：8-音频，9-视频，18-脚本数据
+    UI24 DataSize;		// Header + Data 字段长度?
+    UI24 Timestamp;		// 解码时间戳 DTS(ms)，第一个 Tag 的 DTS 为0
     UI8 TimestampExtended;	// 和 TimeStamp 一起扩展至32位，此字段为高8位
-    UI24 StreamID;	// 0
-  IF TagType == 8	// 数据区
+    UI24 StreamID;		// 0
+  IF TagType == 8		// 数据区
     AudioTagHeader Header;
   IF TagType == 9
     VideoTagHeader Header;

@@ -181,8 +181,8 @@ void myfunc(T&& val)     // 万能引用
 int main()
 {
     myfunc(120); // ok，自动类型推导，120是右值，T为int类型，val为int&&类型
-	int i = 180;
-	myfunc(i); // ok，自动类型推导，i是左值，T为int&类型，val为int&类型
+    int i = 180;
+    myfunc(i); // ok，自动类型推导，i是左值，T为int&类型，val为int&类型
     return 0;
 }
 ```
