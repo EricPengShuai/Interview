@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <vector>
 #include <string>
 #include <set>
@@ -64,7 +65,7 @@ int main()
     for (int i = 0; i < 10; i ++) {
         set_pair_greater.insert(pair<int, int>(i, i%3));
     }
-    for (set<pair<int, int>, greater<pair<int, int>> >::iterator iter=set_pair_greater.begin(); iter!=set_pair_greater.end(); iter++) {
+    for (auto iter=set_pair_greater.begin(); iter!=set_pair_greater.end(); iter++) {
         cout << "(" << iter->first << "," << iter->second << ") ";
     }
     cout << endl;
