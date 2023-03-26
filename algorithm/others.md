@@ -98,7 +98,7 @@ void getPrimeFactor(long x, vector<long>& primes) {
 
 [2507. 使用质因数之和替换后可以取到的最小值](https://leetcode.cn/problems/smallest-value-after-replacing-with-sum-of-prime-factors/)
 
-- 参考灵神的题解，for 循环可以直接使用 `i * i < n` 判断，但是要注意推出之后和 1 判断一下
+- 参考灵神的题解，for 循环可以直接使用 `i * i <= n` 判断，但是要注意退出之后和 1 比较一下
 
 - 没必要判断是否变小，因为 $2+\frac{n}{2} \le n,(n \ge 4)$ 是一直变小的，退出条件就是 ans == n，[0x3F 暴力](https://leetcode.cn/problems/smallest-value-after-replacing-with-sum-of-prime-factors/solution/bao-li-by-endlesscheng-xh0b/)
 
@@ -133,7 +133,7 @@ int gcd(int a,int b) {
 ```cpp
 // lcm(a, b) = a * b / gcd(a, b)
 int lcm(int a,int b){
-	return a/gcd(a,b)*b;	// 注意先除可以防溢出
+    return a/gcd(a,b)*b;	// 注意先除可以防溢出
 }
 ```
 
@@ -215,13 +215,13 @@ public:
                 if (!vis[i] && (u == -1 || dist[i] < dist[u])) u = i;
             }
             vis[u] = true;
-            // 用点 t 的最小距离更新其他点
-            // k-->v <==> k-->u-->v
+            // 用点 u 的最小距离更新其他点
+            // k-->i <==> k-->u-->i
             // 遍历 u 相邻的节点 v
-            for (auto& [v, c]: edges[u]) {
-                if (!vis[v] && dist[v] > dist[u] + c) {
-                    dist[v] = dist[u] + c;
-                    pre[v] = u;
+            for (int i = 1; i <= n; ++ i) {
+                if (!vis[i] && dist[i] > dist[u] + w[u][i]) {
+                    dist[i] = dist[u] + w[u][i];
+                    pre[i] = u;
                 }
             }
         }

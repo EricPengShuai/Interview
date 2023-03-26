@@ -3029,34 +3029,34 @@ const int& a = 10;
 
 ```C++
 #include <bits/stdc++.h>
-using namespace std
+using namespace std;
 
 template<typename T>
 void fun(T&& t)
 {
-	cout << t << endl;
+    cout << t << endl;
 }
 
 int getInt()
 {
-	return 5;
+    return 5;
 }
 
 int main() {
     int a = 10;
-	int& b = a;  //b是左值引用
-	int& c = 10;  //错误，c是左值不能使用右值初始化
-	int&& d = 10;  //正确，右值引用用右值初始化
-	int&& e = a;  //错误，e是右值引用不能使用左值初始化
-	const int& f = a; //正确，左值常引用相当于是万能型，可以用左值或者右值初始化
-	const int& g = 10;//正确，左值常引用相当于是万能型，可以用左值或者右值初始化
-	const int&& h = 10; //正确，右值常引用
-	const int& aa = h;//正确
-	int& i = getInt();  //错误，i是左值引用不能使用临时变量（右值）初始化
-	int&& j = getInt();  //正确，函数返回值是右值
-	fun(10); //此时fun函数的参数t是右值
-	fun(a); //此时fun函数的参数t是左值
-	return 0;
+    int& b = a;  //b是左值引用
+    int& c = 10;  //错误，c是左值不能使用右值初始化
+    int&& d = 10;  //正确，右值引用用右值初始化
+    int&& e = a;  //错误，e是右值引用不能使用左值初始化
+    const int& f = a; //正确，左值常引用相当于是万能型，可以用左值或者右值初始化
+    const int& g = 10;//正确，左值常引用相当于是万能型，可以用左值或者右值初始化
+    const int&& h = 10; //正确，右值常引用
+    const int& aa = h;//正确
+    int& i = getInt();  //错误，i是左值引用不能使用临时变量（右值）初始化
+    int&& j = getInt();  //正确，函数返回值是右值
+    fun(10); //此时fun函数的参数t是右值
+    fun(a); //此时fun函数的参数t是左值
+    return 0;
 }
 ```
 
@@ -4280,7 +4280,11 @@ public:
 
 #### 26、:dizzy:将字符串“hello world”从开始到打印到屏幕上的全过程?
 
-
+- 用户执行 hello 可执行文件
+- OS 创建一个新进程，将 hello 执行文件映射到该进程结构
+- OS 设置好 cpu 上下文之后，进程执行该程序
+- 如果发生缺页中断，OS 分配一页物理内存，将代码从磁盘读入内存然后执行
+- hello 程序中通过系统 cout 或者 printf 在显示器上显示输出字符串
 
 #### 27、为什么拷贝构造函数必须传引用不能传值？
 

@@ -52,7 +52,7 @@ int solve(const vector<vector<char>> &V) {
 
 int main() {
     ios::sync_with_stdio(false);    // 关闭 C++ 兼容 C 的 stdio
-    cin.tie(0); // 接触 cin 与 cout 的绑定，不用每次调用都 flush
+    cin.tie(0); // 解除 cin 与 cout 的绑定，不用每次调用都 flush
     cout.tie(0);
     cout.precision(10); // 精度控制，保留 10 个有效位，不是小数点后10位
     cout << fixed;  // 浮点输出应该以固定点或小数点表示法显示，和 cout.precision(i) 一起使用就表示保留小数点后 i 位
