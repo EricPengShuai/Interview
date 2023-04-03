@@ -59,7 +59,9 @@
 
 > 2023.03.27—19:00—1h，主要是负责 C 端广告业务
 
-#### 项目
+#### 一面
+
+**项目**
 
 - RTMP、RTSP、HLS、DASH 这些协议有什么区别，时延比较呢？
 
@@ -68,9 +70,7 @@
 - 单组播中组播优点是啥
 - 缓存 RTP 的内容队列有长度限制吗，会有阻塞吗
 
-
-
-#### 八股
+**八股**
 
 1. 常见的 linux 命令有哪些
 
@@ -99,4 +99,16 @@
    |  5XX   | Server Error（服务器错误状态码） |     服务器处理请求出错     |
 
 8. 算法：[剑指 Offer II 026. 重排链表](https://leetcode.cn/problems/LGjMqU/)
+
+
+
+#### 二面
+
+1. 为什么要用 QUIC ，如何做到 0-RTT 握手
+2. std::move **底层原理**，转换成右值引用之后会发生什么 :fire:
+3. A 和 B 之间的 TCP 连接，如果 A 请求断开，发送 FIN 报文，但是丢失了，之后的发包也丢失了，A B 之间会发生什么
+4. 页表了解多少，脏数据（脏位）
+5. MySQL InnoDB 引擎一个事务修改某个表中的数据，另一个事务请求读这条数据会发生什么
+6. [剑指 Offer 10- I. 斐波那契数列](https://leetcode.cn/problems/fei-bo-na-qi-shu-lie-lcof/)
+7. [543. 二叉树的直径](https://leetcode.cn/problems/diameter-of-binary-tree/)
 
