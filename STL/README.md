@@ -10,10 +10,9 @@
 - [*emplace_vs_push.cpp*](emplace_vs_push.cpp)：**emplace_back**和**push_back**的区别：好像是前者效率高
 
   - 在接受 `T, T&, T&&`作为参数时，empalce_back 和 push_back 没有区别，分别调用普通构造函数、拷贝构造函数和移动构造函数
-  - emplace_back 支持传入 class T 的构造函数的参数，并且此时**没有任何临时变量生成**，但是 push_back 不支持
+  - emplace_back 支持传入 class T 的构造函数的参数，并且此时**没有任何临时变量生成**，但是 push_back 不支持  
 
-  > 参考1：https://blog.csdn.net/iaibeyond/article/details/119153008
-  >
+  > 参考1：https://blog.csdn.net/iaibeyond/article/details/119153008  
   > 参考2：https://ppipp.blog.csdn.net/article/details/84764104
 
 
@@ -184,6 +183,34 @@ vt.erase(unique(vt.begin(), vt.end()), vt.end());	// 去重
 
 
 
+### move
+
+std::move 并不会真正地移动对象，真正的移动操作是在**移动构造函数、移动赋值函数**等完成的，std::move 只是将参数转换为右值引用而已（相当于一个 static_cast）
+
+更确切的说：move 的本质就是帮助编译器选择重载函数, 告诉编译器 "请尽量把此参数当做右值来处理"
+
+参考代码： [move.cpp](move.cpp) 
+
+**参考**
+
+- [c++ move函数到底是什么意思？](https://www.zhihu.com/question/64205844)
+- [C++:move，带你从根本理解move函数是什么](https://blog.csdn.net/qq_51568363/article/details/124285294)
+
+- https://learn.microsoft.com/en-us/cpp/cpp/move-constructors-and-move-assignment-operators-cpp?redirectedfrom=MSDN&view=msvc-170
+- https://zh.cppreference.com/w/cpp/utility/move
+
+
+
+### forward
+
+TBC...
+
+**参考**
+
+- https://zh.cppreference.com/w/cpp/utility/forward
+
+
+
 ### __builtin（GCC 内建函数）
 
 - `__builtin_ctz()` / `__builtin_ctzll()`：返回括号内数的二进制表示形式中末尾0的个数
@@ -197,7 +224,7 @@ vt.erase(unique(vt.begin(), vt.end()), vt.end());	// 去重
 
 
 
-### 后继
+### 后记
 
-在封装这些数据结构的时候，**STL**按照程序员的使用习惯，以成员函数方式提供的常用操作，如：插入、排序、删除、查找等。让用户在**STL**使用过程中，并不会感到陌生。
+在封装这些数据结构的时候，**STL **按照程序员的使用习惯，以成员函数方式提供的常用操作，如：插入、排序、删除、查找等。让用户在**STL**使用过程中，并不会感到陌生。
 
