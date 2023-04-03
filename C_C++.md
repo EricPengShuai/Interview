@@ -30,19 +30,10 @@
 
 - C++11 以后引入两个关键字 [alignas](https://zh.cppreference.com/w/cpp/language/alignas) 与 [alignof](https://zh.cppreference.com/w/cpp/language/alignof)。其中`alignof`可以计算出类型的对齐方式，`alignas`可以指定结构体的对齐方式
 
-- `alignas`在某些情况下是不能使用的，若`alignas`小于自然对齐的最小单位，则被忽略，具体例子[参考原文](#name)
+- `alignas`在某些情况下是不能使用的，若`alignas`小于自然对齐的最小单位，则被忽略，具体例子[参考原文](#name1)
 
 - 如果想使用单字节对齐的方式，使用`alignas`是无效的。应该使用`#pragma pack(push,1)`或者使用`__attribute__((packed))`
 
-
-<details>
-<summary>查看答案</summary>
-    <li>结构体内成员按照声明顺序存储，第一个成员地址和整个结构体地址相同</li>
-    <li>未特殊说明时，按结构体中size最大的成员对齐（若有double成员，按8字节对齐）</li>
-    <li>C++11 以后引入两个关键字 <a href="https://zh.cppreference.com/w/cpp/language/alignas">alignas</a> 与 <a href="https://zh.cppreference.com/w/cpp/language/alignof">alignof</a>。其中`alignof`可以计算出类型的对齐方式，`alignas`可以指定结构体的对齐方式</li>
-    <li>`alignas`在某些情况下是不能使用的，若`alignas`小于自然对齐的最小单位，则被忽略，具体例子参考原文</li>
-    <li>如果想使用单字节对齐的方式，使用`alignas`是无效的。应该使用`#pragma pack(push,1)`或者使用`__attribute__((packed))`</li>
-</details>
 
 
 
@@ -69,7 +60,7 @@
   > void func(int &p) { p = 5; }	// 引用本质是指针常量
   > ```
   
-- **引用本质是一个指针，同样会占4字节内存**；指针是具体变量，需要占用存储空间（具体情况还要具体分析）
+- **引用本质是一个指针，同样会占8字节内存**；指针是具体变量，需要占用存储空间（具体情况还要具体分析）
 
 - 引用在声明时必须初始化为另一变量，一旦出现必须为`typename refname &varname`形式；指针声明和定义可以分开，可以先只声明指针变量而不初始化，等用到时再指向具体变量。
 
@@ -3243,15 +3234,15 @@ size() 函数返回的是已用空间大小，capacity() 返回的是总空间�
 
  
 
-#### 11、Vector如何释放空间？
+#### 11、vector如何释放空间？
 
 由于vector的内存占用空间只增不减，比如你首先分配了10,000个字节，然后erase掉后面9,999个，留下一个有效元素，但是内存占用仍为10,000个。所有内存空间是在vector析构时候才能被系统回收。empty()用来检测容器是否为空的，clear()可以清空所有元素。但是**即使clear()，vector所占用的内存空间依然如故，无法保证内存的回收**。
 
 如果需要空间动态缩小，可以考虑使用deque。如果vector，可以用swap()来帮助你释放内存。
 
 ~~~cpp
-vector<int>(vec).swap(vec);	// 将Vec中多余内存清除
-vector<int>().swap(vec);	// 清空Vec的全部内存
+vector<int>(vec).swap(vec);	// 将 vec 中多余内存清除
+vector<int>().swap(vec);	// 清空 vec 的全部内存
 ~~~
 
 
