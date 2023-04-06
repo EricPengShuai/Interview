@@ -105,10 +105,24 @@
 #### 二面
 
 1. 为什么要用 QUIC ，如何做到 0-RTT 握手
+
+   TCP 三次握手需要 1.5 RTT，TLS 握手需要 1.5 RTT，一般 HTTPS 就需要 3个 RTT 完成握手，QUIC 基于 UDP 首先通过 Inchoate Client HeLlO 以及 REJ 报文建立连接，这需要 1个 RTT，此时客户端会缓存服务端的一些信息（REJ 报文），**然后客户端能够在不增加额外RTT的情况下建立一个加密的连接，要发送的数据可以在握手的包中捎带着发送过去，而不用等待服务器的回复，从而实现0RTT**。
+
+   > **所谓QUIC的0RTT是指在建立连接之后，后续发送数据都不需要增加额外的RTT时间，最开始的握手还是需要1RTT的时间消耗的**
+
+   参考：https://blog.csdn.net/qq_35448165/article/details/106840038
+
+   
+
 2. std::move **底层原理**，转换成右值引用之后会发生什么 :fire: [move](https://github.com/EricPengShuai/Interview/blob/main/STL/README.md#move)
+
 3. A 和 B 之间的 TCP 连接，如果 A 请求断开，发送 FIN 报文，但是丢失了，之后的发包也丢失了，A B 之间会发生什么
+
 4. 页表了解多少，脏数据（脏位）
+
 5. MySQL InnoDB 引擎一个事务修改某个表中的数据，另一个事务请求读这条数据会发生什么
+
 6. [剑指 Offer 10- I. 斐波那契数列](https://leetcode.cn/problems/fei-bo-na-qi-shu-lie-lcof/)
+
 7. [543. 二叉树的直径](https://leetcode.cn/problems/diameter-of-binary-tree/)
 
