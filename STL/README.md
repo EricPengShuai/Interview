@@ -6,12 +6,9 @@
 ### vector
 
 - [*vector.cpp*](vector.cpp)：**vector**封装数组: 便于随机访问
-
 - [*emplace_vs_push.cpp*](emplace_vs_push.cpp)：**emplace_back**和**push_back**的区别：好像是前者效率高
-
   - 在接受 `T, T&, T&&`作为参数时，empalce_back 和 push_back 没有区别，分别调用普通构造函数、拷贝构造函数和移动构造函数
-  - emplace_back 支持传入 class T 的构造函数的参数，并且此时**没有任何临时变量生成**，但是 push_back 不支持  
-
+  - emplace_back 支持传入 class T 的构造函数的参数，并且此时**没有任何临时变量生成**，但是 push_back 不支持
   > 参考1：https://blog.csdn.net/iaibeyond/article/details/119153008  
   > 参考2：https://ppipp.blog.csdn.net/article/details/84764104
 
@@ -46,16 +43,13 @@
 
 ### map vs set
 
-- **map** 封装了二叉树等 
-  
+- **map** 封装了二叉树等
     - *[mapSTL.cpp](mapSTL.cpp)*：`map`底层是一个红黑树，有序的（按照`key`排序），一般处理有序的情况
     - *[unordered_map.cpp](unordered_map.cpp)*: `unordered_map` 底层是一个哈希表，便于查找，但是内存占用比较高
     - `map` 和 `unordered_map` 外部操作都是一样的，只是内部实现不一样
     
 - **set** 也是封装了二叉树，基于红黑树实现
-  
     - 和 `map` 的区别就是将 `value` 作为 `key`，`map` 的 `key` 和 `value` 是分开的；`map`允许修改 `value` 不允许修改 `key`，`set` 的迭代器是 `const`，不允许修改元素的值
-    
     - *[setSTL.cpp](setSTL.cpp)*：`multiset` 用法，和 `set` 类似，只是前者可以保存重复元素，后者不保存，默认时升序排列的也就是 `multiset<int, less<int>>`
     
       ```cpp
@@ -77,9 +71,7 @@
 - 自定义sort函数：*[sort1.cpp](sort1.cpp)*：使用**lambda表达式**和**函数**；*[sort2.cpp](sort2.cpp)*：使用**模板**和**函数**
 
 - 主要有三种自定义比较方式的写法：
-
     1. 模板
-
        ```cpp
        template <typename T>
        struct cmp1
@@ -90,24 +82,18 @@
            }
        };
        ```
-
     2. 函数
-
        ```cpp
        // 自定义sort 2.使用函数
        int cmp2(int x, int y) {
            return x > y;
        }
        ```
-
     3. 逆序`greater<int>`，顺序`less<int>`
-
        ```cpp
        sort(vt.begin(), vt.end(), greater<int>());
        ```
-
     4. lambda表达式
-
        ```cpp
        sort(b.begin(), b.end(), [](vector<int> a, vector<int> b){
                if (a[0] == b[0]) {
