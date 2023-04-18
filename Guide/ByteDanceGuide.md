@@ -78,6 +78,9 @@
 
 参考：[Cyc2018-IO复用](http://www.cyc2018.xyz/计算机基础/Socket/Socket.html#二、i-o-复用)
 
+- [网络 IO 演变过程](https://zhuanlan.zhihu.com/p/353692786)
+- [深入浅出理解select、poll、epoll的实现](https://zhuanlan.zhihu.com/p/367591714)
+
 
 
 #### 6. 简述操作系统中的缺页中断？

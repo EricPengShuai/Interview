@@ -69,10 +69,10 @@
 - const 成员：注意 const 对象不能调用非 const 成员函数
 
   ```cpp
+  // T::Print(T * const this) 参数类型为 T*, const 修饰的是 this
   void T::Print() { cout << "Print\n"; }
   
   // 实际上调用的是 t.Print(&t), &t 是 const T* 类型
-  // T::Print(T * const this) 参数类型为 T*, const 修饰的是 this
   // const T* 传给 T* 是不对的，权限放大了，前者不可修改，后者可以 
   void func(const T& t) {
       t.Print();	// error
@@ -84,7 +84,7 @@
   
   // 权限可以不变或缩小
   void func(T& t) {
-      t.Print();			// correct, 权限不变：T* 传给 T* 可以
+      t.Print();	// correct, 权限不变：T* 传给 T* 可以
       t.Print_const();	// correct, 权限缩小：T* 传给 const T* 可以
   }
   ```
