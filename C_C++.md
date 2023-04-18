@@ -1741,7 +1741,7 @@ printf的第一个被找到的参数就是那个**字符指针**，就是被双�
 
 
 
-#### 88、为什么模板类一般都是放在一个h文件中 :fire:
+#### 88、为什么模板类一般都是放在一个h文件中 :thinking:
 
 1. 模板定义很特殊。由`template<…>`处理的任何东西都意味着**编译器在当时不为它分配存储空间**，它一直处于等待状态直到被一个模板实例告知。在编译器和连接器的某一处，有一机制能去掉指定模板的多重定义。
 
@@ -2232,11 +2232,18 @@ std::cout << "Max = " << Max(5.5,'a') << std::endl;
 
 其实该模板有个比较隐晦的bug，那就是a、b只有在能进行转型的时候才能进行比较，否则 a > b 这一步是会报错的。这时候往往需要对于`operate>()`进行重载。
 
-> `template<typename T>`  与 `template<class T>` 基本类似，最好使用前者
->
-> 参考1：[C++ 模板中 class T 和 typename T 的区别_Anadem](https://blog.csdn.net/Aloneingchild/article/details/105607306)
->
-> 参考2：[C++模板之typename和class关键字的区别 - CTHON](https://www.cnblogs.com/cthon/p/9201649.html)
+**`template<typename T>` 与`template<class T>` 基本类似，最好使用前者**
+
+参考：
+
+- [C++ 模板中 class T 和 typename T 的区别_Anadem](https://blog.csdn.net/Aloneingchild/article/details/105607306)
+
+- [C++模板之typename和class关键字的区别 - CTHON](https://www.cnblogs.com/cthon/p/9201649.html)
+
+- https://blog.csdn.net/gatieme/article/details/50946005
+- https://stackoverflow.com/questions/2023977/difference-of-keywords-typename-and-class-in-templates
+
+
 
 
 

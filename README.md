@@ -6,26 +6,26 @@
 
 
 
-## Guide Dir
+## 面试题总结
 
-> 不同公司的面试总结
+> 不同公司的面试总结，`Guide` 文件夹
 
 1. [ByteDanceGuide.md](Guide/ByteDanceGuide.md)：字节面试指南
 2. [KuaishouGuide.md](Guide/KuaishouGuide.md)：快手面试指南
 3. [Baidu.md](Guide/baiduGuide.md)：百度面试指南
 
 
-## STL Dir
+## 常见 STL 库
 
-> C++一些**标准库**的常规使用
+> C++一些**标准库**的常规使用，`STL` 文件夹
 
 包括但不限于 vector, map, set, queue, queue_priority, sort 等等，具体参考 [STL/README.md](STL)
 
 
 
-## algorithm dir
+## 常见算法
 
-> 常见的LeetCode算法总结
+> 常见的LeetCode算法总结，`algorithm` 文件夹
 
 1. [背包问题](algorithm/背包问题.md)
 2. [二分查找](algorithm/二分查找.md)
@@ -44,11 +44,17 @@
 15. [数位DP](algorithm/数位DP.md)
 16. [其他算法](algorithm/others.md)
 
+### ACM 模式备忘代码
+
+> 处理链表二叉树等数据结构以及输入处理技巧，参考 `memo` 文件夹
+
+1. [listnode.cpp](memo/listnode.cpp): 链表
+2. [treenode.cpp](memo/treenode.cpp): 二叉树
 
 
-## base_code dir
+## 基础代码
 
-> C++基础关键字的用法，[C++_base.md](C++_base.md) 中第二部分有相关描述
+> C++基础关键字的用法，`base_code` 文件夹，[C++_base.md](C++_base.md) 中第二部分有相关描述
 
 1. [assert.cpp](base_code/assert.cpp)：断言语句，只有在Debug版本才有效
 2. [c_polymorphism.c](c_polymorphism.c), [c++_polymorphism.cpp](base_code/c++_polymorphism.cpp)：多态在c和c++中的实现
@@ -60,12 +66,11 @@
 
 
 
-## c++2.0 dir
+## C++ 新特性
 
-> C++11/14/17/20新特性
+> C++11/14/17/20新特性，`c++2.0` 文件夹
 
 包括但不限于：
-
 - 智能指针
 - 引入了 auto 和 decltype 这两个关键字实现了类型推导
 - 基于范围的 for 循环：for(auto& i : res){}
@@ -77,19 +82,9 @@
 具体参考 [c++2.0/README.md](c++2.0)
 
 
+## 实践代码
 
-## memo dir
-
-> 处理链表二叉树等数据结构以及输入处理技巧
-
-1. [listnode.cpp](memo/listnode.cpp): 链表
-2. [treenode.cpp](memo/treenode.cpp): 二叉树
-
-
-
-## practice dir
-
-> C++实战代码和一些备忘知识点
+> C++实战代码和一些备忘知识点，`practice` 文件夹
 
 1. [unique_ptr.cpp](practice/unique_ptr_ex.cpp)：智能指针
 2. [const_volatile.cpp](practice/const_volatile.cpp)：通过`volatile`关键字修改`const`常量
@@ -103,27 +98,34 @@
 
 
 
-## Streaming Media
+## Linux 相关
+> 《Linux 高性能服务器编程》阅读笔记，`Linux` 文件夹
+
+TBC
+
+
+## 流媒体相关
 
 > 流媒体相关知识点，常见协议说明，包括 RTMP、RTSP、HLS、DASH 等
 
-参考：[streaming.md](streaming.md)
+参考：[Streaming.md](Streaming.md)
 
 
 
-## Review dir
+## 面经汇总
 
-> 不同公司的面经
+> 不同公司的面经，`review` 文件夹
 
 1. [百度面经](review/baidu.md)
 2. [字节面经](review/bytedance.md)
 3. [快手面经](review/kuaishou.md)
 4. [阿里巴巴](review/alibaba.md)
-4. [蚂蚁集团](review/antgroup.md)
-5. [美团](review/meituan.md)
-6. [米哈游](review/mihoyo.md)
-7. [红海无线](review/redInfinity.md)
-8. [其他面经](review/others.md)
+5. [蚂蚁集团](review/antgroup.md)
+6. [美团](review/meituan.md)
+7. [京东](review/jingdong.md)
+8. [米哈游](review/mihoyo.md)
+9. [红海无线](review/redInfinity.md)
+10. [其他面经](review/others.md)
 
 
 
