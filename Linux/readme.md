@@ -127,7 +127,7 @@ socket 被命名之后还需要创建**监听队列**以存放待处理的客户
 ```cpp
 #include <sys/socket.h>
 
-// backlog 是内核监听队列的最大长度，表示服务端完全连接状态 ESTABLISHED 数量的上限+1
+// backlog 是内核监听队列的最大长度，表示服务端完全连接状态 ESTABLISHED 数量的上限（backlog+1）
 int listen(int sockfd, int backlog); // 失败返回 -1，成功返回 0
 ```
 
@@ -318,4 +318,107 @@ struct hostent* gethostbyaddr(const void* addr, size_t len, int type);
 ```
 
 返回的都是 hostent 结构体类型的指针，更多具体的 API 参考 P95
+
+
+
+### 第六章 高级 I/O 函数
+
+Linux 提供很多高级 IO 函数，没有 read/open 等基础的常用，但是特定地方使用性能较高，一般有三类
+
+- **创建文件描述符**的函数：pipe、dup/dup2
+- **读写数据**的函数：包括 readv/writev、sendfile、mmap/munmap、splice、tee 等
+- **控制 IO 行为和属性**的函数：fcntl
+
+
+
+#### 6.1 pipe 函数
+
+```cpp
+#include <unistd.h>
+
+// 往 fd[1] 写入的数据可以从 fd[0] 读出，不能反过来
+int pipe(int fd[2]); // 成功返回 0，并将一对打开的文件描述符填入其参数指向的数组
+```
+
+- 管道内部传输的数据是字节流
+- 管道有容量限制，默认大小为 65536 字节
+- socketpair 函数可以在本地域 AF_UNIX 创建双向管道
+
+
+
+#### 6.2 dup/dup2 函数
+
+```cpp
+#include <unistd.h>
+
+// 返回一个新的文件描述符，和旧的文件描述符 old_fd 指向相同的文件、管道或者网络连接
+// 返回系统当前可用的最小整数值
+int dup(int old_fd);
+
+// 和 dup 类似，返回的文件描述符不小于 limit_fd
+int dup2(int old_fd, int limit_fd);
+```
+
+P102 例子中，写了一个简单的服务端程序，与客户端通信的 socket 记为 connfd，先关闭标准输出 STDOUT_FILENO (其值为1)，**然后调用 dup(connfd) 返回 1**，这样标准输出就和 connfd 指向同样的文件，也就是 printf 的数据直接写入管道（不会出现在终端上），发送给客户端，这就是 Comman Gateway Interface（CGI）服务器的基本工作原理
+
+
+
+#### 6.3 readv/writev 函数
+
+简单来说 readv 是分散读，writev 是集中写，相当于 recvmsg/sendmsg
+
+```cpp
+#include <sys/uio.h>
+
+// fd 是被操作的 socket，vector 是 iovec 结构数组，iovec 结构描述的是一块内存区，count 参数是 vector 数组长度
+// 成功时返回读出/写入 fd 的字节数，失败返回 -1 并设置 errno 
+ssize_t readv(int fd, const struct iovec* vector, int cnt);
+ssize_t writev(int fd, const struct iovec* vector, int cnt);
+
+strcut iovec {
+    void *iov_base; // 内存起始地址
+    size_t iov_len; // 内存长度
+};
+```
+
+P105 例子中给了简单 HTTP 文件服务器，通过 writev 将 headbuf（状态行+头部字段+空行）和 filebuf（文档内容）集中写入 socket
+
+
+
+#### 6.4 sendfile 函数
+
+sendfile 在两个文件描述符之间直接传递数据，完全在内核中操作，避免了内核缓冲区和用户缓冲区之间的数据拷贝，这就是**零拷贝**
+
+```cpp
+#include <sys/sendfile.h>
+
+// in_fd --sendfile--> out_fd
+// in_fd 表示待读出内容的文件描述符，out_fd 表示待写入内容的文件描述符
+// offset 表示 in_fd 的起始位置，count 表示 in_fd 和 out_fd 之间传输的字节数
+ssize_t sendfile(int out_fd, int in_fd, off_t* offset, size_t count); // 成功时返回传输的字节数，失败返回-1
+```
+
+- in_fd 必须是一个支持类似 mmap 函数的文件描述符，必须指向真实的文件，不能是 socket 和管道
+- out_fd 必须是一个 socket
+
+> sendfile 几乎是专门为在网络上传输文件而设计的
+
+P107 例子使用 sendfile 将服务器上的一个文件传输给客户端，其中没有**为目标文件分配任何用户空间的缓存，也没有执行读取文件的操作**，相比于之前的 通过 HTTP 传输文件的效率要高得多
+
+
+
+#### 6.5 mmap/munmap 函数
+
+mmap 用于申请一段内存空间，munmap 则释放由 mmap 创建的这段内存空间
+
+```cpp
+#include <sys/mman.h>
+
+// start: 待分配内存的起始地址，如果为 null 则系统自动分配一个地址
+// length: 指定内存段的长度；prot: 设置内存段的访问权限，可以按位或取 PROT_READ|PROT_WRITE|PROT_EXEC|PROT_NONE
+// fd 是被映射文件对应的文件描述符，一般通过 open 获得
+// 【return】成功时返回指向目标内存区域的指针，失败 -1
+void* mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset);
+int munmap(void *start, size_t length); // 失败 -1，成功 0
+```
 
