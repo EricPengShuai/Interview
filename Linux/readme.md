@@ -417,8 +417,109 @@ mmap 用于申请一段内存空间，munmap 则释放由 mmap 创建的这段�
 // start: 待分配内存的起始地址，如果为 null 则系统自动分配一个地址
 // length: 指定内存段的长度；prot: 设置内存段的访问权限，可以按位或取 PROT_READ|PROT_WRITE|PROT_EXEC|PROT_NONE
 // fd 是被映射文件对应的文件描述符，一般通过 open 获得
-// 【return】成功时返回指向目标内存区域的指针，失败 -1
+// [return] 成功时返回指向目标内存区域的指针，失败 -1
 void* mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset);
 int munmap(void *start, size_t length); // 失败 -1，成功 0
 ```
+
+
+
+#### 6.6 splice 函数
+
+splice 函数用于两个文件描述符之间移动数据，是**零拷贝操作**
+
+```cpp
+#include <fcntl.h>
+
+// fd_in 表示待输入数据的文件描述符
+// len 指定移动数据的长度
+// flags 控制数据如何移动，取异或值：SPLICE_F_MOVE|SPLICE_F_NONBLOCK|SPLICE_F_MORE
+ssize_t splice(int fd_in, loff_t* off_in, int fd_out, loff_t* off_out, size_t len, unsigned int flags); // 成功时返回移动字节的数量，失败 -1
+```
+
+fd_in/fd_out 必须至少有一个是管道文件描述符
+
+- fd_in 如果是管道文件描述符，off_in 参数必须被设置为 NULL
+- fd_in 如果不是一个管道文件描述符，off_in 指定输入数据流的何处开始读取数据
+
+P110 例子实现了一个简单的回射服务器，利用 splice 函数将客户端的内容读入管道写端 fd[1]，然后再使用 splice 函数从管道读端 fd[0] 读出该内容到客户端。整个过程没有执行 recv/send 操作，十分高效
+
+
+
+#### 6.7 tee 函数
+
+tee 函数在两个管道文件描述符之间复制数据，是零拷贝操作
+
+```cpp
+#include <fcntl.h>
+
+// fd_in 和 fd_out 必须都是管道文件描述符
+// [return] 成功时返回复制的字节数，失败 -1
+ssize_t tee(int fd_in, int fd_out, size_t len, unsigned int flags);
+```
+
+P111 例子实现了一个简单的 tee 程序，利用 splice（标准输入输出<-->输入输出管道） 和 tee（输出管道<-->文件管道）同时输出数据到终端和文件
+
+
+
+#### 6.8 fcntl 函数
+
+file control 函数提供对文件描述符的各种控制操作
+
+```cpp
+#include <fcntl.h>
+
+// fd 是被操作的文件描述符，cmd 指定执行何种类型的操作
+// 根据操作类型不同可能还需要第3个可选参数 arg
+int fcntl(int fd, int cmd, ...); // 失败 -1
+```
+
+- F_GETFD/F_SETFD：获取和设置文件描述符的标志
+- F_GETFL/F_SETFL：获取和设置文件描述符的状态标志
+
+P113 代码清单中首先 F_GETFL 获取 fd 的旧状态标志，然后 F_SETFL 将 fd 设置为非阻塞状态
+
+
+
+### 第七章 Linux 服务器程序规范
+
+#### 7.1 日志
+
+##### 7.1.1 Linux 系统日志
+
+rsyslogd 守护进程技能接收用户进程输出的日志，又能接收内核日志，通过调用 syslog 函数生成系统日志，该函数将日志输出到一个 UNIX 本地域 socket 类型 AF_UNIX 的 文件 /dev/log 中，具体参考 图7-1 Linux 的系统日志体系
+
+
+
+##### 7.1.2 syslog 函数
+
+```cpp
+#include <syslog.h>
+
+// priority 是设施值（LOG_USER）与日志级别的按位或，7种日志级别参考 P115
+void syslog(int priority, const char* message, ...);
+```
+
+openlog 可以改变 syslog 的默认输出方式，进一步结构化日志内容 
+
+```cpp
+#include <syslog.h>
+
+// ident 参数指定的字符串被添加到日志消息的日期和时间之后，一般为程序的名字
+void openlog(const char* ident, int logopt, int facility);
+```
+
+程序开发过程中需要输出很多调试信息，而发布之后又需要将这些调式信息关闭，这时候需要对日志进行过滤
+
+```cpp
+#include <syslog.h>
+
+// 日志级别大于日志掩码的日志信息会被系统忽略
+int setlogmask(int maskpri);
+
+// 最后需要关闭日志
+void closelog();
+```
+
+
 
