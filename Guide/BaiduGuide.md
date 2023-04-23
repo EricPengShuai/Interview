@@ -563,7 +563,7 @@ ToDo
 
 
 
-#### 18. 数据库有哪些常见索引？数据库设计的范式是什么？ 中等 [参考1](https://smartkeyerror.oss-cn-shenzhen.aliyuncs.com/Phyduck/database/深入浅出 InnoDB Index.pdf)
+#### 18. 数据库有哪些常见索引？数据库设计的范式是什么？ 中等 [参考1](https://smartkeyerror.oss-cn-shenzhen.aliyuncs.com/Phyduck/database/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%20InnoDB%20Index.pdf)
 
 - 物理存储：聚簇索引、二级索引
 
