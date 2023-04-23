@@ -1,6 +1,6 @@
 ## Linux 高性能服务器编程
 
-### 第五章 Linux 网络编程基础 API
+### Ch.5 Linux 网络编程基础 API
 
 #### 5.1 socket 地址 API
 
@@ -321,7 +321,7 @@ struct hostent* gethostbyaddr(const void* addr, size_t len, int type);
 
 
 
-### 第六章 高级 I/O 函数
+### Ch.6 高级 I/O 函数
 
 Linux 提供很多高级 IO 函数，没有 read/open 等基础的常用，但是特定地方使用性能较高，一般有三类
 
@@ -481,13 +481,13 @@ P113 代码清单中首先 F_GETFL 获取 fd 的旧状态标志，然后 F_SETFL
 
 
 
-### 第七章 Linux 服务器程序规范
+### Ch.7 Linux 服务器程序规范
 
 #### 7.1 日志
 
 ##### 7.1.1 Linux 系统日志
 
-rsyslogd 守护进程技能接收用户进程输出的日志，又能接收内核日志，通过调用 syslog 函数生成系统日志，该函数将日志输出到一个 UNIX 本地域 socket 类型 AF_UNIX 的 文件 /dev/log 中，具体参考 图7-1 Linux 的系统日志体系
+rsyslogd 守护进程技能接收用户进程输出的日志，又能接收内核日志，通过调用 syslog 函数生成系统日志，该函数将日志输出到一个 UNIX 本地域 socket 类型 AF_UNIX 的 文件 /dev/log 中，具体参考 P115 Linux 的系统日志体系。
 
 
 
@@ -522,4 +522,167 @@ void closelog();
 ```
 
 
+
+#### 7.2 用户信息
+
+##### 7.2.1 uid/euid/gid/egid
+
+```cpp
+#include <sys/types.h>
+#include <unistd.h>
+uid_t getuid();		// 获取真实用户 id
+uid_t geteuid();	// 获取有效用户 id
+gid_t getgid();		// 获取真实组 id
+gid_t getegid();	// 获取有效组 id
+```
+
+P117 代码清单 7-1 展示了 UID 和 EUID 的区别
+
+
+
+##### 7.2.2 切换用户
+
+代码清单 7-2 展示了以 root 身份启动的进程切换为一个普通用户身份运行，没看懂o(╥﹏╥)o
+
+> root 的 uid == 0 && guid == 0?
+
+
+
+#### 7.3 进程间关系
+
+##### 7.3.1 进程组
+
+每个进程都隶属于一个进程组，进程组有进程组 ID（PGID），首领进程的 PID 和 PGID 相同
+
+```cpp
+#include <unistd.h>
+pid_t getpgid(pid_t pid); // 成功返回 pid 的进程组的 PGID，失败 -1
+int setpgid(pid_t pid, pid_t pgid); // 设置 pid 的进程组的 PGID 为 pgid，成功 0，失败 -1
+```
+
+一个进程只能设置自己或者子进程的 PGID，并且子进程调用 exec 系列函数之后不能再在父进程中对它设置 PGID
+
+
+
+##### 7.3.2 会话
+
+一些关联的进程组形成一个会话 session，创建会话
+
+```cpp
+#include <unistd.h>
+pid_t setsid(void); // 只能由非首领进程创建会话，调用进程成为会话的首领
+pid_t getsid(pid_t pid); // 读取会话ID SID，Linux 系统认为 SID==PGID
+```
+
+
+
+##### 7.3.3 ps 查看进程关系
+
+P119 图 7-2 很清晰的展示了进程之间的关系，不同进程组成进程组，不同进程组组成会话
+
+
+
+#### 7.4 系统资源限制
+
+Linux 系统有资源限制，比如物理设备限制、系统策略限制、具体实现的限制等等
+
+```cpp
+#include <sys/resource.h>
+int getrlimit(int resource, struct rlimit *rlim);
+int setrlimit(int resource, const struct rlimit *rlim);
+
+// rlim_t 是一个整数类型，描述资源级别
+struct rlimit
+{
+    rlim_t rlim_cur; // 资源的软限制，建议性的、最好不要超越的限制，超过可能会发信号终止进程
+    rlim_t rlin_max; // 资源的硬限制，软限制的上限，普通程序只能减少，只有 root 可以增加
+}
+```
+
+ulimit 命令可以修改**当前 shell** 环境下的资源限制，也可以通过修改配置文件来改变系统的软限制和硬限制，这种修改是**永久的**。
+
+
+
+#### 7.5 改变工作目录和根目录
+
+有些服务器程序还需要改变工作目录和根目录
+
+```cpp
+#include <unistd.h>
+
+// buf 指向内存用于存储进程当前工作目录的绝对路径名，size 指定其大小
+// [return] 成功时返回一个指向目标存储区的指针
+char* getcwd(char* buf, size_t size); // 失败返回 NULL 并设置 errno
+
+// path 指定要切换到的目标目录
+int chdir(const char* path); // 成功 0，失败 -1
+
+// path 指定要切换到的目标根目录
+int chroot(const char* path); // 成功 0，失败 -1
+```
+
+
+
+#### 7.6 服务器程序后台化
+
+如何让进程以守护进程的方式运行？参考代码清单 7-3，实际上提供如下的系统调用：
+
+```cpp
+#include <unistd.h>
+
+// nochdir 用于指定是否改变工作目录，0 --> 工作目录设置为 "/"，否则留在当前目录
+// noclose 为 0 时标准输入输出以及错误输出都被重定向到 /dev/null 文件，否则依然使用原来的设备
+int daemon(int nochdir, int noclose); // 成功 0，失败-1
+```
+
+
+
+### Ch.8 高性能服务器程序框架
+
+#### 8.1 服务器模型
+
+##### 8.1.1 C/S 模型
+
+服务器客户端模式
+
+- 服务器：创建 socket --> bind 地址 --> listen --> select IO 复用 --> accept --> 逻辑单元（fork子进程、子线程或其他）
+- 客户但：socket --> connect --> send --> recv
+
+缺点：访问量过大时，服务器负载加大，客户端得到的响应变慢
+
+
+
+##### 8.1.2 P2P 模型
+
+点对点模式中主机即使服务端又是客户端，缺点是：用户之间传输的请求过多时，网络的负载加重
+
+通常 P2P 模型带有一个专门的发现服务器，提供查找服务
+
+
+
+#### 8.2 服务器编程框架
+
+- IO 处理单元：服务器管理客户连接额模块
+- 逻辑单元：进程或线程，分析并处理数据，然后将结果传递给 IO 处理单元或者直接返回给客户端
+- 网络存储单元：数据库、缓存或文件，可选的
+
+
+
+#### 8.3 IO 模型
+
+阻塞 I/O 和 非阻塞 I/O，P126 描述了阻塞的 connect 工作流程，无法立即完成被系统挂起，直到等待的时间发生为止
+
+- socket 相关 API 中，可能被阻塞的系统调用包括 accept、send、recv 和 connect
+- 非阻塞 I/O 执行的系统调用如果时间没有立即发生，返回 -1，这和出错的情况一样，此时需要根据 errno 来区分
+- **I/O 复用函数本身是阻塞的**，它们能提高程序效率的原因在于它们具有同时**监听多个 I/O 事件的能力**
+
+同步 I/O 向应用程序通知的是 I/O 就绪事件，异步 I/O 通知的是 I/O 完成事件
+
+
+
+#### 8.4 两种高效的事件处理模式
+
+同步 I/O 模型通常用于实现 Reactor 模式，异步 I/O 模型则用于实现 Proactor 模式
+
+##### 8.4.1 Reactor 模式
 
