@@ -61,68 +61,67 @@
 
 #### 一面
 
-**项目**
+##### 1、[项目] RTMP、RTSP、HLS、DASH 这些协议有什么区别，时延比较呢？
 
-- RTMP、RTSP、HLS、DASH 这些协议有什么区别，时延比较呢？
+> HLS 和 DASH 是基于**切片**的，相比于基于**流式**的 RTMP 和 RTSP 时延要大
 
-  > HLS 和 DASH 是基于**切片**的，相比于基于**流式**的 RTMP 和 RTSP 时延要大
+##### 2、[项目] 单组播中组播优点是啥
 
-- 单组播中组播优点是啥
-- 缓存 RTP 的内容队列有长度限制吗，会有阻塞吗
+##### 3、[项目] 缓存 RTP 的内容队列有长度限制吗，会有阻塞吗
 
-**八股**
 
-1. 常见的 linux 命令有哪些
 
-2. **设计模式了解吗**
+##### 4、常见的 linux 命令有哪些
 
-3. unordered_map  和 map 区别是
+##### 5、设计模式了解吗
 
-4. **解决哈希冲突的方法有哪些**
+##### 6、unordered_map  和 map 区别是
 
-   - **「线性探测」** 使用hash函数计算出的位置如果已经有元素占用了，则向后依次寻找，找到表尾则回到表头，直到找到一个空位
-   - **「开链」** 每个表格维护一个list，如果hash函数计算出的格子相同，则按顺序存在这个list中
-   - **「再散列」** 发生冲突时使用另一种hash函数再计算一个地址，直到不冲突
+##### 7、解决哈希冲突的方法有哪些
 
-5. 智能指针了解多少
+- **「线性探测」** 使用hash函数计算出的位置如果已经有元素占用了，则向后依次寻找，找到表尾则回到表头，直到找到一个空位
+- **「开链」** 每个表格维护一个list，如果hash函数计算出的格子相同，则按顺序存在这个list中
+- **「再散列」** 发生冲突时使用另一种hash函数再计算一个地址，直到不冲突
 
-6. 数据的索引有哪些 [小林coding](https://xiaolincoding.com/mysql/index/index_interview.html)
+##### 8、智能指针了解多少
 
-7. 常见的 **HTTP 状态码**有哪些
+##### 9、数据的索引有哪些 [小林coding](https://xiaolincoding.com/mysql/index/index_interview.html)
 
-   | 状态码 |               类别               |            含义            |
-   | :----: | :------------------------------: | :------------------------: |
-   |  1XX   |  Informational（信息性状态码）   |     接收的请求正在处理     |
-   |  2XX   |      Success（成功状态码）       |      请求正常处理完毕      |
-   |  3XX   |   Redirection（重定向状态码）    | 需要进行附加操作以完成请求 |
-   |  4XX   | Client Error（客户端错误状态码） |     服务器无法处理请求     |
-   |  5XX   | Server Error（服务器错误状态码） |     服务器处理请求出错     |
+##### 10、常见的 **HTTP 状态码**有哪些
 
-8. 算法：[剑指 Offer II 026. 重排链表](https://leetcode.cn/problems/LGjMqU/)
+| 状态码 |               类别               |            含义            |
+| :----: | :------------------------------: | :------------------------: |
+|  1XX   |  Informational（信息性状态码）   |     接收的请求正在处理     |
+|  2XX   |      Success（成功状态码）       |      请求正常处理完毕      |
+|  3XX   |   Redirection（重定向状态码）    | 需要进行附加操作以完成请求 |
+|  4XX   | Client Error（客户端错误状态码） |     服务器无法处理请求     |
+|  5XX   | Server Error（服务器错误状态码） |     服务器处理请求出错     |
+
+##### 11、[算法] [剑指 Offer II 026. 重排链表](https://leetcode.cn/problems/LGjMqU/)
 
 
 
 #### 二面
 
-1. 为什么要用 QUIC ，如何做到 0-RTT 握手
+##### 1、[项目] 为什么要用 QUIC ，如何做到 0-RTT 握手
 
-   TCP 三次握手需要 1.5 RTT，TLS 握手需要 1.5 RTT，一般 HTTPS 就需要 3个 RTT 完成握手，QUIC 基于 UDP 首先通过 Inchoate Client HeLlO 以及 REJ 报文建立连接，这需要 1个 RTT，此时客户端会缓存服务端的一些信息（REJ 报文），**然后客户端能够在不增加额外RTT的情况下建立一个加密的连接，要发送的数据可以在握手的包中捎带着发送过去，而不用等待服务器的回复，从而实现0RTT**。
+TCP 三次握手需要 1.5 RTT，TLS 握手需要 1.5 RTT，一般 HTTPS 就需要 3个 RTT 完成握手，QUIC 基于 UDP 首先通过 Inchoate Client HeLlO 以及 REJ 报文建立连接，这需要 1个 RTT，此时客户端会缓存服务端的一些信息（REJ 报文），**然后客户端能够在不增加额外RTT的情况下建立一个加密的连接，要发送的数据可以在握手的包中捎带着发送过去，而不用等待服务器的回复，从而实现0RTT**。
 
-   > **所谓QUIC的0RTT是指在建立连接之后，后续发送数据都不需要增加额外的RTT时间，最开始的握手还是需要1RTT的时间消耗的**
+> **所谓QUIC的0RTT是指在建立连接之后，后续发送数据都不需要增加额外的RTT时间，最开始的握手还是需要1RTT的时间消耗的**
 
-   参考：https://blog.csdn.net/qq_35448165/article/details/106840038
+参考：https://blog.csdn.net/qq_35448165/article/details/106840038
 
-   
 
-2. std::move **底层原理**，转换成右值引用之后会发生什么 :fire: [move](https://github.com/EricPengShuai/Interview/blob/main/STL/README.md#move)
 
-3. A 和 B 之间的 TCP 连接，如果 A 请求断开，发送 FIN 报文，但是丢失了，之后的发包也丢失了，A B 之间会发生什么
+##### 2、std::move **底层原理**，转换成右值引用之后会发生什么 :fire: [move](https://github.com/EricPengShuai/Interview/blob/main/STL/README.md#move)
 
-4. 页表了解多少，脏数据（脏位）
+##### 3、A 和 B 之间的 TCP 连接，如果 A 请求断开，发送 FIN 报文，但是丢失了，之后的发包也丢失了，A B 之间会发生什么
 
-5. MySQL InnoDB 引擎一个事务修改某个表中的数据，另一个事务请求读这条数据会发生什么
+##### 4、页表了解多少，脏数据（脏位）
 
-6. [剑指 Offer 10- I. 斐波那契数列](https://leetcode.cn/problems/fei-bo-na-qi-shu-lie-lcof/)
+##### 5、MySQL InnoDB 引擎一个事务修改某个表中的数据，另一个事务请求读这条数据会发生什么
 
-7. [543. 二叉树的直径](https://leetcode.cn/problems/diameter-of-binary-tree/)
+##### 6、[算法] [剑指 Offer 10- I. 斐波那契数列](https://leetcode.cn/problems/fei-bo-na-qi-shu-lie-lcof/)
+
+##### 7、[算法] [543. 二叉树的直径](https://leetcode.cn/problems/diameter-of-binary-tree/)
 
