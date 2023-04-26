@@ -561,11 +561,15 @@ Next-Key Locks 是 MySQL 的 InnoDB 存储引擎的一种锁实现。
 
 MVCC 不能解决幻影读问题，Next-Key Locks 就是为了解决这个问题而存在的。在可重复读（REPEATABLE READ）隔离级别下，使用 MVCC + Next-Key Locks 可以解决幻读问题。
 
+参考：https://juejin.cn/post/7018137095315128328
+
 ##### 1.7. 关系型数据库设计理论 && ER图
 
-- 函数依赖：A-->B，B依赖于A
-- 异常
-- 范式
+- 函数依赖：A --> B，A 决定 B，B 依赖于 A
+- 异常：冗余、修改异常、删除异常、插入异常
+- 范式：第一范式（属性不可分）、第二范式（每个非主属性完全函数依赖于键码）、第三范式（非主属性不传递函数依赖于键码）
+
+参考：https://www.cnblogs.com/caiyishuai/p/10975736.html
 
 ##### 1.8. MySQL
 
@@ -580,8 +584,8 @@ MVCC 不能解决幻影读问题，Next-Key Locks 就是为了解决这个问题
   > [MyISAM与InnoDB 的区别（9个不同点）](https://blog.csdn.net/qq_35642036/article/details/82820178)
   
 - 切分
-  - 水平切分：减少单个表存储数据的压力，哈希取模
-  - 垂直区分
+  - 水平切分：将同一个表中的记录拆分到多个结构相同的表中，缓存单个数据库的压力
+  - 垂直区分：将一张表按列切分成多个表，通常是按照列的关系密集程度进行切分，也可以利用垂直切分将经常被使用的列和不经常被使用的列切分到不同的表中
   
 - 主从复制
 
@@ -737,7 +741,7 @@ https://zhuanlan.zhihu.com/p/45338392
 
    > const 定义的常量在超出其作用域之后其空间会被释放，而static定义的静态常量在函数执行后不会释放其存储空间，程序结束之后才会释放。
    >
-   > const 变量存储位置以及如何改变：https://blog.csdn.net/qq_43152052/article/details/99306967
+   > const 变量存储位置以及如何改变：const变量的内存位于**栈区或者静态存储区**，不在符号表(常量表)中，[参考](https://blog.csdn.net/qq_43152052/article/details/99306967)
 
 
 
@@ -878,7 +882,7 @@ https://zhuanlan.zhihu.com/p/45338392
 | [33. 搜索旋转排序数组](https://leetcode.cn/problems/search-in-rotated-sorted-array/) | 执行 `nums[mid] >= nums[left] ? 左边有序 : 右边有序`，然后二分，注意这里最好 `while(left <= right)` 并且内部直接判断 :fire: | [通过](https://leetcode.cn/submissions/detail/399463997/)    |
 | [81. 搜索旋转排序数组 II](https://leetcode.cn/problems/search-in-rotated-sorted-array-ii/) | 在 LC.33 基础上通过 while 比较临近元素去重                   | [通过](https://leetcode.cn/submissions/detail/399466035/)    |
 | [300. 最长递增子序列](https://leetcode.cn/problems/longest-increasing-subsequence/) | 常规 DP 复杂度 O(N^2)，贪心+二分 O(NlogN)                    | [LIS](https://github.com/EricPengShuai/Interview/blob/main/algorithm/%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97.md) |
-| [剑指 Offer 11. 旋转数组的最小数字](https://leetcode.cn/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/) | 只能比较 nums[mid] > nums[right] 得出 mid 在哪边排序数组中   | [K神](https://leetcode.cn/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/solution/mian-shi-ti-11-xuan-zhuan-shu-zu-de-zui-xiao-shu-3/) |
+| [剑指 Offer 11. 旋转数组的最小数字](https://leetcode.cn/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/) | 只能比较 nums[mid] > nums[right] 得出 mid 在哪边排序数组中 :fire: | [K神](https://leetcode.cn/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/solution/mian-shi-ti-11-xuan-zhuan-shu-zu-de-zui-xiao-shu-3/) |
 | [剑指 Offer 42. 连续子数组的最大和](https://leetcode.cn/problems/lian-xu-zi-shu-zu-de-zui-da-he-lcof/) | 很常规的 DP，另外可以使用两个变量压缩空间                    | [通过](https://leetcode.cn/submissions/detail/126954195/)    |
 | [25. K 个一组翻转链表](https://leetcode.cn/problems/reverse-nodes-in-k-group/) | [递归](https://leetcode.cn/submissions/detail/399578801/)比较繁琐，每 k 个节点入栈比较清晰，但是也要注意细节，比为尾结点之后为空 | [通过](https://leetcode.cn/submissions/detail/399583186/)    |
 | [剑指 Offer 68 - II. 二叉树的最近公共祖先](https://leetcode.cn/problems/er-cha-shu-de-zui-jin-gong-gong-zu-xian-lcof/) | 在 root 的左右子树上面递归，注意返回的条件                   | [通过](https://leetcode.cn/submissions/detail/377104965/)    |
