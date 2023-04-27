@@ -43,25 +43,24 @@ dp[i][1] = max(dp[i-1][1], - prices[i]);
 
 **进阶2**：[最多两次买卖](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/)：
 
-- 有点难度的三维DP
+- 参考[代码随想录的状态定义](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-iii/solution/123-mai-mai-gu-piao-de-zui-jia-shi-ji-ii-zfh9/)
 
-- 牛逼的Trick：
+- 牛逼的 Trick：
 
   ```cpp
   class Solution {
   public:
-     	/**
-        对于任意一天考虑四个变量:
-        fstBuy: 在该天第一次买入股票可获得的最大收益 
-        fstSell: 在该天第一次卖出股票可获得的最大收益
-        secBuy: 在该天第二次买入股票可获得的最大收益
-        secSell: 在该天第二次卖出股票可获得的最大收益
-        分别对四个变量进行相应的更新, 最后secSell就是最大
-        收益值(secSell >= fstSell)
-      **/
+      // 对于任意一天考虑四个变量:
+      // fstBuy: 在该天第一次买入股票可获得的最大收益 
+      // fstSell: 在该天第一次卖出股票可获得的最大收益
+      // secBuy: 在该天第二次买入股票可获得的最大收益
+      // secSell: 在该天第二次卖出股票可获得的最大收益
+      // 分别对四个变量进行相应的更新, 最后secSell就是最大
+      // 收益值(secSell >= fstSell)
       int maxProfit(vector<int>& prices) {
           int fstBuy = INT_MIN, fstSell = 0;
           int secBuy = INT_MIN, secSell = 0;
+          
           for(int p: prices) {
               fstBuy = max(fstBuy, -p);
               fstSell = max(fstSell, fstBuy + p);
