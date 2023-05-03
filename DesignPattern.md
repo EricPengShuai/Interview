@@ -27,34 +27,35 @@ using namespace std;
 
 class singleInstance{
 public:
-	static singleInstance* GetsingleInstance(){
-		if (instance == NULL){
-			pthread_mutex_lock(&mutex);//mlock.lock();
-			if (instance == NULL){
-				instance = new singleInstance();
-			}
-			pthread_mutex_unlock(&mutex);//mlock.unlock();
-		}
-		return instance;
-	};
-	~singleInstance(){};
-	static pthread_mutex_t mutex;//mutex mlock; 加锁互斥
-private:// 涉及创建对象的函数都设置为private
-	singleInstance(){};
-	singleInstance(const singleInstance& other){};
-	singleInstance& operator=(const singleInstance& other){ return *this; };
-	static singleInstance* instance;
+    static singleInstance* GetsingleInstance(){
+        if (instance == NULL){
+            pthread_mutex_lock(&mutex); // mlock.lock();
+            if (instance == NULL) {
+                instance = new singleInstance();
+            }
+            pthread_mutex_unlock(&mutex); // mlock.unlock();
+        }
+        return instance;
+    };
+    ~singleInstance(){};
+    static pthread_mutex_t mutex; // mutex mlock; 加锁互斥
+private:
+    // 涉及创建对象的函数都设置为private
+    singleInstance(){};
+    singleInstance(const singleInstance& other){};
+    singleInstance& operator=(const singleInstance& other){ return *this; };
+    static singleInstance* instance;
 };
 
-//懒汉式，静态变量需要定义
+// 懒汉式，静态变量需要定义
 singleInstance* singleInstance::instance = nullptr;
 pthread_mutex_t singleInstance::mutex;
 
 int main(){
-	// 因为没有办法创建对象，就得采用静态成员函数的方法返回静态成员变量
-	singleInstance *s = singleInstance::GetsingleInstance();
-	//singleInstance *s1 = new singleInstance(); // 报错
-    cout << "Hello World";
+    // 因为没有办法创建对象，就得采用静态成员函数的方法返回静态成员变量
+    singleInstance *s = singleInstance::GetsingleInstance();
+    // singleInstance *s1 = new singleInstance(); // 报错
+    cout << "Hello World\n";
     delete s;  // 防止内存泄露
     return 0;
 }
@@ -73,22 +74,23 @@ using namespace std;
 
 class singleInstance{
 public:
-	static singleInstance* GetsingleInstance(){ // 饿汉式，直接创建一个对象，不需要加锁
-		static singleInstance instance;
-		return &instance;
-	};
-	~singleInstance(){};
-private:// 涉及创建对象的函数都设置为private
-	singleInstance(){};
-	singleInstance(const singleInstance& other){};
-	singleInstance& operator=(const singleInstance& other){ return *this; };
+    static singleInstance* GetsingleInstance(){ // 饿汉式，直接创建一个对象，不需要加锁
+        static singleInstance instance;
+        return &instance;
+    };
+    ~singleInstance(){};
+private: 
+    // 涉及创建对象的函数都设置为private
+    singleInstance(){};
+    singleInstance(const singleInstance& other){};
+    singleInstance& operator=(const singleInstance& other){ return *this; };
 };
 
 int main(){
-	// 因为没有办法创建对象，就得采用静态成员函数的方法返回
-	singleInstance *s = singleInstance::GetsingleInstance();
-	//singleInstance *s1 = new singleInstance(); // 报错
-    cout << "Hello World";
+    // 因为没有办法创建对象，就得采用静态成员函数的方法返回
+    singleInstance *s = singleInstance::GetsingleInstance();
+    //singleInstance *s1 = new singleInstance(); // 报错
+    cout << "Hello World\n";
     return 0;
 }
 ```
@@ -110,22 +112,22 @@ int main(){
 #include <pthread.h>
 using namespace std;
 
-//产品类（抽象类，不能实例化）
+// 产品类（抽象类，不能实例化）
 class Product{
 public:
     Product(){};
-    virtual void show()=0;  //纯虚函数
+    virtual void show()=0;  // 纯虚函数
     virtual ~Product(){};
 };
 
-class productA:public Product{
+class productA: public Product{
 public:
     productA(){};
     void show(){ cout << "product A create!" << endl; };
     ~productA(){ cout << "product A delete!" << endl; };
 };
 
-class productB:public Product{
+class productB: public Product{
 public:
     productB(){};
     void show(){ cout << "product B create!" << endl; };
@@ -133,7 +135,6 @@ public:
 };
 
 class simpleFactory{ // 工厂类
-
 public:
     simpleFactory(){};
     Product* product(const string str){
@@ -147,15 +148,15 @@ public:
 };
 
 int main(){
-    simpleFactory obj; // 创建工厂
-    Product* pro; // 创建产品
+    simpleFactory obj;	// 创建工厂
+    Product* pro;		// 创建产品
 
     pro = obj.product("productA");
-    pro->show(); // product A create!
+    pro->show();	// product A create!
     delete pro;
 
     pro = obj.product("productB");
-    pro->show(); // product B create!
+    pro->show();	// product B create!
     delete pro;
 
     return 0;
@@ -173,65 +174,64 @@ int main(){
 #include <pthread.h>
 using namespace std;
 
-//产品类（抽象类，不能实例化）
+// 产品类（抽象类，不能实例化）
 class Product{
 public:
-	Product(){}
-	virtual void show()=0;  //纯虚函数
-	virtual ~Product(){}
+    Product(){}
+    virtual void show()=0;  // 纯虚函数
+    virtual ~Product(){}
 };
 
-//产品A
-class ProductA:public Product{
+// 产品A
+class ProductA: public Product{
 public:
-	ProductA(){}
-	void show(){ cout<<"product A create!"<<endl; };
-	~ProductA(){ cout<<"product A delete!"<<endl; };
+    ProductA(){}
+    void show(){ cout<<"product A create!"<<endl; };
+    ~ProductA(){ cout<<"product A delete!"<<endl; };
 };
 
-//产品B
-class ProductB:public Product{
+// 产品B
+class ProductB: public Product{
 public:
-	ProductB(){}
-	void show(){ cout<<"product B create!"<<endl; };
-	~ProductB(){ cout<<"Product B delete!"<<endl; };
+    ProductB(){}
+    void show(){ cout<<"product B create!"<<endl; };
+    ~ProductB(){ cout<<"Product B delete!"<<endl; };
 };
 
-class Factory{//抽象类
+class Factory{ // 抽象类
 public:
-	virtual Product* CreateProduct()=0;
-	~Factory(){}
+    virtual Product* CreateProduct()=0;
+    ~Factory(){}
 };
 
-class FactorA:public Factory{//工厂类A，只生产A产品
+class FactorA: public Factory{ // 工厂类A，只生产A产品
 public:
-	Product* CreateProduct(){
-		return (new ProductA());
-	}
+    Product* CreateProduct(){
+        return (new ProductA());
+    }
 };
 
-class FactorB:public Factory{//工厂类B，只生产B产品
+class FactorB: public Factory{ // 工厂类B，只生产B产品
 public:
-	Product* CreateProduct(){
-		return (new ProductB());
-	}
+    Product* CreateProduct(){
+        return (new ProductB());
+    }
 };
 
 int main(){
-	
 	Product* _Product = nullptr;
-	auto MyFactoryA = new FactorA();
-	_Product = MyFactoryA->CreateProduct();// 调用产品A的工厂来生产A产品
-	_Product->show();
-	delete _Product;
+    auto MyFactoryA = new FactorA();
+    _Product = MyFactoryA->CreateProduct(); // 调用产品A的工厂来生产A产品
+    _Product->show();
+    delete _Product;
 
-	auto MyFactoryB=new FactorB();
-	_Product=MyFactoryB->CreateProduct();// 调用产品B的工厂来生产B产品
-	_Product->show();
-	delete _Product;
-
-	getchar();
-	return 0;
+    auto MyFactoryB = new FactorB();
+    _Product = MyFactoryB->CreateProduct(); // 调用产品B的工厂来生产B产品
+    _Product->show();
+    delete _Product;
+    
+    getchar();
+    return 0;
 }
 ```
 
