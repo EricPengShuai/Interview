@@ -19,7 +19,7 @@ test.union_bytes[0] == 1 && test.union_bytes[1] == 2; // 大端
 test.union_bytes[0] == 2 && test.union_bytes[1] == 1; // 小端
 ```
 
-
+> 参考代码：[5-1byteorder.cpp](ch5/5-1byteorder.cpp)
 
 一般网络编程中，发送端会将发送的数据转换成大端字节序数据后再发送，接收端这边根据自身采用的字节序决定是否对接受的数据进行转换（小端机转换，大端机不转），Linux 提供一下函数：
 
@@ -128,10 +128,11 @@ socket 被命名之后还需要创建**监听队列**以存放待处理的客户
 #include <sys/socket.h>
 
 // backlog 是内核监听队列的最大长度，表示服务端完全连接状态 ESTABLISHED 数量的上限（backlog+1）
+// Mac 环境中测试是监听上限就是 backlog
 int listen(int sockfd, int backlog); // 失败返回 -1，成功返回 0
 ```
 
-> 具体测试参考 P77
+> 代码参考：[5-3testlisten.cpp](ch5/5-3testlisten.cpp)
 
 
 
@@ -150,7 +151,9 @@ int accept(int sockfd, struct sockaddr* addr, socklen_t *addrlen);
 
 accept 成功调用会返回一个新的**连接 socket**（处于 ESTABLISHED 状态），该套接字唯一标识这个被接受的连接，服务器可以通过读写该 socket 来与客户端通信
 
-> 注意：accept 并不关心任何网络状况的变化，只是从监听队列中取出连接，而不论连接处于何种状态，参考 P80
+> 注意：accept 并不关心任何网络状况的变化，只是从监听队列中取出连接，而不论连接处于何种状态
+>
+> 代码参考：[5-5testaccept.cpp](ch5/5-5testaccept.cpp)
 
 
 
@@ -209,10 +212,12 @@ ssize_t send(int sockfd, const void *buf, size_t len, int flags);
 ```
 
 > flags 选项可以设置 send 或者 recv 读取或者发送数据的方式，比如处理紧急数据（带外数据）等
+>
+> 带外数据处理代码参考：[客户端-5-6oobsend.cpp](ch5/5-6oobsend.cpp)，[服务端-5-7oobrecv.cpp](ch5/5-7oobrecv.cpp)
 
 
 
-##### 5.8.2 UCP 数据读写
+##### 5.8.2 UDP 数据读写
 
 ```cpp
 #include <sys/types.h>
@@ -299,8 +304,17 @@ int setsockopt(int sockfd, int level, int option_name, const void* option_value,
 ```
 
 - SO_REUSEADDR：强制使用被处于 TIME_WAIT 状态的连接占用的 socket 地址
+
+  > 代码参考：[5-9reuse_address.cpp](ch5/5-9reuse_address.cpp)
+
 - SO_RCVBUF：修改 TCP 接受缓冲区的大小（翻倍设置），最小为 256 字节
+
+  > 代码参考：[5-11set_recv_buffer.cpp](ch5/5-11set_recv_buffer.cpp)
+
 - SO_SNDBUF：修改 TCP 发送缓冲区的大小（翻倍设置），最小为 2048 字节
+
+  > 代码参考：[5-10set_send_buffer.cpp](ch5/5-10set_send_buffer.cpp)
+
 - SO_RCVLOWAT 和 SO_SNDLOWAT：TCP 接受缓冲区和发送缓冲区的低水位标记，用于 IO 复用中判断何时可读写
 
 
@@ -318,6 +332,8 @@ struct hostent* gethostbyaddr(const void* addr, size_t len, int type);
 ```
 
 返回的都是 hostent 结构体类型的指针，更多具体的 API 参考 P95
+
+> 代码参考：[5-12access_daytime.cpp](ch5/5-12access_daytime.cpp)
 
 
 
@@ -361,6 +377,8 @@ int dup2(int old_fd, int limit_fd);
 
 P102 例子中，写了一个简单的服务端程序，与客户端通信的 socket 记为 connfd，先关闭标准输出 STDOUT_FILENO (其值为1)，**然后调用 dup(connfd) 返回 1**，这样标准输出就和 connfd 指向同样的文件，也就是 printf 的数据直接写入管道（不会出现在终端上），发送给客户端，这就是 Comman Gateway Interface（CGI）服务器的基本工作原理
 
+> 代码参考：[6-1testdup.cpp](ch6/6-1testdup.cpp)
+
 
 
 #### 6.3 readv/writev 函数
@@ -383,6 +401,8 @@ strcut iovec {
 
 P105 例子中给了简单 HTTP 文件服务器，通过 writev 将 headbuf（状态行+头部字段+空行）和 filebuf（文档内容）集中写入 socket
 
+> 代码参考：[6-2testwritev.cpp](ch6/6-2testwritev.cpp)
+
 
 
 #### 6.4 sendfile 函数
@@ -401,9 +421,11 @@ ssize_t sendfile(int out_fd, int in_fd, off_t* offset, size_t count); // 成功�
 - in_fd 必须是一个支持类似 mmap 函数的文件描述符，必须指向真实的文件，不能是 socket 和管道
 - out_fd 必须是一个 socket
 
-> sendfile 几乎是专门为在网络上传输文件而设计的
+> sendfile 几乎是专门为在网络上传输文件而设计的，注意 MacOS 的 sendfile 参数和 Linux 不太一样，参考 [sendfile.2](https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/sendfile.2.html)
 
 P107 例子使用 sendfile 将服务器上的一个文件传输给客户端，其中没有**为目标文件分配任何用户空间的缓存，也没有执行读取文件的操作**，相比于之前的 通过 HTTP 传输文件的效率要高得多
+
+> 代码参考：[6-3testsendfile.cpp](ch6/6-3testsendfile.cpp)
 
 
 
@@ -444,6 +466,8 @@ fd_in/fd_out 必须至少有一个是管道文件描述符
 
 P110 例子实现了一个简单的回射服务器，利用 splice 函数将客户端的内容读入管道写端 fd[1]，然后再使用 splice 函数从管道读端 fd[0] 读出该内容到客户端。整个过程没有执行 recv/send 操作，十分高效
 
+> 代码参考：[6-4testsplice.cpp](ch6/6-4testsplice.cpp) （注：MacOS 并没有 splice 函数）
+
 
 
 #### 6.7 tee 函数
@@ -459,6 +483,8 @@ ssize_t tee(int fd_in, int fd_out, size_t len, unsigned int flags);
 ```
 
 P111 例子实现了一个简单的 tee 程序，利用 splice（标准输入输出<-->输入输出管道） 和 tee（输出管道<-->文件管道）同时输出数据到终端和文件
+
+> 代码参考：[6-5testtee.cpp](ch6/6-5testtee.cpp)
 
 
 
@@ -536,7 +562,7 @@ gid_t getgid();		// 获取真实组 id
 gid_t getegid();	// 获取有效组 id
 ```
 
-P117 代码清单 7-1 展示了 UID 和 EUID 的区别
+P117 代码清单 7-1 展示了 UID 和 EUID 的区别，代码参考：[7-1testeuid.cpp](ch7/7-1testeuid.cpp)
 
 
 
@@ -545,6 +571,8 @@ P117 代码清单 7-1 展示了 UID 和 EUID 的区别
 代码清单 7-2 展示了以 root 身份启动的进程切换为一个普通用户身份运行，没看懂o(╥﹏╥)o
 
 > root 的 uid == 0 && guid == 0?
+>
+> 代码参考：[7-2switchuser.cpp](ch7/7-2switchuser.cpp)
 
 
 
@@ -635,6 +663,8 @@ int chroot(const char* path); // 成功 0，失败 -1
 int daemon(int nochdir, int noclose); // 成功 0，失败-1
 ```
 
+> 代码参考：[7-3daemonize.cpp](ch7/7-3daemonize.cpp)
+
 
 
 ### Ch.8 高性能服务器程序框架
@@ -698,11 +728,370 @@ P128 图 8-5 展示同步 I/O epoll_wait 实现的 Reactor 模式，主线程通
 - 主线程（I/O 处理单元）负责所有的 I/O 操作
 - 工作线程（逻辑单元）仅仅负责业务逻辑
 
+图 8-6 展示了异步 I/O aio_read/aio_write 实现的 Proactor 模式，没看懂o(╥﹏╥)o
 
 
 
+##### 8.4.3 模拟 Proactor 模式
+
+使用同步 I/O epoll_wait 模拟 Proactor 模式，让主线程执行数据读写操作，读写完成之后，主线程向工作线程通知这一“完成事件”。那么从工作进程的角度上来看，它们就直接获得了数据的读写结果，接下来要做的就是对读写的结果进行逻辑处理。
+
+> 流程依旧没看懂o(╥﹏╥)o
 
 
 
+#### 8.5 两种高效的并发模式
+
+##### 8.5.1 半同步/半异步模式
+
+- 同步：程序完成按照代码序列的顺序执行
+- 异步：程序的执行需要由系统事件来驱动，常见的系统事件包括中断、信号等
+
+异步线程执行效率高、实时性强，但是难以调试和扩展，不适合大量并发；同步线程虽然执行效率较低、实时性差，但逻辑简单。服务器一般及要求较好的实时性，又要求能同时处理多个客户请求的应用程序，所以采用**「半同步/半异步模式」**实现
 
 
+
+##### 8.5.2 领导者/追随者模式
+
+多个工作线程轮流获得事件源集合，轮流监听、分发并处理时间的一种模式。在任意时间点，程序都仅有一个领导者线程，负责监听 I/O 事件。而其他线程都是追随者，它们休眠在线程池中等待成为新的领导者。
+
+- 句柄集 HandleSet
+- 线程集 ThreadSet
+- 时间处理器 EventHandler
+
+
+
+#### 8.6 有限状态机
+
+程序清单 8-3 展示了 HTTP 请求的读取和分析中主从状态机是如何处理 HTTP 请求字段的
+
+> 代码参考：[8-3httpparser.cpp](ch8/8-3httpparser.cpp)
+
+
+
+#### 8.7 提高服务器性能的其他建议
+
+##### 8.7.1 池
+
+池通过空间换时间的思想来提高服务器的运行效率，相当于服务器管理系统资源的应用设施，避免了服务器对内核的频繁访问。
+
+- 内存池通常用于 socket 的接收缓存和发送缓存
+- 进程池和线程池通常用于并发编程，当需要一个工作进程或线程来处理新的客户请求时，可以直接从池中取得一个执行实体，这样就无需动态地调用 fork 或 pthread_create 等函数来创建进程和线程
+- 连接池通常用于服务器或服务器机群的内部永久连接，连接池是服务器预先和数据库程序建立的一组连接的集合
+
+
+
+##### 8.7.2 数据复制
+
+内核直接处理从 socket 或者文件读入的数据，所以应用程序没必要将这些数据从内核缓冲区复制到应用程序缓冲区中，使用“零拷贝”函数 sendfile 等就可以将一个文件直接发送给客户端。
+
+另外当两个工作进程之间需要传递大量的数据时，应考虑使用共享内存来共享这些数据，而不是使用管道或者消息队列来传递，这样就可以**避免不必要的数据复制**。
+
+
+
+##### 8.7.3 上下文切换和锁
+
+并发程序必须考虑上下文切换的问题，即进程切换或线程切换导致的系统开销；还需要考虑共享资源的加锁保护，如果服务器必须使用“锁”，则可以考虑减小锁的粒度。
+
+
+
+### Ch.9 I/O 复用
+
+#### 9.1 select 系统调用
+
+select 系统调用的原型如下：
+
+```cpp
+#include <sys/select.h>
+
+// nfds 指定被监听的文件描述符的总数，通常是监听的所有文件描述符中的最大值加1
+// readfds, writefds, exceptfds 分别指向可读、可写和异常等事件对应的文件描述符集合
+// timeout 设置 select 函数的超时时间，0 立即返回，NULL 一直阻塞
+int select(int nfds, fd_set* readfds, fd_set* writefds, fd_set* exceptfds, struct timeval* timeout);
+
+// fd_set 结构体仅包含一个整形数组，该数组的每个元素的每一位 bit 标记一个文件描述符，容纳数量由 FD_SETSIZE 指定
+FD_ZERO(fd_set* fdset);			// 清除 fdset 的所有位
+FD_SET(int fd, fd_set *fdset);	// 设置 fdset 的位 fd
+FD_CLR(int fd, fd_set *fdset);	// 清除 fdset 的位 fd
+int FD_ISSET(int fd, fd_set *fdset); // 测试 fdset 的位 fd 是否被设置
+
+struct timeval
+{
+    long tv_sec;	// 秒数
+    long tv_usec;	// 微秒数
+}
+```
+
+**select 成功时返回就绪文件描述符的总数，如果在超时时间内没有任何文件描述符就绪就返回 0，失败 -1 并设置 errno**
+
+
+
+**文件描述符可读就绪条件**
+
+- socket 接收缓冲区中的字节数大于或等于低水位标记 SO_RCVLOWAT 时可以无阻塞地读 socket
+- socket 通信对方关闭连接时，对该 socket 的读操作返回 0
+- 监听 socket 上有新的连接
+- socket 上有未处理的错误
+
+**文件描述符可写就绪条件**
+
+- socket 发送缓冲区中的可用字节数大于或等于低水位标记 SO_RCVLOWAT 时可以无阻塞地写 socket
+- socket 的写操作被关闭，对该 socket 的读操作返回 0
+- socket 使用非阻塞 connect 连接成功或者失败（超时）之后
+- socket 上有未处理的错误
+
+代码参考：[9-1use_select.cpp](ch9/9-1use_select.cpp)
+
+
+
+#### 9.2 poll 系统调用
+
+poll 和 select 类似，也是在指定时间内轮询一定数量的文件描述符，测试其是否就绪
+
+```cpp
+#include <poll.h>
+
+// fds 参数指定感兴趣的文件描述符上发生的可读、可写和异常事件
+// nfds 参数指定被监听事件集合 fds 的大小，实际类型为 unsigned long int
+// timeout 指定 poll 的超时值，单位是毫秒，-1 永远阻塞，0 直接返回
+// [return] 和 select 一样
+int poll(struct pollfd* fds, nfds_t nfds, int timeout);
+
+// pollfd 结构体
+struct pollfd
+{
+    int fd;	// 文件描述符
+    short events; // 注册的事件，一系列 POLL 事件的按位或
+    short revents; // 实际发生的事件，内核填充
+}
+```
+
+
+
+#### 9.3 epoll 系列系统调用
+
+> Mac 里没有 epoll 库，使用 kqueue 代替，[参考](https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/kqueue.2.html)
+
+epoll 把用户关心的文件描述符上的事件放入内核里的一个时间表中，无需像 select 和 poll 那样每次调用都要重复传入文件描述符集或事件集。epoll 需要一个额外的文件描述符来唯一标识内核中的这个事件表
+
+```cpp
+#include <sys/epoll.h>
+
+// 创建标识内核中的事件表，size 参数并无实际作用
+// [return] 返回的 fd 将作为其他所有 epoll 系统调用的第一个参数
+int epoll_create(int size);
+
+// 操作内核事件表
+// op 参数指定操作类型，由 EPOLL_CTL_ADD|EPOLL_CTL_MOD|EPOLL_CTL_DEL 组成
+// fd 参数是要操作的文件描述符
+// event 参数指定事件
+// [return] 成功 0，失败 -1 并设置 errno
+int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
+
+struct epoll_event {
+    _uint32_t events; // epoll 事件，和 poll 类型基本一致
+    epoll_data_t data; // 用户数据
+}
+
+// 联合体
+typedef union epoll_data {
+    void* ptr;
+    int fd;
+    uint32_t u32;
+    uint64_t u64;
+} epoll_data_t;
+
+// timeout 指定超时，maxevents 指定最多监听多少个事件
+int epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout);
+```
+
+epoll 相比于 poll 有两个额外的事件类型：EPOLLET | EPOLLONESHOT
+
+epoll_wait 将所有就绪的事件从内核事件表（由 epfd 参数指定）中复制到 events 指定的数组中，**只用于输出 epoll_wait 检测到的就绪事件**，所以相比于 select 和 poll 极大提升性能
+
+
+
+##### LT 和 ET 模式
+
+- LT：Level Trigger，默认的，epoll_wait 检测到其上有事件发生并将此事件通知应用程序之后，应用程序可以不立即处理该事件，下次调用 epoll_wait 还可以再次向应用程序通告此事件
+- ET：Edge Trigger，epoll_wait 检测到就绪事件之后必须处理，效率比 LT 模式要高，需要指定 EPOLLET 事件类型
+
+> 代码参考：[LT vs ET 9-3mtlt.cpp](ch9/9-3mtlt.cpp)
+
+
+
+**EPOLLONESHOT 事件**
+
+即使在 ET 模式下，一个 socket 上的某个事件还是可能被触发多次，在并发程序中，一个线程读取完某个 socket 上的数据后开始处理这些数据，但是在处理过程中该 socket 上又有新数据可读（EPOLLIN 被再次出发），此时另一个线程被唤醒来读取这些新的数据。此时出现了两个线程同时操作一个 socket 的局面
+
+为此需要 EPOLLONESHOT 事件
+
+> 代码参考：[9-4oneshot.cpp](ch9/9-4oneshot.cpp)
+
+
+
+#### 9.4 三组 I/O 复用函数比较
+
+selecet、poll 和 epoll 都通过某种结构体变量来告诉内核监听哪些文件描述符上的哪些事件，并使用该结构体类型的参数来获取内核处理的结果
+
+- select 参数类型 fd_set 没有将文件描述符和事件绑定，因此需要 3 个类型的参数分别区分可读、可写和异常事件，不能处理更多类型的事件，且下次调用时徐璈重置 3 个 fd_set 集合
+- poll 通过参数类型 pollfd 将文件描述符和事件都定义在其中，支持更多的事件类型，且下次调用 poll 时无需重置 pollfd 类型的事件集参数，因为内核修改的仅仅是 revents 成员
+- select 和 poll 调用返回整个用户注册的事件集合（包括就绪和未就绪的），索引就绪文件描述符的时间复杂度为 O(n)，epoll 通过 epoll_wait 直接从 epollfd 指定的内核事件表中取得用户注册的事件，且通过 events 参数仅仅用来返回就绪的事件，索引就绪的 fd 事件复杂度为 O(1)
+- poll 和 epoll_wait 分别使用 nfds 和 maxevents 参数指定最多监听的 fd 和 事件，最大 65535，但是 select 一般是 1024
+- poll 和 selecet 只能工作在相对低效的 LT 模式，epoll 可以在 ET 模式，且还支持 EPOLLONESHOT 事件
+
+> 具体区别参考表格 9-2 
+
+
+
+#### 9.5 I/O 复用的高级应用一：非阻塞 connect
+
+connect 出错时有一个 errno 值：EINPROGRESS，**这种错误发生在非阻塞的 sockct 调用 connect，而连接又没有立即建立时**。根据 man 文档的解释，在这种情况下，我们可以调用 select、poll 等函数来监听这个连接失败的 socket 上的**可写事件**。当select、poll 等函数返回后，再利用 getsockopt 来读取错误码并清除该 socket 上的错误。如果错误码是0，表示连接成功建立，否则连接失败。
+
+> 代码参考：[9-5unblockconnect.cpp](ch9/9-5unblockconnect.cpp)
+
+
+
+#### 9.6 I/O 复用的高级应用二：聊天室程序
+
+客户端程序有两个功能：
+
+- 从标准输人终端读入用户数据，并将用户数据发送至服务器
+- 往标准输出终端打印服务器发送给它的数据
+
+> 代码参考：[9-6mytalk_client.cpp](ch9/9-6mytalk_client.cpp)
+
+服务器的功能
+
+- 接收客户数据
+- 把客户数据发送给每一个登录到该服务器上的客户端（数据发送者除外)
+
+> 代码参考：[9-7mytalk_server.cpp](ch9/9-7mytalk_server.cpp)
+
+
+
+#### 9.7  I/O 复用的高级应用二：同时处理 TCP 和 UDP 服务
+
+代码参考：[9-8multi_port.cpp](ch9/9-8multi_port.cpp)
+
+
+
+#### 9.8 超级服务 xinetd
+
+Linux 因特网服务 inetd 是超级服务。它同时管理着多个子服务，即监听多个遄口。现在 Linux 系统上使用的 inetd 服务程序通常是其升级版本 xinetd。 xinetd 程序的原理与 inetd 相同，但增加了一些控制选项，并提高了安全性。
+
+
+
+### Ch.10 信号
+
+信号是由用户、系统或者进程发送给目标进程的信息，以通知目标进程某个状态的改变或系统异常。Linux 信号可由如下条件产生：
+
+- 对于前台进程，用户可以通过输人特殊的终端字符来给它发送信号。比如输入 Ctrl+C 通常会给进程发送一个中断信号
+- 系统异常。比如浮点异常和非法内存段访问
+- 系统状态变化。比如 alarm 定时器到期将引起 SIGALRM 信号
+- 运行 kill 命令或调用 kill 函数
+
+
+
+#### 10.1 Linux 信号概述
+
+```cpp
+#include <sys/types.h>
+#include <signal.h>
+
+// 把信号 sig 发给目标进程 pid
+int kill(pid_t pid, int sig); // 成功返回 0，失败 -1 并设置 errno
+
+// 信号处理函数原型
+typedef void (*__sighandler_t)(int);
+```
+
+linux 信号有很多，和网络编程关系紧密的是：
+
+- SIGHUP：控制终端挂起
+- SIGPIPE：往读端被关闭的管道或者 socket 连接中写数据
+- SIGURG：socket 连接上接受到紧急数据
+- SIGALRM：由 alarm 或 setitimer 设置的实时闹钟超时引起
+- SIGCHLD：子进程状态发生变化（退出或暂停）
+
+
+
+#### 10.2 信号函数
+
+##### signal 系统调用
+
+```cpp
+#include <signal.h>
+
+// sig 参数指出要捕获的信号类型，
+// _handler 参数是函数指针，用于指定信号 sig 的处理函数
+_sighandler_t signal(int sig, _sighandler_t handler);
+```
+
+
+
+##### sigaction 系统调用
+
+```cpp
+#include <signal.h>
+
+// sig 指出要捕获的信号类型
+// act 参数指定新的信号处理方式
+// oact 输出信号先前的处理方式（如果不为 NULL 的话）
+// [return] 成功 0，失败 -1 并设置 errno
+int sigaction(int sig, const struct sigaction* act, struct sigaction* oact);
+
+struct sigaction {...}; // 参考 P181
+```
+
+
+
+#### 10.3 信号集
+
+##### 信号集函数
+
+```cpp
+#include <bits/sigset.h>
+
+# define _SIGSET_NWORDS (1024 / (8 * sizeof (unsigned long int)))
+tydedef struct {
+    unsigned long int __val[_SIGSET_NWORDS];
+} __sigset_t; // 其实就是一个长整型数组
+```
+
+
+
+##### 进程信号掩码
+
+```cpp
+#include <signal.h>
+
+// _set 参数指定新的信号掩码，_how 指定设置掩码方式 SIG_BLOCK|SIG_UNBLOCK|SIG_SETMASK
+// _oset 参数输出原来的信号掩码（如果不为 NULL 的话）
+// [return] 成功 0，失败 -1 并设置 errno
+int sigprocmask(int _how, _const sigset_t* _set, sigset_t* _oset);
+```
+
+
+
+##### 被挂起的信号
+
+**设置进程信号掩码后，被屏蔽的信号将不能被进程接收**。如果给进程发送一个被屏蔽的信号，则操作系统将该信号设置为进程的一个**被挂起的信号**。如果我们取消对被挂起信号的屏蔽，则它能立即被进程接收到。如下两数可以获得进程当前被挂起的信号集
+
+```cpp
+#include <signal.h>
+
+// 获取进程当前被挂起的信号集
+// [return] 成功 0，失败 -1 并设置 errno
+int sigpending(sigset_t* set);
+```
+
+
+
+#### 10.4 统一事件源
+
+信号是一种异步事件：信号处理两数和程序的主循环是两条不同的执行路线。很显然，信号处理函数需要尽可能快地执行完毕，以确保该信号不被屏蔽（前面提到过，为了避免一些竞态条件，信号在处理期间，系统不会再次触发它）太久。一种典型的解决方案是：
+
+把信号的主要处理逻辑放到程序的主循环中，当信号处理函数被触发时，它只是简单地通知主循环程序接收到信号，并把信号值传递给主循环，主循环再根据接收到的信号值执行目标信号对应的逻辑代码。信号处理函数通常使用管道来将信号 “传递”给主循环：**信号处理函数往管道的写端写人信号值**，主循环则从管道的读端读出该信号值。**那么主循环怎么知道管道上何时有数据可读呢？**这很简单，我们只需要使用 I/O 复用系统调用来**监听管道的读端文件描述符**上的可读事件。如此一来，信号事件就能和其他 I/O 事件一样被处理，即统一事件源。
+
+> 代码参考：[10-1unievent.cpp](ch10/10-1unievent.cpp)
