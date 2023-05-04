@@ -16,8 +16,8 @@ void Print(const list<T>& my)
 
 void Print_f(forward_list<int>& test)
 {
-    for(auto iter = test.cbegin(); iter != test.cend(); ++ iter) {
-        cout << *iter << ' ';
+    for(int iter : test) {
+        cout << iter << ' ';
     }
     cout << endl;
 }
@@ -40,7 +40,6 @@ int main()
     Print(list1);   // 23 34 12 11
 
     list2.push_front(44);
-
 
     // forward_list
     forward_list<int> test = {1, 2, 3, 4, 5};
