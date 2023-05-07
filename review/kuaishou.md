@@ -206,3 +206,165 @@ template<class Key,
   - mid 为偶数：正常情况下应该是当前和下一个元素相同
 - **无序**也是一样的思路
 
+
+
+### 大数据引擎
+
+#### 一面
+
+> 2023.05.05—19:00-20:00
+
+##### 1、[项目] 如何提升 wrk 压测
+
+
+
+##### 2、static、const 和 volatile 关键字
+
+volatile关键字是一种类型修饰符，用它声明的类型变量表示可以被某些编译器未知的因素更改，比如：操作系统、硬件或者其它线程等。遇到这个关键字声明的变量，编译器对访问该变量的代码就不再进行优化，从而可以提供对特殊地址的稳定访问。
+
+**volatile定义变量的值是易变的，每次用到这个变量的值的时候都要去重新读取这个变量的值，而不是读寄存器内的备份。多线程中被几个任务共享的变量需要定义为volatile类型。**
+
+
+
+##### 3、静态多态和动态多态了解吗 [参考](https://www.cnblogs.com/lizhenghn/p/3667681.html)
+
+动态多态就是运行时多态，动态绑定，可以处理异质对象集合
+
+```cpp
+namespace DynamicPoly
+{
+    class Geometry
+    {
+    public:
+        virtual void Draw() const = 0;
+    };
+
+    class Line : public Geometry
+    {
+    public:
+        virtual void Draw() const { std::cout << "Line Draw()\n"; }
+    };
+
+    class Circle : public Geometry
+    {
+    public:
+        virtual void Draw() const { std::cout << "Circle Draw()\n"; }
+    };
+
+    class Rectangle : public Geometry
+    {
+    public:
+        virtual void Draw() const { std::cout << "Rectangle Draw()\n"; }
+    };
+
+    void DrawGeometry(std::vector<DynamicPoly::Geometry *> vecGeo)
+    {
+        const size_t size = vecGeo.size();
+        for (size_t i = 0; i < size; ++i)
+            vecGeo[i]->Draw();
+    }
+}
+
+DynamicPoly::Line line;
+DynamicPoly::Circle circle;
+DynamicPoly::Rectangle rect;
+
+std::vector<DynamicPoly::Geometry*> vec;
+vec.push_back(&line);
+vec.push_back(&circle);
+vec.push_back(&rect);
+DynamicPoly::DrawGeometry(vec);
+```
+
+
+
+静态多态是编译器完成的，效率高，但是不能处理异质对象集合，本质是模板的具现化，静态多态中的接口调用也叫隐式接口
+
+```cpp
+namespace StaticPoly
+{
+    class Line
+    {
+    public:
+        void Draw() const { std::cout << "Line Draw()\n"; }
+    };
+
+    class Circle
+    {
+    public:
+        void Draw(const char *name = NULL) const { std::cout << "Circle Draw()\n"; }
+    };
+
+    class Rectangle
+    {
+    public:
+        void Draw(int i = 0) const { std::cout << "Rectangle Draw()\n"; }
+    };
+
+    template <typename Geometry>
+    void DrawGeometry(std::vector<Geometry> vecGeo)
+    {
+        const size_t size = vecGeo.size();
+        for (size_t i = 0; i < size; ++i)
+            vecGeo[i].Draw();
+    }
+}
+
+StaticPoly::Line line1;
+StaticPoly::Line line2;
+StaticPoly::Circle circle;
+StaticPoly::Rectangle rect;
+
+std::vector<StaticPoly::Line> vecLines;    
+vecLines.push_back(line1);
+vecLines.push_back(line2);
+// vecLines.push_back(&circle);  //编译错误，已不再能够处理异质对象
+// vecLines.push_back(&rect);    //编译错误，已不再能够处理异质对象
+```
+
+
+
+##### 4、C++ 垃圾回收器了解吗
+
+- 引用计数算法
+- Mark & Sweep 算法
+- 节点复制算法
+
+参考：https://blog.csdn.net/u012611878/article/details/78947267
+
+
+
+##### 5、MySQL倒排索引了解吗 [参考](https://blog.csdn.net/m0_46405589/article/details/113603721)
+
+- 全文检索通常使用**倒排索引（inverted index）**来实现
+- 倒排索引在辅助表（auxiliary table）中存储了单词与单词自身在一个或多个文档中所在位置之间的映射这通常利用关键数组实现，其拥有两种表现形式：
+  - inverted file index：其表现形式为{单词，单词所在文档的ID}
+  - full inverted index：其表现形式为{单词，(单词所在文档的ID，在文档中的具体位置)}
+
+
+
+##### 6、描述一下红黑树，会手撕插入删除过程吗
+
+性质1：每个节点要么是黑色，要么是红色
+
+性质2：根节点是黑色
+
+性质3：**每个叶子节点（NIL）是黑色**
+
+性质4：每个红色结点的两个子结点一定都是黑色
+
+性质5：任意一结点到每个叶子结点的路径都包含数量相同的黑结点
+
+> 参考：https://www.jianshu.com/p/e136ec79235c
+
+
+
+##### 7、三个线程轮流打印 ABC [LC55. 跳跃游戏](https://leetcode.cn/problems/jump-game/)
+
+用一个 int 变量控制条件变量 wait() 阻塞等待时机，用 notify_all() 唤醒条件变量
+
+参考：https://blog.csdn.net/qq_41963107/article/details/108306090
+
+
+
+跳跃游戏：[贪心覆盖](https://leetcode.cn/submissions/detail/430028029/)

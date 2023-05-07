@@ -8,7 +8,7 @@
 - 进程是程序的一次执行过程，是一个动态概念，**是程序在执行过程中分配资源的基本单位**，每一个进程都有一个自己的地址空间，至少有 5 种基本状态，它们是：初始态，执行态，等待状态，就绪状态，终止状态。
 - **线程是CPU调度的基本单位**，它可与同属一个进程的其他的线程共享进程所拥有的全部资源。
 
-> 联系： 线程是进程的一部分，一个线程只能属于一个进程，而一个进程可以有多个线程，但至少有一个线程。线程共享进程的资源：**进程代码段、进程的公有数据(利用这些共享的数据，线程很容易的实现相互之间的通讯)、进程打开的文件描述符、信号的处理器、进程的当前目录和进程用户ID与进程组ID**
+> 联系： 线程是进程的一部分，一个线程只能属于一个进程，而一个进程可以有多个线程，但至少有一个线程。线程共享进程的资源：**进程代码段、进程的公有数据(利用这些共享的数据，线程很容易实现相互之间的通讯)、进程打开的文件描述符、信号的处理器、进程的当前目录和进程用户ID与进程组ID**
 >
 > 所处环境：在操作系统中能同时运行多个进程（程序）；而在同一个进程（程序）中有多个线程同时执行（通过CPU调度，在每个时间片中只有一个线程执行）
 >
@@ -81,7 +81,7 @@
 
 #### 5.  简述 socket 中 select 与 epoll 的使用场景以及区别，epoll 中水平触发以及边缘触发有什么不同？
 
-> ==I/O多路复用中 select, poll, epoll之间有什么区别，各自支持的最大描述符上限以及原因是什么？==
+> I/O多路复用中 select, poll, epoll之间有什么区别，各自支持的最大描述符上限以及原因是什么？
 
 参考：[Cyc2018-IO复用](http://www.cyc2018.xyz/计算机基础/Socket/Socket.html#二、i-o-复用)
 
@@ -112,7 +112,7 @@
 
 Linux通过将一个虚拟内存区域与一个磁盘上的对象(object)关联起来，以初始化这个虚拟内存区域的内容，这个过程称为**内存映射**(memory mapping)。
 
-**mmap是用来建立从虚拟空间到磁盘空间的映射的**，可以将一个虚拟空间地址映射到一个磁盘文件上，当不设置这个地址时，则由系统自动设置，函数返回对应的内存地址（虚拟地址），当访问这个地址的时候，就需要把磁盘上的内容拷贝到内存了，然后就可以读或者写，最后通过manmap可以将内存上的数据换回到磁盘，**也就是解除虚拟空间和内存空间的映射，这也是一种读写磁盘文件的方法，也是一种进程共享数据的方法 共享内存**
+**mmap是用来建立从虚拟空间到磁盘空间的映射的**，可以将一个虚拟空间地址映射到一个磁盘文件上，当不设置这个地址时，则由系统自动设置，函数返回对应的内存地址（虚拟地址），当访问这个地址的时候，就需要把磁盘上的内容拷贝到内存了，然后就可以读或者写，最后通过munmap可以将内存上的数据换回到磁盘，**也就是解除虚拟空间和内存空间的映射，这也是一种读写磁盘文件的方法，也是一种进程共享数据的方法 共享内存**
 
 
 
@@ -136,13 +136,13 @@ c.  **外围设备的中断**：硬盘读写操作完成，系统会切换到硬
 
 有的同学可能还是不太明白，为什么虚拟地址空间切换会比较耗时呢？
 
-> 现在我们已经知道了进程都有自己的虚拟地址空间，把虚拟地址转换为物理地址需要查找页表，页表查找是一个很慢的过程，因此通常使用 cache 来缓存常用的地址映射，这样可以加速页表查找，这个 cache 就是 TLB（translation Lookaside Buffer，我们不需要关心这个名字只需要知道 TLB 本质上就是一个 cache，是用来加速页表查找的）。由于每个进程都有自己的虚拟地址空间，那么显然每个进程都有自己的页表，那么**当进程切换后页表也要进行切换，页表切换后 TLB 就失效了**，cache 失效导致命中率降低，那么虚拟地址转换为物理地址就会变慢，表现出来的就是程序运行会变慢，而线程切换则不会导致 TLB 失效，因为线程无需切换地址空间，因此我们通常说线程切换要比较进程切换块，原因就在这里。
+> 现在我们已经知道了进程都有自己的虚拟地址空间，把虚拟地址转换为物理地址需要查找页表，页表查找是一个很慢的过程，因此通常使用 cache 来缓存常用的地址映射，这样可以加速页表查找，这个 cache 就是 TLB（Translation Lookaside Buffer，我们不需要关心这个名字只需要知道 TLB 本质上就是一个 cache，是用来加速页表查找的）。由于每个进程都有自己的虚拟地址空间，那么显然每个进程都有自己的页表，那么**当进程切换后页表也要进行切换，页表切换后 TLB 就失效了**，cache 失效导致命中率降低，那么虚拟地址转换为物理地址就会变慢，表现出来的就是程序运行会变慢，而线程切换则不会导致 TLB 失效，因为线程无需切换地址空间，因此我们通常说线程切换要比较进程切换块，原因就在这里。
 
 
 
 #### 11. 简述 traceroute 命令的原理
 
-1. 构造一个 UDP 报文，TTL 分别为1,当这个报文到达第一个路由器后，TTL 减去1后为零，报文被丢弃，然后路由器发送 ICMP 报文（时间超过）给源主机。
+1. 构造一个 UDP 报文，TTL 分别为1，当这个报文到达第一个路由器后，TTL 减去1后为零，报文被丢弃，然后路由器发送 ICMP 报文（时间超过）给源主机。
 
 2. 构造 UDP 报文，TTL 为2，同样的，第二个路由器会返回 ICMP 报文（时间超过）给源主机
 
@@ -256,12 +256,12 @@ c.  **外围设备的中断**：硬盘读写操作完成，系统会切换到硬
 
 3. **Cookie和Session的关系和区别是什么**
 
-   - cookie和session都是用来跟踪浏览器用户身份的会话方式。[了解一下两者的过程](https://blog.csdn.net/chen13333336677/article/details/100939030)
-   - cookie数据保存在客户端，session数据保存在服务端
-     - 浏览器第一次访问服务器时，服务器端创建Cookie，该Cookie中包含用户的信息，然后将该Cookie发送到浏览器端，服务器端通过Cookie中携带的数据区分不同的用户
-     - session基于cookies实现，浏览器第一次访问服务器时候创建一个session，同时会创建一个特殊的Cookie（`name`为`JSESSIONID`的固定值，`value`为`session对象的ID`），然后将该Cookie发送至浏览器端，服务器端根据name为JSESSIONID的Cookie的value(sessionId),去查询Session对象，从而区分不同用户。
-   - cookies不是很安全，存储数据大小限制3K，有cookies欺骗，session一般存放登录等重要信息
-   - session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能，如果主要考虑到减轻服务器性能方面，应当使用Cookies
+   - cookie 和 session 都是用来跟踪浏览器用户身份的会话方式。[了解一下两者的过程](https://blog.csdn.net/chen13333336677/article/details/100939030)
+   - cookie 数据保存在客户端，session 数据保存在服务端
+     - 浏览器第一次访问服务器时，服务器端创建 Cookie，该 Cookie 中包含用户的信息，然后将该 Cookie 发送到浏览器端，服务器端通过 Cookie 中携带的数据区分不同的用户
+     - session 基于 cookies 实现，浏览器第一次访问服务器时候创建一个 session，同时会创建一个特殊的 Cookie（`name`为`JSESSIONID`的固定值，`value`为`session对象的ID`），然后将该 Cookie 发送至浏览器端，服务器端根据 name 为 JSESSIONID 的 Cookie 的 value(sessionId)，去查询Session对象，从而区分不同用户。
+   - cookies 不是很安全，存储数据大小限制 3K，有 cookies 欺骗，session 一般存放登录等重要信息
+   - session 会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能，如果主要考虑到减轻服务器性能方面，应当使用 Cookies
 
 
 
@@ -398,10 +398,10 @@ c.  **外围设备的中断**：硬盘读写操作完成，系统会切换到硬
 
 ##### 3.2 常见状态码
 
-- **301（Moved Permanently）** : 跳转，代表永久性重定向
-- **304（Not Modified）** : 客户端发送附带条件的请求时，服务器端允许请求访问资源，但因发生请求未满足条件的情况后，直接返回了304
-- **401（Unauthorized）** : 发送的请求需要有通过HTTP认证的认证信息
-- **403（Forbidden）** : 对请求资源的访问被服务器拒绝了
+- **301-Moved Permanently**：跳转，代表永久性重定向
+- **304-Not Modified**：客户端发送附带条件的请求时，服务器端允许请求访问资源，但因发生请求未满足条件的情况后，直接返回了304
+- **401-Unauthorized**：发送的请求需要有通过HTTP认证的认证信息
+- **403-Forbidden**：对请求资源的访问被服务器拒绝了
 
 > 参考：https://www.runoob.com/http/http-status-codes.html
 
@@ -731,17 +731,14 @@ https://zhuanlan.zhihu.com/p/45338392
 - **文字常量区**：常量字符串就是放在这里的，如char str[]=”hello”，程序结束后由系统释放，区别const修饰的变量。
 - **程序代码区**：存放函数体的二进制代码。
 
-1. static 声明的变量内存只分配一次，static 变量存放在数据区，程序结束后才会释放；该变量（static）只被分配一次，因此它的值在下一次调用时依然可以维持上次结果的值。
-
-   > static数据成员必须进行初始化，默认初始化为0
-   >
-   > 模块内声明的static函数，可以被该模块内的函数进行调用，模块外的函数不可调用它
-
+1. static 声明的变量内存只分配一次，static 变量存放在静态区，程序结束后才会释放；该变量（static）只被分配一次，因此它的值在下一次调用时依然可以维持上次结果的值。
+   - static数据成员必须进行初始化，默认初始化为0
+   - 模块内声明的static函数，可以被该模块内的函数进行调用，模块外的函数不可调用它
 2. const 修饰的变量可以防止被改变，初始化后，就没有机会再去改变它。这样可以阻止一个变量被改变。
-
-   > const 定义的常量在超出其作用域之后其空间会被释放，而static定义的静态常量在函数执行后不会释放其存储空间，程序结束之后才会释放。
-   >
-   > const 变量存储位置以及如何改变：const变量的内存位于**栈区或者静态存储区**，不在符号表(常量表)中，[参考](https://blog.csdn.net/qq_43152052/article/details/99306967)
+   - const 定义的常量在超出其作用域之后其空间会被释放，而static定义的静态常量在函数执行后不会释放其存储空间，程序结束之后才会释放。
+   - const 变量存储位置以及如何改变：const变量的内存位于**栈区或者静态存储区**，不在符号表(常量表)中，[参考](https://blog.csdn.net/qq_43152052/article/details/99306967)
+   - clang 环境下测试好像无法修改栈区的 const 变量，但是可以修改栈区的 const volatile 变量，编译运行都不会报错，[volatile](https://github.com/EricPengShuai/Interview/blob/main/C_C%2B%2B.md#39volatile-mutabe-explicit-%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E7%94%A8%E6%B3%95)
+   - clang 环境下测试好像无法修改静态区的 const 变量以及 const volatile 变量，编译不会报错，但是运行会报 bus error 错误
 
 
 
@@ -877,7 +874,7 @@ https://zhuanlan.zhihu.com/p/45338392
 | 题目                                                         | 说明                                                         | 题解                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [21. 合并两个有序链表](https://leetcode.cn/problems/merge-two-sorted-lists/) | [递归](https://leetcode.cn/submissions/detail/122687963/)注意出口，迭代使用一个 dummy 节点 | [通过](https://leetcode.cn/submissions/detail/337567705/)    |
-| [215. 数组中的第K个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/) | 掌握[快速排序](https://github.com/EricPengShuai/Interview/blob/main/algorithm/%E6%8E%92%E5%BA%8F.md#12-%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F)，截止 partition 的思想递归求得第 k 大元素，最小堆也可 | [快排](https://leetcode.cn/submissions/detail/399440993/) [小顶堆](https://leetcode.cn/submissions/detail/399454576/) |
+| [215. 数组中的第K个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/) | 掌握[快速排序](https://github.com/EricPengShuai/Interview/blob/main/algorithm/%E6%8E%92%E5%BA%8F.md#12-%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F)，借用 partition 的思想递归求得第 k 大元素，最小堆也可 | [快排](https://leetcode.cn/submissions/detail/399440993/) [小顶堆](https://leetcode.cn/submissions/detail/399454576/) |
 | [445. 两数相加 II](https://leetcode.cn/problems/add-two-numbers-ii/) | 链表元素入栈，然后弹出过程就相当于从后面相加，**注意进位**   | [通过](https://leetcode.cn/submissions/detail/337603420/)    |
 | [33. 搜索旋转排序数组](https://leetcode.cn/problems/search-in-rotated-sorted-array/) | 执行 `nums[mid] >= nums[left] ? 左边有序 : 右边有序`，然后二分，注意这里最好 `while(left <= right)` 并且内部直接判断 :fire: | [通过](https://leetcode.cn/submissions/detail/399463997/)    |
 | [81. 搜索旋转排序数组 II](https://leetcode.cn/problems/search-in-rotated-sorted-array-ii/) | 在 LC.33 基础上通过 while 比较临近元素去重                   | [通过](https://leetcode.cn/submissions/detail/399466035/)    |
