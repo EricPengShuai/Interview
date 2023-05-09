@@ -1263,5 +1263,108 @@ pid_t waitpid(pid_t pid, int* stat_loc, int options);
 
 #### 13.4 管道
 
+管道能在父子进程间传递数据，一般来说是单向的，只能保证父子进程之间一个方向的数据，父子进程必须有一个关闭 fd[0]、另一个关闭 fd[1]，如果要实现父子进程之间的双向数据传输就必须使用两个管道。
 
+> 书中描述了 squid 如何使用 socketpair 系统调用创建一个全双工管道的
+
+
+
+#### 13.5 信号量
+
+**信号量原语**
+
+关键代码段/临界区代码会引发进程之间的竞态条件，进程同步需要确保任一时刻只有一个进程能进入关键代码段。
+
+Dekker 算法和 Peterson 算法通过忙等待解决同步问题，CPU 利用率低；Dijkstra 提出的信号量（Semaphore）通过 P、V 操作实现。
+
+信号量取值可以是任何自然数，最常用的 0 1 是Mutex，Linux 相关的系统调用是 semget、semop 和 semctl
+
+
+
+**semget** 
+
+semget 系统调用创建一个新的信号量集（会修改内核数据结构体 semid_ds），或者获取一个已经存在的信号量集
+
+```cpp
+#include <sys/sem.h>
+
+// key 参数标识一个全局唯一的信号量集合
+// num_sems 指定要创建/获取的信号量集中信号量的数目，0 标识获取已经存在的信号量
+// sem_flags 参数指定一组标志
+// [return] 成功返回一个正整数表示信号量集的标识符，失败 -1 并设置 errno
+int semget(ket_t key, int num_sems, int sem_flags);
+```
+
+key 可以传递一个特殊的键值 IPC_PRIVATE（值为0），这样无论信号量是否已经存在，semget 都将创建一个新的信号量。所有其他进程都可以使用这个新创建的信号量
+
+
+
+**semop** 
+
+```cpp
+#include <sys/sem.h>
+
+// sem_id 是 semget 返回的信号量集标识符
+// sem_ops 指向一个 sembuf 结构体类型的数组
+// num_sem_ops 指定要执行的操作个数
+int semop(int sem_id, struct sembuf* sem_ops, size_t num_sem_ops);
+```
+
+这个 sembuf 结构体中 sem_flg 和 sem_op 关系有点复杂，没看懂o(╥﹏╥)o
+
+
+
+**semctl**
+
+```cpp
+#include <sys/sem.h>
+
+// sem_id 是 semget 返回的信号量集标识符
+// sem_num 指定被操作的信号量在信号量集中的编号
+// command 指定要执行的命令
+int semctl(int sem_id, int sem_num, int command, ...);
+```
+
+> 代码参考：[13-3sem.cpp](ch13/13-3sem.cpp)
+
+
+
+#### 13.6 共享内存
+
+共享内存是最高效的 IPC 机制，他不涉及进程之间的任何数据传输
+
+
+
+**shmget**
+
+和 semget 一样，shmget 系统调用创建一段新的共享内存或者获取一段已经存在的共享内存
+
+```cpp
+#include <sys/shm.h>
+
+// key 表示一段全局唯一的共享内存
+// size 指定共享内存的大小，单位 byte，为 0 表示获取已经存在的共享内存
+// shmflg 和 sem_flags 类似
+// [return] 成功返回一个正整数标识共享内存的标识符，失败 -1 并设置 errno
+int shmget(key_t key, size_t size, int shmflg);
+```
+
+
+
+**shmat 和 shmdt**
+
+共享内存创建之后需要先将其关联到进程的地址空间才能使用
+
+```cpp
+// shm_id 是由 shmget 返回的共享内存标识符
+// shm_addr 指定共享内存关联到进程的那块地址空间
+// shmflg 是一些标志 SHM_RND|SHM_RDONLY...
+void* shmat(int shm_id, const void* shm_addr, int shmflg);
+```
+
+使用完共享内存之后还需要将它从进程地址空间分离
+
+```cpp
+int shmdt(const void* shm_addr);
+```
 
