@@ -706,7 +706,7 @@ https://zhuanlan.zhihu.com/p/45338392
 
 #### 1. 简述 C++ 右值引用与转移语义
 
-右值引用 (Rvalue Referene) 是 C++ 新标准 (C++11, 11 代表 2011 年 ) 中引入的新特性 , 它实现了**转移语义** (Move Sementics) 和**精确传递** (Perfect Forwarding)。它的主要目的有两个方面：
+右值引用 (Rvalue Referene) 是 C++11 新标准中引入的新特性 , 它实现了**转移语义** (Move Sementics) 和**精确传递** (Perfect Forwarding)。它的主要目的有两个方面：
 
 - **消除两个对象交互时不必要的对象拷贝，节省运算存储资源，提高效率**
 - **能够更简洁明确地定义泛型函数**
@@ -717,7 +717,10 @@ https://zhuanlan.zhihu.com/p/45338392
 
 > 标准库函数**move**可以将一个左值引用**强制转换**成右值引用来使用，相当于 static_cast
 >
-> 参考：[[C++]右值引用和转移语义_stary_yan的博客-CSDN博客](https://blog.csdn.net/stary_yan/article/details/51284929)
+> 参考：
+>
+> - [[C++]右值引用和转移语义_stary_yan的博客-CSDN博客](https://blog.csdn.net/stary_yan/article/details/51284929)
+> - [C++ 移动构造函数详解](https://blog.csdn.net/weixin_44788542/article/details/126284429)
 
 
 

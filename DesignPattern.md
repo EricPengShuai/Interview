@@ -149,7 +149,7 @@ public:
 
 int main(){
     simpleFactory obj;	// 创建工厂
-    Product* pro;		// 创建产品
+    Product* pro;	// 创建产品
 
     pro = obj.product("productA");
     pro->show();	// product A create!
@@ -219,7 +219,7 @@ public:
 };
 
 int main(){
-	Product* _Product = nullptr;
+    Product* _Product = nullptr;
     auto MyFactoryA = new FactorA();
     _Product = MyFactoryA->CreateProduct(); // 调用产品A的工厂来生产A产品
     _Product->show();
