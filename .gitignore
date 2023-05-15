@@ -7,6 +7,7 @@
 !*.md
 !*.c
 !*.pdf
+!*.h
 
 # Unignore all dirs
 !*/
