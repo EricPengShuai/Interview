@@ -765,6 +765,18 @@ P128 图 8-5 展示同步 I/O epoll_wait 实现的 Reactor 模式，主线程通
 
 程序清单 8-3 展示了 HTTP 请求的读取和分析中主从状态机是如何处理 HTTP 请求字段的
 
+```cpp
+// 代码中有一个 string.h 文件里面的库函数
+const char* str = "hello world, friend of mine!";
+const char* sep = " ,!";
+
+str = strpbrk(str, sep); // 找分隔符，str = " world, friend of mine!"
+str += strspn(str, sep); // 跳过分隔符，str = "world, friend of mine!"
+str = strchr(str, 'f');  // 找到第一个出现的字符，str = "friend of mine!"
+```
+
+
+
 > 代码参考：[8-3httpparser.cpp](ch8/8-3httpparser.cpp)
 
 
@@ -922,7 +934,7 @@ epoll_wait 将所有就绪的事件从内核事件表（由 epfd 参数指定）
 
 **EPOLLONESHOT 事件**
 
-即使在 ET 模式下，一个 socket 上的某个事件还是可能被触发多次，在并发程序中，一个线程读取完某个 socket 上的数据后开始处理这些数据，但是在处理过程中该 socket 上又有新数据可读（EPOLLIN 被再次出发），此时另一个线程被唤醒来读取这些新的数据。此时出现了两个线程同时操作一个 socket 的局面
+即使在 ET 模式下，一个 socket 上的某个事件还是可能被触发多次，在并发程序中，一个线程读取完某个 socket 上的数据后开始处理这些数据，但是在处理过程中该 socket 上又有新数据可读（EPOLLIN 被再次触发），此时另一个线程被唤醒来读取这些新的数据。此时出现了两个线程同时操作一个 socket 的局面
 
 为此需要 EPOLLONESHOT 事件
 
@@ -1273,13 +1285,9 @@ pid_t waitpid(pid_t pid, int* stat_loc, int options);
 
 **信号量原语**
 
-关键代码段/临界区代码会引发进程之间的竞态条件，进程同步需要确保任一时刻只有一个进程能进入关键代码段。
+关键代码段/临界区代码会引发进程之间的竞态条件，进程同步需要确保任一时刻只有一个进程能进入关键代码段。Dekker 算法和 Peterson 算法通过忙等待解决同步问题，CPU 利用率低；Dijkstra 提出的信号量（Semaphore）通过 P、V 操作实现。
 
-Dekker 算法和 Peterson 算法通过忙等待解决同步问题，CPU 利用率低；Dijkstra 提出的信号量（Semaphore）通过 P、V 操作实现。
-
-信号量取值可以是任何自然数，最常用的 0 1 是Mutex，Linux 相关的系统调用是 semget、semop 和 semctl
-
-
+信号量取值可以是任何自然数，最常用的 0 1 是Mutex，Linux 相关的系统调用是 semget、semop 和 semctl，内核中与信号量相关联的数据结构是 semid_ds
 
 **semget** 
 
@@ -1297,8 +1305,6 @@ int semget(ket_t key, int num_sems, int sem_flags);
 
 key 可以传递一个特殊的键值 IPC_PRIVATE（值为0），这样无论信号量是否已经存在，semget 都将创建一个新的信号量。所有其他进程都可以使用这个新创建的信号量
 
-
-
 **semop** 
 
 ```cpp
@@ -1311,8 +1317,6 @@ int semop(int sem_id, struct sembuf* sem_ops, size_t num_sem_ops);
 ```
 
 这个 sembuf 结构体中 sem_flg 和 sem_op 关系有点复杂，没看懂o(╥﹏╥)o
-
-
 
 **semctl**
 
@@ -1331,9 +1335,7 @@ int semctl(int sem_id, int sem_num, int command, ...);
 
 #### 13.6 共享内存
 
-共享内存是最高效的 IPC 机制，他不涉及进程之间的任何数据传输
-
-
+共享内存是最高效的 IPC 机制，他不涉及进程之间的任何数据传输，内核中与共享内存相关联的数据结构是 shmid_ds
 
 **shmget**
 
@@ -1349,8 +1351,6 @@ int semctl(int sem_id, int sem_num, int command, ...);
 int shmget(key_t key, size_t size, int shmflg);
 ```
 
-
-
 **shmat 和 shmdt**
 
 共享内存创建之后需要先将其关联到进程的地址空间才能使用
@@ -1359,12 +1359,364 @@ int shmget(key_t key, size_t size, int shmflg);
 // shm_id 是由 shmget 返回的共享内存标识符
 // shm_addr 指定共享内存关联到进程的那块地址空间
 // shmflg 是一些标志 SHM_RND|SHM_RDONLY...
+// [return] 成功时返回共享内存被关联到的地址，失败返回 -1 并设置 errno
 void* shmat(int shm_id, const void* shm_addr, int shmflg);
 ```
 
 使用完共享内存之后还需要将它从进程地址空间分离
 
 ```cpp
+// 将关联到的 shm_addr 处的共享内存从进程中分离，失败 -1 并设置 errno
 int shmdt(const void* shm_addr);
 ```
+
+**shmctl**
+
+```cpp
+#include <sys/shm.d>
+
+// shm_id 是 shmget 返回的共享内存标识符
+// command 指定要执行的命令
+// [return] 成功返回值取决于 command，失败 -1 并设置 errno
+int shmctl(int shm_id, int command, struct shmid_ds* buf);
+```
+
+
+
+**共享内存的POSIX方法**
+
+mmap 函数利用它的 MAP ANONYMOUS 标志我们可以实现父、子进程之间的匿名内存共享。通过打开同一个文件，mmap 也可以实现无关进程之间的内存共享。Linux 提供了另外一种利用mmap 在无关进程之间共享内存的方式。这种方式无需任何文件的支特，但它需要先使用如下函数来创建或打开一个 POSIX 共享内存对象：
+
+```cpp
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+// 与 open 系统调用完全相同，shm_open 成功时返回一个文件描述符，失败 -1 并设置 errno
+int shm_open(const char* name, int oflag, mode_t mode);
+
+// shm_open 创建的共享内存对象使用完之后需要删除
+int shm_unlink(const char* name);
+```
+
+这里实现多进程的聊天服务器：一个子进程处理一个客户连接，所有客户 socket 连接的读缓冲设置为一块共享内存，实现”共享读“，每个子进程在使用共享内存时无需加锁
+
+> 代码参考：[13-4shm_talk_server.cpp](ch13/13-4shm_talk_server.cpp)
+
+
+
+#### 13.7 消息队列
+
+消息队列是在两个进程之间传递二进制块数据的一种简单有效的方式。每个数据块都有一个特定的类型，**接收方可以根据类型来有选择地接收数据**，而不一定像管道和命名管道那样必须以先进先出的方式接收数据。
+
+同样的有 4 个系统调用：
+
+```cpp
+#include <sys/msg.h>
+
+// 创建一个消息队列，或者获取一个已有的消息队列
+int msgget(key_t key, int msgflg);
+
+// 将一条消息 msg_ptr 添加到消息队列
+int msgsnd(int msqid, const void* msg_ptr, size_t msg_sz, int msgflg);
+
+// 从消息队列中获取消息 msg_ptr
+int msgrcv(int msqid, void* msg_ptr, size_t msg_sz, long int msgtype, int msgflg);
+
+// 控制消息队列的某些属性
+int msgctl(int msqid, int command, struct msqid_ds* buf);
+```
+
+
+
+#### 13.8 IPC 命令
+
+ipcs 命令可以显示 Linux 系统拥有的共享内存、信号量和消息队列资源使用情况
+
+
+
+#### 13.9 在进程间传递文件描述符
+
+由于 fork 调用之后，父进程中打开的文件描述符在子进程中仍然保持打开，所以文件描述符可以很方便地从父进程传递到子进程。需要注意的是，传递一个文件描述符并不是传递一个文件描述符的值，**而是要在接收进程中创建一个新的文件描述符，并且该文件描述符和发送进程中被传递的文件描述符指向内核中相同的文件表项。**
+
+那么如何把子进程中打开的文件描述符传递给父进程呢？或者更通俗地说，如何在两个不相于的进程之间传递文件描述符呢？在 Linux 下，我们可以利用 UNIX 域 socket 在进程间传递特殊的辅助数据，以实现文件描述符的传递。代码清单 13-5 给出了一个实例，它在子进程中打开一个文件描述符，然后将它传递给父进程，父进程则通过读取该文件描述符来获得文件的内容。
+
+> 代码参考：[13-5passfd.cpp](ch13/13-5passfd.cpp)
+
+
+
+### Ch.14 多线程编程
+
+#### 14.1 Linux  线程概述
+
+**线程模型**
+
+- 内核线程：运行在内核空间，内核来调度，数量 M
+- 用户线程：运行在用户空间，线程库来调度，数量 N
+
+内核线程相当于用户线程的容器，M <= N，根据 M:N 取值将线程实现方式分为三种模式：完全在用户空间实现、完全由内核调度和双层调度
+
+**Linux 线程库**：LinuxThreads 和 NPTL 线程库
+
+
+
+#### 14.2 创建线程和结束线程
+
+```cpp
+#include <pthread.h>
+
+// othread_t 是 unsigned long int 类型
+// attr 设置新线程的属性
+// start_routine 是函数指针，就是线程运行的函数，arg 是其参数
+// [return] 成功返回 0，失败返回错误码
+int pthread_create(pthread_t* thread, const pthread_attr_t* attr, void* (*start_routine)(void *), void* arg);
+
+// 通过 retval 参数向线程的回收者传递其退出信息
+void pthread_exit(void* retval);
+
+// thread 是目标线程的标识符
+// retval 是目标线程返回的退出信息
+// [return] 成功返回 0，失败返回错误码
+int pthread_join(pthread_t thread, void** retval); // 会一直阻塞，知道被回收的线程结束
+
+// thread 是目标线程的标识符
+int pthread_cancel(pthread_t thread);
+```
+
+
+
+#### 14.3 线程属性
+
+pthread_attr_t 结构体定义了一套完整的线程属性
+
+```cpp
+#include <bits/pthreadtypes.h>
+
+typedef union {
+    char __size[__SIZEOF_PTHREAD_ATTR_T];
+    long int __align;
+} pthread_attr_t;
+
+// 初始化线程属性对象
+int pthread_attr_init(pthread_attr_t* attr);
+
+// 销毁线程属性对象，被销毁的线程属性对象只有再次初始化之后才能继续使用
+int pthread_attr_destroy(pthread_attr_t* attr);
+
+// 获取和设置线程属性对象的某个属性很熟有很多...
+```
+
+
+
+#### 14.4 POSIX 信号量
+
+POSIX 信号量函数都以 sem_ 开头
+
+```cpp
+#include <semaphore.h>
+
+int sem_init(sem_t* sem, int pshared, unsigned int value);
+int sem_destroy(sem_t* sem);
+int sem_wait(sem_t* sem); // 信号量减1
+int sem_trywait(sem_t* sem); // wait 的非阻塞版本
+int sem_post(sem_t* sem); // 信号量加1
+```
+
+
+
+#### 14.5 互斥锁
+
+**基础 API**
+
+互斥锁（也称互斥量）可以用于保护关键代码段，以确保其独占式的访向，这有点像一个二进制信号量（见 13.5.1 小节）。当进入关键代码段时，我们需要获得互斥锁并将其加锁。这等价于二进制信号量的P操作：当离开关键代码段时，我们需要对互斥锁解锁，以唤醒其他等待该互斥锁的线程，这等价于二进制信号量的V操作。
+
+```cpp
+#include <pthread.h>
+
+int pthread_mutex_init(pthread_mutex_t* mutex, const pthread_mutexatrr_t* mutexattr);
+int pthread_mutex_destroy(pthread_mutex_t* mutex);
+int pthread_mutex_lock(pthread_mutex_t* mutex); // 互斥锁加锁
+int pthread_mutex_trylock(pthread_mutex_t* mutex); // lock 的非阻塞版本
+int pthread_mutex_unlock(pthread_mutex_t* mutex); // 互斥锁解锁
+```
+
+**互斥锁属性**
+
+pthread_mutexattr_t 结构体定义了一套完整的互斥锁属性
+
+```cpp
+#include <pthread.h>
+/*初始化互斥锁属性对象*/
+int pthread_mutexattr_init(pthread_mutexattr_t* attr);
+
+/*销毁互斥锁属性对象*/
+int pthread_mutexattr_destroy(pthread_mutexattr_t* attr);
+
+/*获取和设置互斥锁的 pshared 属性*/
+int pthread_mutexattr_getpshared(const pthread_mutexattr_t* attr, int* pshared);
+int pthread_mutexattr_setpshared(pthread_mutexattr_t* attr, int pshared);
+
+/*获取和设置互斥锁的 type 属性*/
+int pthread_mutexattr_gettype(const pthread_mutexattr_t* attr, int* type);
+int pthread_mutexattr_settype(pthread_mutexattr_t* attr, int type);
+```
+
+- pshared 参数指定是否允许跨进程共享互斥锁
+- type 参数指定互斥锁类型：普通锁、检错锁、嵌套锁、默认锁
+
+**死锁举例**
+
+主线程获取 mutex_a 之后等待 mutex_b，子线程获取 mutex_b 之后等待 mutex_a
+
+> 代码参考：[14-1mutual_lock.c](ch14/14-1mutual_lock.c)
+
+
+
+#### 14.6 条件变量
+
+条件变量用于在线程之间同步共享数据的值
+
+```cpp
+#include <pthread.h>
+
+int pthread_cond_init(pthread_cond_t* cond, const pthread_condattr_t* cond_attr);
+int pthread_cond_destroy(pthread_cond_t* cond);
+int pthread_cond_broadcast(pthread_cond_t* cond); // 广播方式唤醒所有等待目标条件变量的线程
+int pthread_cond_signal(pthread_cond_t* cond); // 唤醒一个等待目标条件变量的线程
+int pthread_cond_wait(pthread_cond_t* cond, pthread_mutex_t* mutex);
+```
+
+
+
+#### 14.7 线程同步机制包装类
+
+将 sem、mutex 和 cond 封装成类
+
+> 代码参考：[14-2locker.h](ch14/14-2locker.h)
+
+
+
+#### 14.8 多线程环境
+
+**可重入函数**
+
+一个函数能被多个线程同时调用且不发生竞态条件，那就是线程安全的，该函数就是可重入函数，Linux 库函数中 inet_ntoa、getservbyname 等函数是不可重入的，主要是因为它们内部使用了静态变量。
+
+不过 Linux 对很多不可重入的库函数提供了对应的可重入版本，原函数尾部加上 _r，多线程编程中一定要使用可重入版本
+
+
+
+**线程和进程**
+
+思考这样一个问题：如果一个多线程程序的某个线程调用了 fork 函数，那么新创建的子进程是否将自动创建和父进程相同数量的线程呢？答案是 “否”，
+
+正如我们期望的那样。**子进程只拥有一个执行线程，它是调用 fork 的那个线程的完整复制。并且子进程将自动继承父进程中互斥锁（条件变量与之类似）的状态。**也就是说，父进程中已经被加锁的互斥锁在子进程中也是被锁住的。
+
+这就引起了一个问题：子进程可能不清楚从父进程继承而来的互斥锁的具体状态（是加锁状态还是解锁状态）。这个互斥锁可能被加锁了，但并不是由调用 fork 函数的那个线程锁住的，而是由其他线程锁住的。如果是这种情况，则子进程若再次对该互斥锁执行加锁操作就会导致死锁，如代码清单 14-3 所示。
+
+> 代码参考：[14-3thread_atfork.c](ch14/14-3thread_atfork.c)
+
+
+
+**线程与信号**
+
+多线程版本下的信号掩码设置函数为
+
+```cpp
+#include <pthread.h>
+#include <signal.h>
+
+int pthread_sigmask(int how, const sigset_t* newmask, sigset_t* oldmask);
+```
+
+由于进程中的所有线程共享该进程的信号，所以线程库将根据**线程掩码**决定把信号发送给哪个具体的线程。因此，如果我们在每个子线程中都单独设登信号掩码，就很容易导致逻辑错误。此外，**所有线程共享信号处理函数**。也就是说，当我们在一个线程中设置了某个信号的信号处理函数后，它将覆盖其他线程为同一个信号设置的信号处理函数。这两点都说明，我们应该定义一个专门的线程来处理所有的信号。这可以通过如下两个步骤来实现：
+
+1. 在主线程创建出其他子线程之前就调用 pthread_sigmask 来设置好信号掩码，所有新创建的子线程都将自动继承这个信号掩码。这样做之后，实际上所有线程都不会响应被屏蔽的信号了
+
+2. 在某个线程中调用如下函数来等待信号并处理之：
+
+   ```cpp
+   #include <signal.h>
+   
+   // set 参数指定需要等待的信号集合
+   // sig 存储返回值
+   int sigwait(const sigset_t* set, int* sig);
+   
+   // 明确讲一个信号 sig 发给 thread 线程，sig = 0 不发送信号
+   // thread 参数指定目标线程，sig 指定待发送的信号
+   // 可以用于检查指定线程是否存在，成功返回 0，失败返回错误码
+   int pthread_kill(pthread_t thread, int sig);
+   ```
+
+> 代码参考：[14-5sigmask.c](ch14/14-5sigmask.c) 没看懂o(╥﹏╥)o
+
+
+
+
+
+### Ch.15 进程池和线程池
+
+#### 15.1 概述
+
+进程池中的所有子进程都运行着相同的代码，并具有相同的属性，比如优先级、PGID等。因为进程池在服务器启动之初就创建好了，所以每个子进程都相对 “干净”，即它们没有打开不必要的文件描述符（从父进程继承而来），也不会错误地使用大块的堆内存（从父进程复制得到）。
+
+**当有新的任务到来时，主进程将通过某种方式选择进程池中的某一个子进程来为之服务**。相比于动态创建子进程，选择一个已经存在的子进程的代价显然要小得多。至于主进程选择哪个子进程来为新任务服务，则有两种方式：
+
+- 随机算法和 Round Robin 算法、以及更优秀的均匀分配算法
+- 主进程和所有子进程通过一个共享的工作队列来同步，子进程都睡眠在该队列上，有新任务时将任务添加到工作队列，唤醒正在等待的子进程
+
+选择好子进程之后，可以通过管道实现父子进程之间的数据传递
+
+
+
+#### 15.2 处理多客户
+
+- 半同步/半反应堆：主进程接受新的连接以得到连接 socket，然后它需要将该 socket 传递给子进程（对于线程池而言，父线程将socket 传递给子线程必须使用13.9节介绍的 socketpair 系统调用创建的双向管道实现）
+- 半同步/半异步模式以及领导者/追随者模式，是由主进程管理所有监听 socket，而各个子进程分别管理属于自己的连接 socket 的，子进程自己调用 accept 来接受新的连接
+
+
+
+#### 15.3 半同步/半异步进程池
+
+为了避免在父子进程之间传递文件描述符，我们将接收新连接的操作放到子进程中
+
+> 代码参考：[15-1processpool.h](ch15/15-1processpool.h)
+
+
+
+#### 15.4 用进程池实现简单的 CGI 服务器
+
+复用前面的进程池，构建一个并发的 CGI 服务器
+
+> 代码参考：[15-2pool_cgi.cpp](ch15/15-2pool_cgi.cpp)
+
+
+
+#### 15.5 半同步/半反应堆线程次
+
+本节我们实现一个基于图 8-10所示的半同步/半反应堆并发模式的线程池，如代码清单15-3所示。相比代码清单 15-1 所示的进程池实现，该线程池的通用性要高得多，因为它使用一个工作队列完全解除了主线程和工作线程的耦合关系：**主线程往工作队列中插入任务，工作线程通过竞争来取得任务并执行它**。不过，如果要将该线程池应用到实际服务器程序中，那么我们必须保证所有客户请求都是无状态的，因为同一个连接上的不同请求可能会由不同的线程处理。
+
+> 代码参考：[15-3threadpool.h](ch15/15-3threadpool.h)
+
+
+
+#### 15.6 用线程池实现的简单 web 服务器
+
+- [15-4http_conn.h](ch15/15-4http_conn.h)
+- [15-5http_conn.cpp](ch15/15-5http_conn.cpp)
+- [15-6main.cpp](ch15/15-6main.cpp)
+
+类似于一个传输文本服务器，简单测试的客户端可以使用 telnet
+
+```bash
+# HTTP 请求格式
+GET /test.txt HTTP/1.1
+Connection: keep-alive
+Content-Length: 8
+Host: telnet
+
+param1=1
+```
+
+
 
