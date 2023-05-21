@@ -67,11 +67,12 @@ void *worker(void *arg)
         if (ret == 0)
         {
             close(sockfd);
-            printf("foreiner closed the connection\n");
+            printf("foreigner closed the connection\n");
             break;
         }
         else if (ret < 0)
         {
+            // 此时客户端的数据发送完毕，重置 EPOLL 事件，让其他线程有机会为该 socket 服务
             if (errno == EAGAIN)
             {
                 reset_oneshot(epollfd, sockfd);

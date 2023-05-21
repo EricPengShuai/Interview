@@ -653,7 +653,15 @@ int chroot(const char* path); // 成功 0，失败 -1
 
 #### 7.6 服务器程序后台化
 
-如何让进程以守护进程的方式运行？参考代码清单 7-3，实际上提供如下的系统调用：
+守护进程（Daemon Process），也就是通常说的 Daemon 进程（精灵进程），是 Linux 中的后台服务进程。它是一个生存期较长的进程，通常独立于控制终端并且周 期性地执行某种任务或等待处理某些发生的事件。一般采用以 d 结尾的名字。守护进程特点如下：
+
+- 生命周期很长，守护进程会在系统启动的时候被创建并一直运行直至系统被关闭
+
+- 它在后台运行并且不拥有控制终端。没有控制终端确保了内核永远不会为守护进程自动生成任何控制信号以及终端相关的信号（如 SIGINT、SIGQUIT）
+
+代码参考：[daemon.c](nowcoder/daemon.c)
+
+如何让进程以「**守护进程**」的方式运行？参考代码清单 7-3，实际上提供如下的系统调用：
 
 ```cpp
 #include <unistd.h>
@@ -676,7 +684,7 @@ int daemon(int nochdir, int noclose); // 成功 0，失败-1
 服务器客户端模式
 
 - 服务器：创建 socket --> bind 地址 --> listen --> select IO 复用 --> accept --> 逻辑单元（fork子进程、子线程或其他）
-- 客户但：socket --> connect --> send --> recv
+- 客户端：socket --> connect --> send --> recv
 
 缺点：访问量过大时，服务器负载加大，客户端得到的响应变慢
 
@@ -684,7 +692,7 @@ int daemon(int nochdir, int noclose); // 成功 0，失败-1
 
 ##### 8.1.2 P2P 模型
 
-点对点模式中主机即使服务端又是客户端，缺点是：用户之间传输的请求过多时，网络的负载加重
+点对点模式中主机既是服务端又是客户端，缺点是：用户之间传输的请求过多时，网络的负载加重
 
 通常 P2P 模型带有一个专门的发现服务器，提供查找服务
 
@@ -761,7 +769,7 @@ P128 图 8-5 展示同步 I/O epoll_wait 实现的 Reactor 模式，主线程通
 
 
 
-#### 8.6 有限状态机
+#### 8.6 有限状态机 :fire:
 
 程序清单 8-3 展示了 HTTP 请求的读取和分析中主从状态机是如何处理 HTTP 请求字段的
 
@@ -807,7 +815,9 @@ str = strchr(str, 'f');  // 找到第一个出现的字符，str = "friend of mi
 
 
 
-### Ch.9 I/O 复用
+### Ch.9 I/O 复用 :fire:
+
+需要指出的是，I/O 复用虽然能同时监听多个文件描述符，但它本身是阻塞的。并且当多个文件描述符同时就绪时，如果不采取额外的措施，程序就只能按顺序依次处理其中的每一个文件描述符，这使得服务器程序看起来像是串行工作的。**如果要实现并发，只能使用多进程或多线程等编程手段。**
 
 #### 9.1 select 系统调用
 
@@ -834,21 +844,21 @@ struct timeval
 }
 ```
 
-**select 成功时返回就绪文件描述符的总数，如果在超时时间内没有任何文件描述符就绪就返回 0，失败 -1 并设置 errno**
+**select 成功时返回就绪文件描述符的总数，如果在超时时间内没有任何文件描述符就绪就返回 0，失败 -1 并设置 errno**，如果在 select 等待期间，程序收到信号，就立即返回 -1，并设置 errno 为 EINTR
 
 
 
 **文件描述符可读就绪条件**
 
 - socket 接收缓冲区中的字节数大于或等于低水位标记 SO_RCVLOWAT 时可以无阻塞地读 socket
-- socket 通信对方关闭连接时，对该 socket 的读操作返回 0
-- 监听 socket 上有新的连接
+- socket 通信的对方关闭连接时，对该 socket 的读操作返回 0
+- **监听 socket** 上有新的连接（注意「监听 socket」和「通信 socket」是两个概念）
 - socket 上有未处理的错误
 
 **文件描述符可写就绪条件**
 
-- socket 发送缓冲区中的可用字节数大于或等于低水位标记 SO_RCVLOWAT 时可以无阻塞地写 socket
-- socket 的写操作被关闭，对该 socket 的读操作返回 0
+- socket 发送缓冲区中的可用字节数大于或等于低水位标记 SO_SNDLOWAT 时可以无阻塞地写 socket
+- socket 的写操作被关闭，对该 socket 的执行写操作将触发一个 SIGPIPE 信号
 - socket 使用非阻塞 connect 连接成功或者失败（超时）之后
 - socket 上有未处理的错误
 
@@ -873,7 +883,7 @@ int poll(struct pollfd* fds, nfds_t nfds, int timeout);
 struct pollfd
 {
     int fd;	// 文件描述符
-    short events; // 注册的事件，一系列 POLL 事件的按位或
+    short events; // fd 上注册的事件，一系列 POLL 事件的按位或
     short revents; // 实际发生的事件，内核填充
 }
 ```
@@ -882,9 +892,9 @@ struct pollfd
 
 #### 9.3 epoll 系列系统调用
 
-> Mac 里没有 epoll 库，使用 kqueue 代替，[参考](https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/kqueue.2.html)
+> MacOSX 里没有 epoll 库，使用 kqueue 代替，[参考](https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/kqueue.2.html)
 
-epoll 把用户关心的文件描述符上的事件放入内核里的一个时间表中，无需像 select 和 poll 那样每次调用都要重复传入文件描述符集或事件集。epoll 需要一个额外的文件描述符来唯一标识内核中的这个事件表
+epoll 是 Linux 特有的 I/O 复用函数，它把用户关心的文件描述符上的事件放入内核里的一个事件表中，无需像 select 和 poll 那样每次调用都要重复传入文件描述符集或事件集。epoll 需要一个额外的文件描述符来唯一标识内核中的这个事件表
 
 ```cpp
 #include <sys/epoll.h>
@@ -893,10 +903,10 @@ epoll 把用户关心的文件描述符上的事件放入内核里的一个时�
 // [return] 返回的 fd 将作为其他所有 epoll 系统调用的第一个参数
 int epoll_create(int size);
 
-// 操作内核事件表
+// 操作内核事件表 epfd
 // op 参数指定操作类型，由 EPOLL_CTL_ADD|EPOLL_CTL_MOD|EPOLL_CTL_DEL 组成
 // fd 参数是要操作的文件描述符
-// event 参数指定事件
+// event 参数指定 fd 的监听事件
 // [return] 成功 0，失败 -1 并设置 errno
 int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
 
@@ -905,21 +915,22 @@ struct epoll_event {
     epoll_data_t data; // 用户数据
 }
 
-// 联合体
+// 联合体：不能同时使用多个成员
 typedef union epoll_data {
     void* ptr;
-    int fd;
+    int fd; // 使用最多，表示监听事件所属的目标文件描述符，和 epoll_ctl 中的 fd 相同
     uint32_t u32;
     uint64_t u64;
 } epoll_data_t;
 
 // timeout 指定超时，maxevents 指定最多监听多少个事件
+// [return] 成功时返回就绪的文件描述符的个数，失败时返回 -1 并设置 errno
 int epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout);
 ```
 
 epoll 相比于 poll 有两个额外的事件类型：EPOLLET | EPOLLONESHOT
 
-epoll_wait 将所有就绪的事件从内核事件表（由 epfd 参数指定）中复制到 events 指定的数组中，**只用于输出 epoll_wait 检测到的就绪事件**，所以相比于 select 和 poll 极大提升性能
+epoll_wait 将所有就绪的事件从内核事件表（由 epfd 参数指定）中复制到 events 指定的数组中，**只用于输出 epoll_wait 检测到的就绪事件**，不像 select 和 poll 的数组参数那样既用于传入用户注册的时间又用于输出内核检测到的就绪事件，所以 epoll_wait 极大地提升了性能
 
 
 
@@ -948,9 +959,9 @@ selecet、poll 和 epoll 都通过某种结构体变量来告诉内核监听哪�
 
 - select 参数类型 fd_set 没有将文件描述符和事件绑定，因此需要 3 个类型的参数分别区分可读、可写和异常事件，不能处理更多类型的事件，且下次调用时需要重置 3 个 fd_set 集合
 - poll 通过参数类型 pollfd 将文件描述符和事件都定义在其中，支持更多的事件类型，且下次调用 poll 时无需重置 pollfd 类型的事件集参数，因为内核修改的仅仅是 revents 成员
-- select 和 poll 调用返回整个用户注册的事件集合（包括就绪和未就绪的），索引就绪文件描述符的时间复杂度为 O(n)，epoll 通过 epoll_wait 直接从 epollfd 指定的内核事件表中取得用户注册的事件，且通过 events 参数仅仅用来返回就绪的事件，索引就绪的 fd 事件复杂度为 O(1)
+- select 和 poll 调用返回整个用户注册的事件集合（包括就绪和未就绪的），通过**「轮询扫描」**索引就绪文件描述符的时间复杂度为 O(n)，epoll 通过 epoll_wait 直接从 epollfd 指定的内核事件表中取得用户注册的事件，内核检测到就绪的文件描述符将触发**「回调函数」**将该文件描述符上对应的事件插入「内核就绪队列」，且通过 events 参数仅仅用来返回就绪的事件，索引就绪的 fd 事件复杂度为 O(1)
 - poll 和 epoll_wait 分别使用 nfds 和 maxevents 参数指定最多监听的 fd 和 事件，最大 65535，但是 select 一般是 1024
-- poll 和 selecet 只能工作在相对低效的 LT 模式，epoll 可以在 ET 模式，且还支持 EPOLLONESHOT 事件
+- poll 和 select 只能工作在相对低效的 LT 模式，epoll 可以在 ET 模式，且还支持 EPOLLONESHOT 事件
 
 > 具体区别参考表格 9-2 
 
@@ -958,7 +969,7 @@ selecet、poll 和 epoll 都通过某种结构体变量来告诉内核监听哪�
 
 #### 9.5 I/O 复用的高级应用一：非阻塞 connect
 
-connect 出错时有一个 errno 值：EINPROGRESS，**这种错误发生在非阻塞的 sockct 调用 connect，而连接又没有立即建立时**。根据 man 文档的解释，在这种情况下，我们可以调用 select、poll 等函数来监听这个连接失败的 socket 上的**可写事件**。当select、poll 等函数返回后，再利用 getsockopt 来读取错误码并清除该 socket 上的错误。如果错误码是0，表示连接成功建立，否则连接失败。
+connect 出错时有一个 errno 值：EINPROGRESS，**这种错误发生在非阻塞的 socket 调用 connect，而连接又没有立即建立时**。根据 man 文档的解释，在这种情况下，我们可以调用 select、poll 等函数来监听这个连接失败的 socket 上的**可写事件**。当select、poll 等函数返回后，再利用 getsockopt 来读取错误码并清除该 socket 上的错误。如果错误码是0，表示连接成功建立，否则连接失败。
 
 > 代码参考：[9-5unblockconnect.cpp](ch9/9-5unblockconnect.cpp)
 
@@ -1012,6 +1023,10 @@ Linux 因特网服务 inetd 是超级服务。它同时管理着多个子服务�
 #include <signal.h>
 
 // 把信号 sig 发给目标进程 pid
+// pid > 0 : 将信号发送给指定的进程
+// pid = 0 : 将信号发送给当前的进程组
+// pid = -1 : 将信号发送给每一个有权限接收这个信号的进程
+// pid < -1 : 这个pid=某个进程组的ID取反 （-12345）
 int kill(pid_t pid, int sig); // 成功返回 0，失败 -1 并设置 errno
 
 // 信号处理函数原型
@@ -1023,7 +1038,7 @@ linux 信号有很多，和网络编程关系紧密的是：
 - SIGHUP：控制终端挂起
 - SIGPIPE：往读端被关闭的管道或者 socket 连接中写数据
 - SIGURG：socket 连接上接受到紧急数据
-- SIGALRM：由 alarm 或 setitimer 设置的实时闹钟超时引起
+- SIGALRM：由 [alarm.c](nowcoder/2.21-signal-alarm/alarm.c) 或 [setitimer.c](nowcoder/2.21-signal-alarm/setitimer.c) 设置的实时闹钟超时引起
 - SIGCHLD：子进程状态发生变化（退出或暂停）
 
 
@@ -1037,8 +1052,21 @@ linux 信号有很多，和网络编程关系紧密的是：
 
 // sig 参数指出要捕获的信号类型，
 // _handler 参数是函数指针，用于指定信号 sig 的处理函数
+//	- SIG_IGN ： 忽略信号
+// 	- SIG_DFL ： 使用信号默认的行为
+//	- 回调函数 :  这个函数是内核调用，程序员只负责写，捕捉到信号后如何去处理信号
+// [return] 成功，返回上一次注册的信号处理函数的地址。第一次调用返回 NULL
+//          失败，返回 SIG_ERR，设置错误号
 _sighandler_t signal(int sig, _sighandler_t handler);
 ```
+
+回调函数：
+
+- 需要程序员实现，提前准备好的，函数的类型根据实际需求，看函数指针的定义
+- 不是程序员调用，而是当信号产生，由内核调用
+- 函数指针是实现回调的手段，函数实现之后，将函数名放到函数指针的位置就可以了
+
+代码参考：[signal.c](nowcoder/2.21-signal-alarm/signal.c)
 
 
 
@@ -1056,44 +1084,68 @@ int sigaction(int sig, const struct sigaction* act, struct sigaction* oact);
 struct sigaction {...}; // 参考 P181
 ```
 
+代码参考：[sigaction.c](nowcoder/2.21-signal-alarm/sigaction.c)
+
 
 
 #### 10.3 信号集
 
+在 PCB 中有两个非常重要的信号集。一个称之为 「**阻塞信号集**」，另一个称之为 「**未决信号集**」 。这两个信号集都是内核使用位图机制来实现的。但操作系统不允许我 们直接对这两个信号集进行位操作。而需自定义另外一个集合，借助信号集操作函数 来对 PCB 中的这两个信号集进行修改。
+
+- 信号的 “未决” 是一种状态，指的是从信号的产生到信号被处理前的这一段时间，未决信号集不能修改只能获取
+- 信号的 “阻塞” 是一个开关动作，指的是阻止信号被处理，但不是阻止信号产生，阻塞信号集可以修改
+
 ##### 信号集函数
 
 ```cpp
-#include <bits/sigset.h>
+#include <sigset.h>
 
 # define _SIGSET_NWORDS (1024 / (8 * sizeof (unsigned long int)))
 tydedef struct {
     unsigned long int __val[_SIGSET_NWORDS];
 } __sigset_t; // 其实就是一个长整型数组
+
+// 对「自定义」的信号集进行操作
+int sigemptyset(sigset_t *set); // 清空信号集数据
+int sigfillset(sigset_t *set);  // 将信号集中所有标志位置为 1
+int sigaddset(sigset_t *set, int signum); // 设置信号集中的某一个信号对应的标志位为1，表示阻塞这个信号
+int sigdelset(sigset_t *set, int signum); // 设置信号集中的某一个信号对应的标志位为0，表示不阻塞这个信号
+int sigismember(const sigset_t *set, int signum); // 判断某个信号是否阻塞
 ```
 
+代码参考：[sigset.c](nowcoder/2.24-sigset/sigset.c)
 
 
-##### 进程信号掩码
+
+##### 进程信号掩码（阻塞信号集）
+
+sigprocmask 可以将自定义信号集中的数据设置到内核中（设置阻塞，解除阻塞，替换）
 
 ```cpp
 #include <signal.h>
 
-// _set 参数指定新的信号掩码，_how 指定设置掩码方式 SIG_BLOCK|SIG_UNBLOCK|SIG_SETMASK
+// _set 参数指定新的信号掩码，
+// _how 指定设置掩码方式，假设内核中默认的阻塞信号集是mask
+//	- SIG_BLOCK: 将用户设置的阻塞信号集添加到内核中，内核中原来的数据不变，mask | set
+//	- SIG_UNBLOCK: 根据用户设置的数据，对内核中的数据进行解除阻塞，mask &= ~set
+//	- SIG_SETMASK: 覆盖内核中原来的值
 // _oset 参数输出原来的信号掩码（如果不为 NULL 的话）
 // [return] 成功 0，失败 -1 并设置 errno
 int sigprocmask(int _how, _const sigset_t* _set, sigset_t* _oset);
 ```
 
+代码参考：[sigprocmask.c](nowcoder/2.24-sigset/sigprocmask.c)
 
 
-##### 被挂起的信号
+
+##### 被挂起的信号（未决信号集）
 
 **设置进程信号掩码后，被屏蔽的信号将不能被进程接收**。如果给进程发送一个被屏蔽的信号，则操作系统将该信号设置为进程的一个**被挂起的信号**。如果我们取消对被挂起信号的屏蔽，则它能立即被进程接收到。如下两数可以获得进程当前被挂起的信号集
 
 ```cpp
 #include <signal.h>
 
-// 获取进程当前被挂起的信号集
+// 获取进程当前被挂起的信号集（未决信号集）
 // [return] 成功 0，失败 -1 并设置 errno
 int sigpending(sigset_t* set);
 ```
@@ -1219,13 +1271,38 @@ TODO 略
 pid_t fork(void );
 ```
 
-fork 函数复制当前进程，在内核进程表中创建一个新的进程表项。新的进程表项有很多属性和原进程相同，比如**堆指针、栈指针和标志寄存器的值**。但也有许多属性被赋予了新的值，比如该进程的 PPID 被设置成原进程的 PID，信号位图被清除（原进程设置的信号处理函数不再对新进程起作用)
+fork 函数复制当前进程，在内核进程表中创建一个新的进程表项。新的进程表项有很多属性和原进程相同，比如**堆指针、栈指针和标志寄存器的值**。但也有许多属性被赋予了新的值，比如该进程的 PPID 被设置成原进程的 PID，信号位图被清除（原进程设置的信号处理函数不再对新进程起作用)，fork() 之后的父子进程共享文件，此时的 fork() 产生的子进程与父进程相同的文件描述符指向相同的文件表，引用计数增加，共享文件偏移指针
+
+**父子进程虚拟地址空间**
+
+Linux 的 fork() 使用是通过**写时拷贝（copy-on-write）**实现。写时拷贝是一种**可以推迟甚至避免拷贝数据的技术**。内核并不复制整个进程的地址空间，而是让父子进程共享同一个地址空间。只有在写入时才会复制地址空间（重新开辟一块内存），从而使各个进程拥有自己的地址空间。即资源的复制只有在写入时才会进行，在此之前，只有以只读的方式进行，即所谓的**「读时共享，写时拷贝」**
+
+**GDB 多进程调试**
+
+gdb 默认只能跟踪一个进程，[视频](https://www.nowcoder.com/study/live/504/2/5)
+
+```bash
+# 设置调试父进程或者子进程
+set follow-fork-mode [parent(默认)|child]
+
+# on 表示调试当前进程时其他进程继续运行，off 表示调试当前进程时其他进程被 GDB 挂起
+set detach-on-fork [on(默认)|off]
+
+# 查看调试的进程
+info inferiors
+
+# 切换当前调试的进程
+inferior id
+
+# 使进程脱离 GDB 调试
+detach inferiors id
+```
 
 
 
 #### 13.2 exec 系列系统调用
 
-需要在子进程种执行其他程序，即替换当前进程映像，就需要使用 exec 系列函数
+需要在子进程种执行其他程序，即替换当前进程映像，就需要使用 exec 系列函数 [参考](https://blog.csdn.net/u014530704/article/details/73848573)
 
 ```cpp
 #include <unistd.h>
@@ -1235,13 +1312,21 @@ extern char** environ;
 // file 参数接受文件名
 // avg 接受可变参数，argv 接受参数数组
 // envp 设置新程序的环境变量
-int execl(const char* path, const char* arg, ...);
+
+// 传可变参数list，NULL 结尾，execlp("ps", "ps", "-l", NULL)
+int execl(const char* path, const char* arg, ...); 
 int execlp(const char* file, const char* arg, ...);
 int execle(const char* path, const char* arg, ..., char* const envp[]);
 
-int execv(const char* path, const char* argv[] );
-int execvp(const char* file, const char* argv[] );
+// 传参数的指针数组，char *argv[] = {"ps","-l",NULL};
+int execv(const char* path, const char* argv[]); 
+int execvp(const char* file, const char* argv[]);
 int execvpe(const char* path, const char* argv[], char* const envp[]);
+
+// l(list) 参数地址列表，以空指针结尾
+// v(vector) 存有各参数地址的指针数组的地址
+// p(path) 按 PATH 环境变量指定的目录搜索可执行文件
+// e(environment) 存有环境变量字符串地址的指针数组的地址
 ```
 
 一般情况下，exec 函数是不返回的，除非出错。它出错时返回-1，并设置 errno。 如果没出错，则原程序中 exec 调用之后的代码都不会执行，因为此时原程序己经被 exec 的参数指定的程序完全替换（包括代码和数据）。**exec 函数不会关闭原程序打开的文件描述符**，除非该文件描述符被设置了类似 SOCK_CLOEXEC 的属性（见5.2节）。
@@ -1250,10 +1335,10 @@ int execvpe(const char* path, const char* argv[], char* const envp[]);
 
 #### 13.3 处理僵尸进程
 
-两种情况：
+每个进程结束之后都会释放自己地址空间中的用户区数据，内核区的 PCB 没办自己释放掉（pid ppid 等），需要父进程释放
 
-- 在子进程结束运行之后，父进程读取其退出状态之前，该子进程处于僵尸态
-- 父进程结束或者异常终止，而子进程继续运行。此时子进程的 PPID 将被操作系统设置为 1，即 init 进程。init 进程接管了该子进程，并等待它结束。
+- 在子进程结束运行之后，父进程尚未回收，子进程残留资源(PCB)存放于内核中，即父进程读取其退出状态之前，该子进程就是**僵尸进程**
+- 父进程结束或者异常终止，而子进程继续运行（**孤儿进程**）。此时子进程的 PPID 将被操作系统设置为 1，即 **init 进程**。init 进程接管了该子进程，并等待它结束。
 
 通过下面的系统调用，在父进程中调用等待子进程的结束，并获取子进程的返回信息，从而避免僵尸进程的产生，或者使子进程的僵尸状态立即结束
 
@@ -1261,7 +1346,7 @@ int execvpe(const char* path, const char* argv[], char* const envp[]);
 #include <sys/types.h>
 #include <sys/wait.h>
 
-// 阻塞
+// 阻塞，pid_t 是结束子进程的进程 id，stat_loc 可以保留相关信息，通过相关的宏函数可以查看
 pid_t wait(int* stat_loc);
 
 // 只等待 pid 指定的子进程，为 -1 时与 wait 一样
@@ -1269,15 +1354,64 @@ pid_t wait(int* stat_loc);
 pid_t waitpid(pid_t pid, int* stat_loc, int options);
 ```
 
-要在事件已经发生的情说下执行非阻基调用才能提高程序的效率。对 waitpid 函数而言，我们最好在某个子进程退出之后再调用它。那么父进程从何得知某个子进程已经退出了呢？这正是 SIGCHLD 信号的用途。**当一个进程结束时，它将给其父进程发送一个SIGCHLD 信号**。因此，我们可以在父进程中捕获SIGCHLD 信号，并在信号处理函数中调用 waitpid 函数以“彻底结束”一个子进程
+要在事件已经发生的情况下执行非阻塞调用才能提高程序的效率。对 waitpid 函数而言，我们最好在某个子进程退出之后再调用它。那么父进程从何得知某个子进程已经退出了呢？这正是 SIGCHLD 信号的用途。**当一个进程结束时，它将给其父进程发送一个SIGCHLD 信号**。因此，我们可以在父进程中捕获SIGCHLD 信号，并在信号处理函数中调用 waitpid 函数以“彻底结束”一个子进程
+
+
+
+**进程退出**
+
+```cpp
+#include <stdlib.h>
+void exit(int status); // 标准 C 库函数，会刷新缓冲区
+
+#include <unistd.h>
+void _exit(int status); // Linux 系统调用，不会刷新缓冲区
+```
 
 
 
 #### 13.4 管道
 
-管道能在父子进程间传递数据，一般来说是单向的，只能保证父子进程之间一个方向的数据，父子进程必须有一个关闭 fd[0]、另一个关闭 fd[1]，如果要实现父子进程之间的双向数据传输就必须使用两个管道。
+**匿名管道(pipe)** 能在父子进程间传递数据，一般来说是单向的，只能保证父子进程之间一个方向的数据，父子进程必须有一个关闭 fd[0]、另一个关闭 fd[1]，如果要实现父子进程之间的双向数据传输就必须使用两个管道。
 
 > 书中描述了 squid 如何使用 socketpair 系统调用创建一个全双工管道的
+
+匿名管道默认是阻塞的：如果管道中没有数据，read 阻塞，如果管道满了，write 阻塞
+
+
+
+**有名管道(FIFO)** 不同于匿名管道之处在于它提供了一个路径名与之关联，以 FIFO 的文件形式存在于文件系统中，并且其打开方式与打开一个普通文件是一样的，这样 即使与 FIFO 的创建进程不存在亲缘关系的进程，只要可以访问该路径，就能够彼此 通过 FIFO 相互通信，因此，通过 FIFO 不相关的进程也能交换数据。
+
+
+
+有名管道(FIFO) 和 匿名管道(pipe) 有一些特点是相同的，例如默认的阻塞行为：
+
+```bash
+# 默认 FIFO 和 PIPE 都是阻塞的，读写端关闭或者打开时对方的行为是类似的：
+读管道：
+    管道中有数据，read返回实际读到的字节数
+    管道中无数据：
+        写端被全部关闭，read返回0（相当于读到文件的末尾）
+        写端没有完全关闭，read阻塞等待
+
+写管道：
+    管道读端全部被关闭，进程异常终止（进程收到SIGPIPE信号）
+    管道读端没有全部关闭：
+        管道已满，write阻塞
+        管道没有满，write将数据写入，并返回实际写入的字节数
+```
+
+不一样的地方在于：
+
+- FIFO 在文件系统中作为一个特殊文件存在，但 FIFO 中的内容却存放在内存中
+- 当使用 FIFO 的进程退出后，FIFO 文件将继续保存在文件系统中以便以后使用
+- FIFO 有名字，不相关的进程可以通过打开有名管道进行通信
+
+
+
+
+
+
 
 
 
@@ -1344,7 +1478,7 @@ int semctl(int sem_id, int sem_num, int command, ...);
 ```cpp
 #include <sys/shm.h>
 
-// key 表示一段全局唯一的共享内存
+// key 表示一段全局唯一的共享内存，非零值，一般是 16 进制
 // size 指定共享内存的大小，单位 byte，为 0 表示获取已经存在的共享内存
 // shmflg 和 sem_flags 类似
 // [return] 成功返回一个正整数标识共享内存的标识符，失败 -1 并设置 errno
@@ -1357,7 +1491,7 @@ int shmget(key_t key, size_t size, int shmflg);
 
 ```cpp
 // shm_id 是由 shmget 返回的共享内存标识符
-// shm_addr 指定共享内存关联到进程的那块地址空间
+// shm_addr 指定共享内存关联到进程的那块地址空间，为 NULL 就由内核指定
 // shmflg 是一些标志 SHM_RND|SHM_RDONLY...
 // [return] 成功时返回共享内存被关联到的地址，失败返回 -1 并设置 errno
 void* shmat(int shm_id, const void* shm_addr, int shmflg);
@@ -1380,6 +1514,8 @@ int shmdt(const void* shm_addr);
 // [return] 成功返回值取决于 command，失败 -1 并设置 errno
 int shmctl(int shm_id, int command, struct shmid_ds* buf);
 ```
+
+代码参考：[write_shm.c](nowcoder/2.28-shm/write_shm.c) 与 [read_shm.c](nowcoder/2.28-shm/read_shm.c) 进程通信传数据
 
 
 
@@ -1692,9 +1828,9 @@ int pthread_sigmask(int how, const sigset_t* newmask, sigset_t* oldmask);
 
 
 
-#### 15.5 半同步/半反应堆线程次
+#### 15.5 半同步/半反应堆线程池
 
-本节我们实现一个基于图 8-10所示的半同步/半反应堆并发模式的线程池，如代码清单15-3所示。相比代码清单 15-1 所示的进程池实现，该线程池的通用性要高得多，因为它使用一个工作队列完全解除了主线程和工作线程的耦合关系：**主线程往工作队列中插入任务，工作线程通过竞争来取得任务并执行它**。不过，如果要将该线程池应用到实际服务器程序中，那么我们必须保证所有客户请求都是无状态的，因为同一个连接上的不同请求可能会由不同的线程处理。
+本节我们实现一个基于图 8-10 所示的半同步/半反应堆并发模式的线程池，如代码清单15-3 所示。相比代码清单 15-1 所示的进程池实现，该线程池的通用性要高得多，因为它使用一个工作队列完全解除了主线程和工作线程的耦合关系：**主线程往工作队列中插入任务，工作线程通过竞争来取得任务并执行它**。不过，如果要将该线程池应用到实际服务器程序中，那么我们必须保证所有客户请求都是无状态的，因为同一个连接上的不同请求可能会由不同的线程处理。
 
 > 代码参考：[15-3threadpool.h](ch15/15-3threadpool.h)
 
@@ -1720,3 +1856,8 @@ param1=1
 
 
 
+### 参考
+
+- 《Linux 高性能服务器编程》- 游双著
+- nowcoder - Linux 多进程开发
+- 源码：[注释版-wgfxcu/HPS](https://github.com/wgfxcu/HPS)  [无注释版本-raichen/LinuxServerCodes](https://github.com/raichen/LinuxServerCodes)

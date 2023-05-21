@@ -97,7 +97,7 @@ void et(epoll_event *events, int number, int epollfd, int listenfd)
                 if (ret < 0)
                 {
                     // 对于非阻塞 IO，下面的条件成立表示数据已经全部读取完毕
-                    // 此后 epoll 就能再次出发 sockfd 上的 EPOLLIN 事件，以驱动下一次读操作
+                    // 此后 epoll 就能再次触发 sockfd 上的 EPOLLIN 事件，以驱动下一次读操作
                     if ((errno == EAGAIN) || (errno == EWOULDBLOCK))
                     {
                         printf("read later\n");
