@@ -251,25 +251,25 @@ std::move 并不会真正地移动对象，真正的移动操作是在**移动�
 template<typename T>
 CData* Creator(T t) // 传值，每次都要拷贝内存，效率低
 {
-	return new CData(t);
+    return new CData(t);
 }
 
 template<typename T>
 CData* Creator(T& t) // 无法传递右值
 {
-	return new CData(t);
+    return new CData(t);
 }
 
 template<typename T>
 CData* Creator(T&& t) // 可以传递右值
 {
-	return new CData(t); // 传右值但还是无法调用移动构造函数，t 为左值
+    return new CData(t); // 传右值但还是无法调用移动构造函数，t 为左值
 }
 
 template<typename T>
 CData* Creator(T&& t) // 实现完美转发
 {
-	return new CData(std::forward<T>(t));
+    return new CData(std::forward<T>(t));
 }
 ```
 
@@ -281,7 +281,7 @@ CData* Creator(T&& t) // 实现完美转发
 
   
 
-### __builtin（GCC 内建函数）
+### __builtin
 
 - `__builtin_ctz()` / `__builtin_ctzll()`：返回括号内数的二进制表示形式中末尾0的个数
 - `__buitlin_clz()`  / `__buitlin_clzll()`：返回括号内数的二进制表示形式中前导0的个数（leading zero）
@@ -290,7 +290,7 @@ CData* Creator(T&& t) // 实现完美转发
 - `__builtin_ffs()`：返回括号内数的二进制表示形式中最后一个1在第几位（从后往前）
 - `__builtin_sqrt()` / `__builtin_sqrtf()`：快速开平方，比一般的 `sqrt()` 要快，前者 8 位，后者 4 位
 
-:warning:所有带 `ll` 的名字，均为 `long long` 类型下运算，否则将当作 `int` 来算。
+:warning: 他是 GCC 内建函数，所有带 `ll` 的名字，均为 `long long` 类型下运算，否则将当作 `int` 来算。
 
 
 

@@ -459,7 +459,7 @@ int (*p)[10] = &a;
     int main(int argc, char const *argv[]) {
         const Test t(4);
         // 参考：https://blog.csdn.net/bit_zyx/article/details/124825804
-        //t.foo(); // error, const Test* this 无法转成 Test *，权限放大了
+        // t.foo(); // error, const Test* this 无法转成 Test *，权限放大了
         t.foo_const();	// correct
     
         Test t1(5);
@@ -2769,7 +2769,7 @@ delete this释放了类对象的内存空间，但是内存空间却并不是马
 
 > <a id="new2">完整例子以及解读</a>参考：https://interviewguide.cn/notes/03-hunting_job/02-interview/01-03-01-C++11.html
 
-#### 1、C++ 11有哪些新特性？
+#### 1、C++ 11有哪些新特性？[参考](https://cloud.tencent.com/developer/article/old/1745592)
 
 - nullptr替代 NULL
 - 引入了 auto 和 decltype 这两个关键字实现了类型推导

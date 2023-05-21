@@ -709,3 +709,44 @@ int main() {
 > 过程参考：[中缀转换后缀-CSDN](https://blog.csdn.net/sgbfblog/article/details/8001651)
 >
 > 代码参考：[calExp.cpp](../practice/calExp.cpp)
+
+
+
+### 12. 十进制转 base 进制
+
+首先学会十进制转 -2 进制，[1017. 负二进制转换](https://leetcode.cn/problems/convert-to-base-2/)
+
+```cpp
+// 【分析】
+//  n = …… + a * (base)^5 + b * (base)^4 + c * (base)^3 + d * (base)^2 + e * (base)^1 + f * (base)^0
+//  若base为正数，则n也必定为非负数
+//  若base为负数，则n可为所有整数
+
+// 【任意base的通用写法】
+string baseAny(int n, int base)
+{
+    if (n == 0)
+        return "0";
+
+    string ans;
+    while (n != 0)
+    {
+        // 获取当前最低位
+        int r = n % base;
+        if (r < 0)     // 说明 base 必为负数
+            r -= base; // 保证找到的余数在有效范围 [0, -base - 1] 内
+        n -= r;        // 将最后一位抹零，保证后续是整除，从而保证不同语言通用
+        if (r >= 10)
+            ans += 'A' + r - 10;
+        else
+            ans += '0' + r;
+
+        // 将n的进制表达式向右移一位
+        n /= base;
+    }
+    reverse(ans.begin(), ans.end());
+    return ans;
+}
+```
+
+参考：[进制表达式的本质，不同语言的通用写法](https://leetcode.cn/problems/convert-to-base-2/solution/jin-zhi-biao-da-shi-de-ben-zhi-bu-tong-y-1x4a/)

@@ -82,6 +82,7 @@
 具体参考 [c++2.0/README.md](c++2.0)
 
 
+
 ## 实践代码
 
 > C++实战代码和一些备忘知识点，`practice` 文件夹
@@ -101,7 +102,11 @@
 ## Linux 相关
 > 《Linux 高性能服务器编程》阅读笔记，`Linux` 文件夹
 
-TBC
+详见 [Linux-readme.md](./Linux/readme.md)
+
+- 参考1：《Linux 高性能服务器编程》游双著
+- 参考2：牛客——[Linux高并发服务器开发](https://www.nowcoder.com/courses/cover/live/504)
+
 
 
 ## 流媒体相关

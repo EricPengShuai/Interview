@@ -27,7 +27,7 @@ using namespace std;
 
 class singleInstance{
 public:
-    static singleInstance* GetsingleInstance(){
+    static singleInstance* GetsingleInstance() {
         if (instance == NULL){
             pthread_mutex_lock(&mutex); // mlock.lock();
             if (instance == NULL) {
@@ -72,7 +72,7 @@ int main(){
 #include <pthread.h>
 using namespace std;
 
-class singleInstance{
+class singleInstance {
 public:
     static singleInstance* GetsingleInstance(){ // 饿汉式，直接创建一个对象，不需要加锁
         static singleInstance instance;
@@ -86,7 +86,7 @@ private:
     singleInstance& operator=(const singleInstance& other){ return *this; };
 };
 
-int main(){
+int main() {
     // 因为没有办法创建对象，就得采用静态成员函数的方法返回
     singleInstance *s = singleInstance::GetsingleInstance();
     //singleInstance *s1 = new singleInstance(); // 报错
@@ -113,31 +113,31 @@ int main(){
 using namespace std;
 
 // 产品类（抽象类，不能实例化）
-class Product{
+class Product {
 public:
     Product(){};
     virtual void show()=0;  // 纯虚函数
     virtual ~Product(){};
 };
 
-class productA: public Product{
+class productA: public Product {
 public:
-    productA(){};
-    void show(){ cout << "product A create!" << endl; };
-    ~productA(){ cout << "product A delete!" << endl; };
+    productA() {};
+    void show() { cout << "product A create!" << endl; };
+    ~productA() { cout << "product A delete!" << endl; };
 };
 
-class productB: public Product{
+class productB: public Product {
 public:
-    productB(){};
-    void show(){ cout << "product B create!" << endl; };
-    ~productB(){ cout << "product B delete!" << endl; };
+    productB() {};
+    void show() { cout << "product B create!" << endl; };
+    ~productB() { cout << "product B delete!" << endl; };
 };
 
-class simpleFactory{ // 工厂类
+class simpleFactory { // 工厂类
 public:
-    simpleFactory(){};
-    Product* product(const string str){
+    simpleFactory() {};
+    Product* product(const string str) {
         if (str == "productA")
             return (new productA());
         if (str == "productB")
@@ -234,6 +234,105 @@ int main(){
     return 0;
 }
 ```
+
+
+
+### 3. 观察者模式
+
+观察者模式，是一种行为性模型，又叫发布-订阅模式，定义对象间的一种一对多的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都得到通知并被自动更新。比如拍卖的时候，拍卖师观察最高标价，然后通知给其他竞价者竞价。
+
+> 行为性模型：关注系统中对象之间的相互交互，解决系统在运行时对象之间的相互通信和协作，进一步明确对象的职责。
+
+```cpp
+#include <iostream>
+#include <list>
+using namespace std;
+ 
+class Observer{  // 观察者抽象
+public:
+    virtual void Update(int) = 0;
+};
+ 
+class Subject{  // 被观察者抽象
+public:
+    virtual void Attach(Observer *) = 0;
+    virtual void Detach(Observer *) = 0;
+    virtual void Notify() = 0;
+};
+ 
+class ConcreteObserver1:public Observer{  // 第一个观察者
+public:
+    ConcreteObserver1(Subject *pSubject):m_pSubject(pSubject){}
+    void Update(int value){
+        cout << "ConcreteObserver1 get the update. New State:" << value << endl;
+    }
+private:
+    Subject *m_pSubject;
+};
+ 
+class ConcreteObserver2 : public Observer{  // 第二个观察者
+public:
+    ConcreteObserver2(Subject *pSubject):m_pSubject(pSubject){}
+    void Update(int value){
+        cout << "ConcreteObserver2 get the update. New State:" << value << endl;
+    }
+private:
+    Subject *m_pSubject;
+};
+ 
+class ConcreteSubject:public Subject{  // 被观察者
+public:
+    void Attach(Observer *pObserver);
+    void Detach(Observer *pObserver);
+    void Notify();
+    void SetState(int state){
+        m_iState = state;
+    }
+private:
+    std::list<Observer *> m_ObserverList;
+    int m_iState;
+};
+ 
+void ConcreteSubject::Attach(Observer *pObserver){ // 添加观察者
+    m_ObserverList.push_back(pObserver);
+}
+ 
+void ConcreteSubject::Detach(Observer *pObserver){ // 删除观察者
+    m_ObserverList.remove(pObserver);
+}
+ 
+void ConcreteSubject::Notify(){  // 通知观察者
+    std::list<Observer *>::iterator it = m_ObserverList.begin();
+    while (it != m_ObserverList.end()){
+        (*it)->Update(m_iState);
+        ++it;
+    }
+}
+ 
+int main(){
+    // Create 被观察者
+    ConcreteSubject *pSubject = new ConcreteSubject();
+ 
+    // Create 观察者
+    Observer *pObserver1 = new ConcreteObserver1(pSubject);
+    Observer *pObserver2 = new ConcreteObserver2(pSubject);
+ 
+    // 改变状态
+    pSubject->SetState(2);
+ 
+    // 注册观察者
+    pSubject->Attach(pObserver1);
+    pSubject->Attach(pObserver2);
+ 
+    pSubject->Notify();// 通知观察者
+ 
+    // 删除观察者
+    pSubject->Detach(pObserver1);
+    pSubject->Detach(pObserver2);
+}
+```
+
+
 
 
 
