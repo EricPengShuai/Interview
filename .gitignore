@@ -9,6 +9,11 @@
 !*.c
 !*.pdf
 !*.h
+!*.html
+!*.jpg
+!Makefile
+!*.o
+!*.so
 
 # Unignore all dirs
 !*/
