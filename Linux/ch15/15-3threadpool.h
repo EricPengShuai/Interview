@@ -5,7 +5,7 @@
 #include <cstdio>
 #include <exception>
 #include <pthread.h>
-#include "../14/14-2locker.h"
+#include "../ch14/14-2locker.h"
 
 /* 线程池，将它定义为模板类是为了代码复用。模板参数T是任务类 */
 template<typename T>
