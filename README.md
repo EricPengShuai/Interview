@@ -8,16 +8,20 @@
 
 ## 面试题总结
 
-> 不同公司的面试总结，`Guide` 文件夹
+> 常见八股面试题总结，参考 `Guide` 文件夹
 
-1. [ByteDanceGuide.md](Guide/ByteDanceGuide.md)：字节面试指南
-2. [KuaishouGuide.md](Guide/KuaishouGuide.md)：快手面试指南
-3. [Baidu.md](Guide/baiduGuide.md)：百度面试指南
+1. [Guide_1.md](Guide/Guide_1.md)
+2. [Guide_2.md](Guide/Guide_2.md)
+3. [Guide_3.md](Guide/Guide_3.md)
+3. [Guide_4.md](Guide/Guide_4.md)
+
 
 
 ## 常见 STL 库
 
-> C++一些**标准库**的常规使用，`STL` 文件夹
+> C++一些**标准模板库**的常规使用，`STL` 文件夹
+
+C++ Standard Library（标准库）包括 Standard Template Library（标准模板库），STL 分为六大类型：容器、分配器、算法、迭代器、适配器和仿函式
 
 包括但不限于 vector, map, set, queue, queue_priority, sort 等等，具体参考 [STL/README.md](STL)
 
@@ -44,12 +48,15 @@
 15. [数位DP](algorithm/数位DP.md)
 16. [其他算法](algorithm/others.md)
 
+
+
 ### ACM 模式备忘代码
 
 > 处理链表二叉树等数据结构以及输入处理技巧，参考 `memo` 文件夹
 
-1. [listnode.cpp](memo/listnode.cpp): 链表
-2. [treenode.cpp](memo/treenode.cpp): 二叉树
+1. [ListNode.cpp](memo/listnode.cpp): 链表
+2. [TreeNode.cpp](memo/treenode.cpp): 二叉树
+
 
 
 ## 基础代码
@@ -109,6 +116,12 @@
 
 
 
+## 设计模式
+
+参考：[DesignPattern.md](DesignPattern.md)
+
+
+
 ## 流媒体相关
 
 > 流媒体相关知识点，常见协议说明，包括 RTMP、RTSP、HLS、DASH 等
@@ -129,7 +142,7 @@
 6. [美团](review/meituan.md)
 7. [京东](review/jingdong.md)
 8. [米哈游](review/mihoyo.md)
-9. [红海无线](review/redInfinity.md)
+9. [小红书](review/redxhs.md)
 10. [其他面经](review/others.md)
 
 
