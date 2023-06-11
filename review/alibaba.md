@@ -491,3 +491,41 @@ HTTP 和 WebSocket 都是基于 TCP 的，所以建立连接之前都会有 TCP 
 
 ##### 4、算法题：简单表达式求值 1+2*3/4+5，本质是 [后缀表达式求值](../algorithm/others.md)
 
+
+
+### Lazada
+
+> 2023.06.07 16:00-17:00
+
+- 自我介绍 5min，问了一点单组播协同项目，不深入
+
+- C++ 中 struct 和 class 区别
+
+- inline 失效场景 [参考](https://www.nowcoder.com/feed/main/detail/bf8487a384014b299f1c7d7ed3ad1bdb?)
+
+- 智能指针
+
+- g++ 编译过程
+
+- epoll，mutex，event_loop 了解吗
+
+- 如何防止一个头文件 include  多次
+
+  ```cpp
+  // ① 使用宏定义避免重复引入
+  #ifndef _NAME_H
+  #define _NAME_H
+  //头文件内容
+  #endif
+  
+  // ② 使用#pragma once避免重复引入
+  #pragma once
+  class Student {
+      //......
+  };
+  
+  // ③ 使用_Pragma操作符
+  _Pragma("once");
+  ```
+
+- 算法：手撕 LRU
