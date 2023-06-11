@@ -1,12 +1,221 @@
-# modern-cpp
+# C++ 2.0
+
+## C++11&14
+
+> 参考 《C++ 新标准 C++11&14》——侯捷
+>
+> 笔记参考：https://blog.csdn.net/qq_15041569/article/details/110755182
+
+### 语言部分
+
+- **varadic template** 可变类型参数模板，initializer_list 接受相同类型的可变参数，template 主要指的是函数模板和类模板
+
+  ```cpp
+  void print() { // 递归出口
+  }
+   
+  template <typename T, typename... Types>                
+  //这里的...是关键字的一部分：模板参数包
+  void print(const T& firstArg, const Types&... args)     
+  //这里的...要写在自定义类型Types后面：函数参数类型包
+  {
+      cout << firstArg << endl;
+      print(args...); //这里的...要写在变量args后面：函数参数包
+  }
+  ```
+
+- **default/delete** 作用：为了增强对“类默认函数的控制”，从而让程序员更加精准地去控制默认版本的函数
+
+  - 六大默认函数：构造、析构、拷贝构造、拷贝赋值、移动构造、移动赋值，default 和 delete 基本就作用在这5种函数上（析构除外）
+  - 何时需要自定义 big-three（构造函数、拷贝构造、拷贝赋值），如果类中带有point member（指针成员），那我们就可以断定必须要给出 big-three
+
+- **using** 用来给类型取别名，且这个别名化是可以带参数的，define 和 typedef 无法达到同样的效果，template template parameter + alias template
+
+  ```cpp
+  template <typename T,
+            template <typename T>
+                class Container
+           >
+  class XCls
+  {
+  private:
+      Container<T> c;
+  public:
+      XCLs()
+      {
+          for(long i=0; i<SIZE; ++i)
+              c.insert(c.end(), T());
+   
+          output_static_data(T());
+          Container<T> c1(c);
+          Container<T> c2(std::move(c));
+          c1.swap(c2);
+      }
+  };
+  
+  XCls<MyString, vector> c1; // error, vector 第二个默认参数需要指定
+  
+  template <typename T>
+  using Vec = vector<T, allocator<T>>;
+  XCls<MyString, Vec> c1;    // ok
+  ```
+
+- **noexcept** 用于申明函数保证不会抛出异常，后面可以跟一个括号写一个条件，也就是说在某种条件满足情况下，不会抛出异常
+
+- **override** 用于明确要重写父类的虚函数上，相当于告诉编译器这个函数就是要重写父类虚函数这样一个意图，让编译器帮忙检查，而没有这个关键字，编译器是不会帮你检查的
+
+- **final** 禁止基类被继承，禁止虚函数被重写
+
+- **decltype** 用来声明函数的返回值类型、模板之间的应用、用于求 lambda 表达式的类型
+
+  ```cpp
+  template<typename T1, typename T2>
+  auto Add(T1 x, T2 y) -> decltype(x+y);
+  ```
+
+- **lambda** 表达式，可以大大简化原始仿函数的写法
+
+  ```cpp
+  // mutable throwSpec retType 是可选的
+  // mutable 表示 [] 中的导入数据是否可变
+  // throwSpec 表示抛出异常
+  // [...](...) mutable throwSpec -> retType {...}
+  
+  int id = 0;
+  auto f = [id]() mutable {
+      cout << id << endl;
+      ++ id; // 有 mutable 才能在值传递时 ++ id
+  };
+  id = 42;
+  f(); f(); f(); // 0 1 2 (id 是值传递)
+  cout << id << endl; // 42
+  ```
+
+  
+
+### 标准库
+
+- **临时对象就是一个右值**，右值不要出现在等号左边（虽然 string 和 complex 可以写）
+
+- 使用 std::move() 可以得到一个左值的右值引用，移动语言就是一个「偷」的过程，为了让「偷」的过程不被中间商影响，引入了完美转发 std::forward()
+
+  ```cpp
+  // 带有移动语义的类
+  class MyString{
+  public:
+      static size_t DCtor;        //累计default-ctor呼叫次数
+      static size_t Ctor;         //累计ctor呼叫次数
+      static size_t CCtor;        //累计copy-ctor呼叫次数
+      static size_t CAsgn;        //累计copy-asgn呼叫次数
+      static size_t MCtor;        //累计move-ctor呼叫次数
+      static size_t MAsgn;        //累计move-asgn呼叫次数
+      static size_t Dtor;         //累计dtor呼叫次数
+  private:
+      char* _data;
+      size_t _len;
+      void _init_data(const char *s){
+          _data = new char[_len + 1];
+          memcpy(_data, s, _len);
+          _data[_len] = '\0';
+      }
+  public:
+      //default constructor
+      MyString() : _data(NULL), _len(0) { ++DCtor; }
+   
+      //constructor
+      MyString(const char* p) : _len(strlen(p)){
+          ++Ctor;
+          _init_data(p);
+      }
+   
+      //copy constructor
+      MyString(const MyString& str) : _len(str._len){
+          ++CCtor;
+          _init_data(str._data);
+      }
+   
+      // move constructor, with "noexcept"
+      MyString(MyString&& str) noexcept
+          : _data(str._data), _len(str._len){
+              ++MCtor;
+              str._len = 0;
+              str._data = NULL; // 重要，析构的时候不要 delete 掉
+      }
+   
+      // copy assignment
+      MyString& operator=(const MyString& str){
+          ++ CAsgn;
+          if(this != &str){
+              if(_data) delete _data;
+              _len = str._len;
+              _init_data(str._data);
+          }
+          else{
+          }
+          return *this;
+      }
+   
+      //move assignment
+      MyString& operator=(MyString&& str) noexcept{
+          ++ MAsgn;
+          if(this != &str){
+              if(_data) delete _data;
+              _len = str._len;
+              _data = str._data;
+              str._len = 0;
+              str._data = NULL;
+          }
+          return *this;
+      }
+   
+      //dtor
+      virtual ~MyString(){
+          ++Dtor;
+          if(_data){
+              delete _data;
+          }
+      }
+   
+      bool operator<(const MyString& rhs) const
+      {
+          return string(this->_data) < string(rhs._data);
+      }
+   
+      bool operator==(const MyString& rhs) const
+      {
+          return string(this->_data) == string(rhs._data);
+      }
+   
+      char* get() const { return _data; }
+  };
+  size_t MyString::DCtor = 0;
+  size_t MyString::Ctor = 0;
+  size_t MyString::CCtor = 0;
+  size_t MyString::CAsgn = 0;
+  size_t MyString::MCtor = 0;
+  size_t MyString::MAsgn = 0;
+  size_t MyString::Dtor = 0;
+   
+  namespace std    //必须放在std内
+  {
+  template<>
+  struct hash<MyString>{    //for unordered containers
+      size_t operator()(const MyString& s) const noexcept
+      { return hash<string>() (string(s.get())); } 
+  }；
+  ```
+
+
+
+## modern-cpp
 
 > 参考 https://github.com/changkun/modern-cpp-tutorial
 
   
 
-## 1. 迈向现代 C++
+### 1. 迈向现代 C++
 
-### 1.1 被弃用的特性
+#### 1.1 被弃用的特性
 
 - 善用 const char * 和 auto
 
@@ -20,7 +229,7 @@ char *str = "hello world!";
 
   
 
-### 1.2 与 C 的兼容性
+#### 1.2 与 C 的兼容性
 
 在编写 C++ 时尽量避免使用 C 文件，如非不可应该注意使用 extern "C" 这种特性，将 C 语言的代码与 C++ 代码进行分离编译，再统一链接
 
@@ -32,9 +241,9 @@ clang++ 1.1.cpp foo.o -o 1.1
 
   
 
-## 2. 语言可行性的强化
+### 2. 语言可行性的强化
 
-### 2.1 常量
+#### 2.1 常量
 
 - C++11 使用 nullptr 代替 NULL，传统 C++ 会将 NULL、0 视为同一种东西，取决于编译器。**尽量使用 nullptr**
 
@@ -50,7 +259,7 @@ clang++ 1.1.cpp foo.o -o 1.1
 
     
 
-### 2.2 变量及其初始化
+#### 2.2 变量及其初始化
 
 - if/switch 语句可以放在括号里面定义以及初始化
 
@@ -60,8 +269,6 @@ clang++ 1.1.cpp foo.o -o 1.1
       *itr = 3;
   }
   ```
-
-- 初始化列表：C++11 引入 initializer_list 允许构造函数或其他函数像像参数一样使用初始化列表，可以使用 {} 进行初始化
 
 - 结构化绑定：C++17引入该思想可以使用 auto 直接推断出 tuple 元组各个元素
 
@@ -73,9 +280,18 @@ clang++ 1.1.cpp foo.o -o 1.1
   auto [x, y, z] = f();
   ```
 
-    
 
-### 2.3 类型推导
+##### initialize_list 
+
+初始化列表：C++11 引入 initializer_list 允许构造函数或其他函数像像参数一样使用初始化列表，可以使用 {} 进行初始化
+
+- initializer_list\<T> 背后有 array 数组支撑，initializer_list 它其实是关联一个 array\<T,n>
+- 源码实现中只是对 array 指针的一个浅拷贝动作，比较危险
+- max 和 min 可以接受任意参数，实际内部调用的是 *max_element 和 *min_element
+
+
+
+#### 2.3 类型推导
 
 - C++11 引入了 auto 和 decltype 这两个关键字实现了类型推导，让编译器来操心变量的类型；C++20 开始 auto 可以用于参数传递
 
@@ -111,7 +327,7 @@ clang++ 1.1.cpp foo.o -o 1.1
 
   
 
-### 2.4 控制流
+#### 2.4 控制流
 
 - C++17 将 constexpr 这个关键字引入到 if 语句中，允许在代码中声明常量表达式的判断条件，这样让代码在编译时就完成分支判断，效率更高
 
@@ -144,7 +360,7 @@ clang++ 1.1.cpp foo.o -o 1.1
 
   
 
-### 2.5 模板
+#### 2.5 模板
 
 - C++11 引入了**外部模板**，扩充了原来的强制编译器在特定位置实例化模板的语法，使我们能够显式的通知编译器何时进行模板的实例化，节省编译时长
 
@@ -239,7 +455,7 @@ clang++ 1.1.cpp foo.o -o 1.1
   
   
 
-### 2.6 面向对象
+#### 2.6 面向对象
 
 - **委托构造**：C++11 引入了委托构造的概念，这使得构造函数可以在同一个类中一个构造函数调用另一个构造函数
 
@@ -279,9 +495,9 @@ clang++ 1.1.cpp foo.o -o 1.1
 
   
 
-## 3. 语言运行期的强化
+### 3. 语言运行期的强化
 
-### 3.1 lambda表达式
+#### 3.1 lambda表达式
 
 **基本语法**
 
@@ -313,7 +529,7 @@ auto add = [](auto x, auto y) {
 
 
 
-### 3.2 函数对象包装器
+#### 3.2 函数对象包装器
 
 - std::function
 
@@ -341,7 +557,7 @@ auto add = [](auto x, auto y) {
   
   
 
-### 3.3 右值引用
+#### 3.3 右值引用
 
 - **左值** (lvalue, left value)，就是赋值符号左边的值。准确来说，左值是表达式（不一定是赋值表达式）后依然存在的持久对象。
 
@@ -409,9 +625,9 @@ auto add = [](auto x, auto y) {
 
   
 
-## 4. 容器
+### 4. 容器
 
-### 4.1 线性容器
+#### 4.1 线性容器
 
 - std::array
 
@@ -423,7 +639,7 @@ auto add = [](auto x, auto y) {
 
   
 
-### 4.2 无序容器
+#### 4.2 无序容器
 
 > 传统 C++ 中的有序容器 std::map/std::set，这些元素内部通过红黑树进行实现， 插入和搜索的平均复杂度均为 O(log(size))。在插入元素时候，会根据 < 操作符比较元素大小并判断 元素是否相同，并选择合适的位置插入到容器中。当对这个容器中的元素进行遍历时，输出结果会按照 < 操作符的顺序来逐个遍历。
 
@@ -436,7 +652,7 @@ C++ 11新引入两组无序容器：
 
   
 
-### 4.3 元组
+#### 4.3 元组
 
 **基本操作**
 
@@ -489,7 +705,7 @@ std::cout << tuple_index(t, i) << std::endl;	// i 是索引变量
 
 
 
-## 5. 智能指针与内存管理
+### 5. 智能指针与内存管理
 
 #### 5.1 RAII与引用计数
 
@@ -525,12 +741,15 @@ int main () {
 }
 ```
 
-
-
 - std::shared_ptr 可以通过 get() 方法来获取原始指针，通过 reset() 来减少一个引用计数，并通过 use_count() 来查看一个对象的引用计数。
 - 根据 [cppreference](https://cplusplus.com/reference/memory/shared_ptr/)：`shared_ptr` 对象可以共享指针的所有权，同时指向另一个对象。这种能力被称为 `aliasing`，通常用于指向成员对象，同时拥有它们所属的对象。因此，shared_ptr 可能与两个指针有关：① **stored pointer**: is said to point to, and the one it dereferences with operator; ② **owned pointer**: is the pointer the ownership group is in charge of  deleting at some point
 
 代码参考：[shared_ptr.cpp](./shared_ptr.cpp)
+
+- 构造函数也是 explicit 的，没有 delete 拷贝构造和赋值构造函数，所以可以共享
+- 指向资源的指针增加了一个引用计数就加 1，指向资源的指针减少了一个引用计数就加 1
+- 可以使用 move 将 share_ptr 抓换成 unique_ptr，反之不行
+- **删除器：** 可以自定义删除器，可以为普通函数、仿函数和 Lambda 表达式
 
 
 
@@ -545,6 +764,12 @@ std::unique_ptr<int> pointer2 = pointer; // 非法
 ```
 
 既然是独占， 换句话说就是不可复制。 但是， 我们可以利用 std::move 将其转移给其他的 unique_ptr，例如：[unique_ptr.cpp](./unique_ptr.cpp)
+
+- 构造函数是 explicit 的，所以不能简单的赋值
+- 禁用了拷贝构造函数和拷贝赋值函数，所以就实现了独享语义，unique_ptr 就是想用一个智能指针管理对象
+- 不要用同一个裸指针初始化多个 unique_ptr
+- release() 可以释放 unique_ptr 对原始指针的控制权，返回原始指针，get() 仅仅是返回原始指针
+- 程序使用 exit() 退出时，全局的 unique_ptr 可以正常释放，但是局部的 unique_ptr 不会自动释放
 
 
 
@@ -565,11 +790,15 @@ std::weak_ptr 没有 `*` 运算符和 `->` 运算符，所以不能够对资源�
 
 代码参考：[weak_ptr.cpp](./weak_ptr.cpp)
 
+- weak_ptr 不控制对象的生命周期，但是它知道对象是否还活着
+- 用 lock() 函数把它可以提升为shared_ptr，如果对象还活着，返回有效的shared_ptr，如果对象已经死了，提升会失败，返回一个空的shared ptr。
+- 提升的行为 lock() 是线程安全的
 
 
-## 6. 正则表达式
 
-### 6.1 简介
+### 6. 正则表达式
+
+#### 6.1 简介
 
 正则表达式是由**普通字符**（例如 a 到 z）以及**特殊字符**组成的文字模式。模式描述在搜索文本时要匹配的一个或多个字符串。正则表达式作为一个模板，将某个字符模式与所搜索的字符串进行匹配。一般正则表达式用于：
 
@@ -581,7 +810,7 @@ std::weak_ptr 没有 `*` 运算符和 `->` 运算符，所以不能够对资源�
 
   
 
-### 6.2 std::regex
+#### 6.2 std::regex
 
 C++11 提供的正则表达式库操作 std::string 对象，模式 std::regex (本质是 `std::basic_regex`) 进行初始化，通过 std::regex_match 进行匹配，从而产生 std::smatch（本质是 `std::match_results` 对象）
 
@@ -591,9 +820,9 @@ C++11 提供的正则表达式库操作 std::string 对象，模式 std::regex (
 
   
 
-## 7. 并行与并发
+### 7. 并行与并发
 
-### 7.1 并行基础
+#### 7.1 并行基础
 
 std::thread 用于创建一个执行的线程实例， 所以它是一切并发编程的基础， 使用时需要包含 `<thread>` 头文件，它提供了很多基本的线程操作，例如 get_id() 来获取所创建线程的线程 ID，使用 join() 来加入一个线程等等，例如：
 
@@ -606,7 +835,7 @@ t.join();
 
   
 
-### 7.2 互斥量与临界区
+#### 7.2 互斥量与临界区
 
 std::mutex 是 C++11 中最基本的 mutex 类，通过实例化 std::mutex 可以创建互斥量，而通过其 成员函数 lock() 可以进行上锁，unlock() 可以进行解锁。但是在实际编写代码的过程中，最好不去直 接调用成员函数，因为调用成员函数就需要在每个临界区的出口处调用 unlock()，当然，还包括异常。 这时候 C++11 还为互斥量提供了一个 RAII 语法的模板类 std::lock_guard。RAII 在不失代码简洁性 的同时，很好的保证了代码的异常安全性。
 
@@ -622,7 +851,7 @@ std::lock_guard 不能显式的调用 lock 和 unlock，而 std::unique_lock 可
 
   
 
-### 7.3 期物
+#### 7.3 期物
 
 期物（Future）表现为 std::future，它提供了一个访问异步操作结果的途径，这句话很不好理解。 为了理解这个特性，我们需要先理解一下在 C++11 之前的多线程行为。
 
@@ -636,7 +865,7 @@ std::lock_guard 不能显式的调用 lock 和 unlock，而 std::unique_lock 可
 
   
 
-### 7.4 条件变量
+#### 7.4 条件变量
 
 条件变量 std::condition_variable 是为了解决死锁而生，当互斥操作不够用而引入的。比如，线程可能需要等待某个条件为真才能继续执行，而一个忙等待循环中可能会导致**所有其他线程都无法进入临界区**使得条件为真时，就会发生死锁。所以，condition_variable 实例被创建出现主要就是用于唤**醒等待线程从而避免死锁**。std::condition_variable 的 notify_one() 用于唤醒一个线程；notify_all() 则是通知所有线程。
 
@@ -644,7 +873,7 @@ std::lock_guard 不能显式的调用 lock 和 unlock，而 std::unique_lock 可
 
 
 
-### 7.5 原子操作与内存模型
+#### 7.5 原子操作与内存模型
 
 - 原子操作：`atomic<int> counter`，具体[参考](https://changkun.de/modern-cpp/zh-cn/07-thread/#原子操作)
 - 一致性模型
@@ -660,31 +889,31 @@ std::lock_guard 不能显式的调用 lock 和 unlock，而 std::unique_lock 可
 
 
 
-## 8. 文件系统
+### 8. 文件系统
 
 文件系统库提供了文件系统、路径、常规文件、目录等等相关组件进行操作的相关功能。和正则表达式库类似，他也是最先由 boost 发起，并最终被合并为 C++ 标准的众多库之一。
 
-### 8.1 文档与链接
+#### 8.1 文档与链接
 
 todo
 
   
 
-### 8.2 std::filesystem  
+#### 8.2 std::filesystem  
 
 todo
 
   
 
-## 9. 其他杂项
+### 9. 其他杂项
 
-### 9.1 新类型
+#### 9.1 新类型
 
 long long int 并不是 C++11 最先引入的，其实早在 C99，long long int 就已经被纳入 C 标 准中，所以大部分的编译器早已支持。C++11 的工作则是正式把它纳入标准库，规定了一个 long long int 类型至少具备 64 位的比特数。
 
 
 
-### 9.2 nonexcept
+#### 9.2 nonexcept
 
 C++11 将异常的声明简化为以下两种情况：
 
@@ -704,7 +933,7 @@ noexcept 还能够做操作符，用于操作一个表达式，当表达式无�
 
   
 
-### 9.3 字面量
+#### 9.3 字面量
 
 - 原始字符串字面量
 
@@ -735,7 +964,7 @@ noexcept 还能够做操作符，用于操作一个表达式，当表达式无�
 
   
 
-### 9.4 内存对齐
+#### 9.4 内存对齐
 
 C++ 11 引入了两个新的关键字 alignof 和 alignas 来支持对内存对齐进行控制。alignof 关键字能够获得一个与平台相关的 std::size_t 类型的值，用于查询该平台的对齐方式。当然我们有时候并不满足于此，甚至希望自定定义结构的对齐方式，同样，C++ 11 还引入了 alignas 来重新修饰某个结构的对齐方式。
 
@@ -743,6 +972,6 @@ C++ 11 引入了两个新的关键字 alignof 和 alignas 来支持对内存对�
 
   
 
-## 10. C++20 简介
+### 10. C++20 简介
 
 todo
