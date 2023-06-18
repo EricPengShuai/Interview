@@ -57,7 +57,7 @@ STL 有六大部件：容器（Containers）、分配器（Allocators）、算�
       T* last;
       map_pointer node; // T**
   // ...
-  } 
+  }
 
 - *[priority_queue.cpp](priority_queue.cpp)*：优先队列用法
   
