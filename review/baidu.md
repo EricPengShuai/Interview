@@ -175,3 +175,90 @@ base case：节点 i 只有一个子结点 j，$dp[i]=dp[j] + (color[i] \neq col
 ##### 7、[场景] 海量数据100G选择TOP 100个单词
 
 > 注意只需要选取每个文件中前100个单词，然后再归并
+
+
+
+### 推荐融合
+
+> 2023.06.16 15:00-16:00
+
+#### 1、自我介绍、项目收获
+
+
+
+#### 2、C++ 新特性
+
+
+
+#### 3、share_ptr 是线程安全的吗，引用计数如何设计
+
+线程安全：多线程操作一个共享数据的时候，能够保证所有线程的行为是符合预期的
+
+**share_ptr 的线程安全隐患：**
+
+- 引用计数的加减操作是否线程安全
+- shared_ptr修改指向时，是否线程安全
+- 作为类模板，shared_ptr\<T>的T的并发操作的安全性也要考虑
+
+
+
+share_ptr 中含有两个指针：
+
+- 除了有一个指针，指向所管理数据的地址
+- 还有一个指针指向一个控制块的地址，控制块中存放所管理数据的数量（常说的引用计数）、weak_ptr 的数量、删除器、分配器
+
+
+
+**① 引用计数是否线程安全**
+
+对于引用计数这一变量的存储，是在堆上的，多个shared_ptr的对象都指向同一个堆地址，在多线程环境下，管理同一个数据的 share_ptr 在进行计数的增加或减少的时候是线程安全的，因为这一操作是**原子操作**
+
+> To satisfy thread safety requirements, the reference counters are typically incremented using an equivalent of [std::atomic::fetch_add](https://en.cppreference.com/w/cpp/atomic/atomic/fetch_add) with [std::memory_order_relaxed](https://en.cppreference.com/w/cpp/atomic/memory_order) (decrementing requires stronger ordering to safely destroy the control block)
+
+**② 修改指向是否线程安全**
+
+- 多线程代码操作的是同一个 share_ptr 的对象，例如 通过引用捕获的 lambda 表达式、函数传指针或者引用 时，此时是线程不安全的
+- 多线程代码操作的不是同一个 share_ptr 的对象，指的是管理的数据是同一份，**而shared_ptr不是同一个对象**，例如通过 值捕获的 lambda 表达、函数值值传递时，是线程安全的
+
+**③ 所管理数据的线程安全**
+
+一般来说，多线程如果存在同时修改 STL 容器的情况是极有可能引发线程安全问题的，例如多线程同时对一个 vector 进行 push_back
+
+参考：[c++ 11 的shared_ptr多线程安全？](https://www.zhihu.com/question/56836057/answer/2158966805)
+
+
+
+#### 4、mutex 和 mysql 中的读写锁区别
+
+
+
+#### 5、Makefile 原理，代码编译过程，代码检查在哪一个阶段
+
+1. 预处理（Preprocessing）：预处理器根据预处理指令（例如`#include`、`#define`等）对源代码进行处理，展开宏定义、包含头文件等。预处理后的代码被称为"翻译单元"（translation unit）
+
+2. 编译（Compilation）：编译器将预处理后的翻译单元转换为汇编代码。在这个阶段，编译器会对代码进行语法和语义检查，包括变量和函数的声明和定义是否一致，是否使用了未声明的标识符等。
+
+   > 如果在代码中将一个字符串变量赋值给一个整型变量，编译器会在编译阶段发现类型不匹配的错误，并生成编译错误报告
+
+3. 汇编（Assembly）：汇编器将编译生成的汇编代码转换为机器代码（目标代码）
+
+4. 链接（Linking）：链接器将目标代码与所需的库函数和其他目标代码进行链接，生成可执行文件。在这个阶段，符号解析和地址重定位等操作被执行
+
+
+
+#### 6、实现一个单例
+
+
+
+#### 7、找出 1-n 乱序数组中缺失的那一个元素
+
+原地交换
+
+
+
+#### 
+
+
+
+
+
