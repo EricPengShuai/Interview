@@ -21,44 +21,81 @@
 懒汉模式是在**第一次用到类实例时**才会实例化对象。类初始化时，不会初始化该对象，真正需要使用的时候才会创建该对象，具备懒加载功能
 
 ```cpp
-#include <iostream>
-#include <pthread.h>
-using namespace std;
-
-class singleInstance{
+class single {
 public:
-    static singleInstance* GetsingleInstance() {
+    static single* getInstance() {
         if (instance == NULL){
             pthread_mutex_lock(&mutex); // mlock.lock();
             if (instance == NULL) {
-                instance = new singleInstance();
+                instance = new single();
             }
             pthread_mutex_unlock(&mutex); // mlock.unlock();
         }
         return instance;
     };
-    ~singleInstance(){};
-    static pthread_mutex_t mutex; // mutex mlock; 加锁互斥
+    ~single(){};
+    
 private:
+    static pthread_mutex_t mutex; // mutex mlock; 加锁互斥
+    static single* instance;
+    
     // 涉及创建对象的函数都设置为private
-    singleInstance(){};
-    singleInstance(const singleInstance& other){};
-    singleInstance& operator=(const singleInstance& other){ return *this; };
-    static singleInstance* instance;
+    single(){
+        pthread_mutex_init(&mutex, NULL);
+    };
 };
 
-// 懒汉式，静态变量需要定义
-singleInstance* singleInstance::instance = nullptr;
-pthread_mutex_t singleInstance::mutex;
+// 注意这里需要先声明
+single* single::instance = nullptr;
+pthread_mutex_t single::mutex;
 
 int main(){
     // 因为没有办法创建对象，就得采用静态成员函数的方法返回静态成员变量
-    singleInstance *s = singleInstance::GetsingleInstance();
-    // singleInstance *s1 = new singleInstance(); // 报错
-    cout << "Hello World\n";
-    delete s;  // 防止内存泄露
+    single *s = single::getInstance();
+    delete s;
     return 0;
 }
+```
+
+- 写法2：C++11 之后编译器可以保证内部静态变量的线程安全性
+
+```cpp
+class single {
+  public:
+    static single *getInstance() {
+        static single instance;
+        return &instance;
+    };
+    ~single(){};
+
+  private:
+    single(){};
+};
+
+// 需要先声明
+pthread_mutex_t single::mutex;
+```
+
+- 写法2：C++11 之前还是需要加锁的
+
+```cpp
+class single {
+  private:
+    static pthread_mutex_t mutex;
+    single() { pthread_mutex_init(&mutex, NULL); }
+
+  public:
+    static single *getInstance() {
+        pthread_mutex_lock(&mutex);
+        static single obj;
+        pthread_mutex_unlock(&mutex);
+        return &obj;
+    };
+    ~single() {}
+};
+
+// 需要先声明
+pthread_mutex_t single::mutex;
 ```
 
 
@@ -68,31 +105,18 @@ int main(){
 类初始化时，会立即加载该对象，**线程天生安全**，调用效率高
 
 ```cpp
-#include <iostream>
-#include <pthread.h>
-using namespace std;
+class single {
+  private:
+    static single *p;
+    single() {}
+    ~single() {}
 
-class singleInstance {
-public:
-    static singleInstance* GetsingleInstance(){ // 饿汉式，直接创建一个对象，不需要加锁
-        static singleInstance instance;
-        return &instance;
-    };
-    ~singleInstance(){};
-private: 
-    // 涉及创建对象的函数都设置为private
-    singleInstance(){};
-    singleInstance(const singleInstance& other){};
-    singleInstance& operator=(const singleInstance& other){ return *this; };
+  public:
+    static single *getinstance() { return p; }
 };
 
-int main() {
-    // 因为没有办法创建对象，就得采用静态成员函数的方法返回
-    singleInstance *s = singleInstance::GetsingleInstance();
-    //singleInstance *s1 = new singleInstance(); // 报错
-    cout << "Hello World\n";
-    return 0;
-}
+// 运行时直接初始化
+single *single::p = new single();
 ```
 
 
