@@ -11,7 +11,7 @@ void *another(void *arg)
 {
     pthread_mutex_lock(&mutex_b);
     printf("in child thread, got mutex b, waiting for mutex a\n");
-    sleep(5); // // 模拟 lock 时间差，保证子线程占有 mutex_b
+    sleep(5); // 模拟 lock 时间差，保证子线程占有 mutex_b
     ++b;
     pthread_mutex_lock(&mutex_a); // 子线程等待 mutex_a
     b += a++;

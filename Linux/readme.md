@@ -1680,7 +1680,7 @@ sem_t *sem_open(const char *name, int oflag, mode_t mode, unsigned int value);
    - 有名信号量可以通过权限控制机制（如文件系统权限）进行访问控制，可以限制哪些进程可以打开、读取和修改该信号量。
    - 无名信号量没有访问控制机制，仅能在创建它的进程内部使用。
 
-代码参考：[nowcoder-semaphore.c](nowcoder/3.8-thread-sync/semaphore.c)
+代码参考：[nowcoder-semaphore.c](nowcoder/3.8-thread-sync/6-semaphore.c)
 
 
 
@@ -1749,7 +1749,7 @@ int pthread_cond_signal(pthread_cond_t* cond); // 唤醒一个等待目标条件
 int pthread_cond_wait(pthread_cond_t* cond, pthread_mutex_t* mutex);
 ```
 
-代码参考：[nowcoder-cond.c](nowcoder/3.8-thread-sync/cond.c)
+代码参考：[nowcoder-cond.c](nowcoder/3.8-thread-sync/5-cond.c)
 
 
 
