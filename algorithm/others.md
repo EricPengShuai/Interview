@@ -2,9 +2,9 @@
 
 > 记录一些题目中的小算法，例如判断素数、质因数分解等
 
+### 1. 质数/素数
 
-
-### 1. 判断素数
+#### 1.1 判断素数
 
 素数也叫质数，大于 1 的整数中，只能被 1 和其自身整除的数称为素数；1 既不是素组也不是合数
 
@@ -22,7 +22,7 @@ bool isPrime(int x) {
 
 
 
-### 2. 质因数分解
+#### 1.2 质因数分解
 
 质因数分解就是将一个数分解成各个质数因数，例如 12 = 2 * 2 * 3 ，具体思路为
 
@@ -107,7 +107,58 @@ void getPrimeFactor(long x, vector<long>& primes) {
 
 
 
-### 3. 最大公约数和最小公倍数
+#### 1.3 筛素数
+
+- **埃氏筛**：时间复杂度 $O(n\log\log n)$
+
+```cpp
+int Eratosthenes(int n) {
+    vector<int> notPrime(n+1, 0);
+    notPrime[0] = notPrime[1] = 1; // 首先筛去 0 和 1
+    vector<int> primes;
+    
+    for (int i = 2; i <= n; ++ i) {
+        if (!notPrime[i]) { // i 是质数
+            primes.push_back(i);
+            for (int j = i; j <= n / i; ++ j) { // 避免溢出的写法
+                notPimes[j*i] = 1;
+            }
+        }
+    }
+    return primes.size();
+}
+```
+
+- **线性筛**：欧拉筛，线性筛保证每个合数只被（最小质因子）划掉一次，时间复杂度 $O(n)$
+
+```cpp
+int Euler(int n) {
+    vector<int> notPrime(n+1, 0);
+    notPrime[0] = notPrime[1] = 1; // 首先筛去 0 和 1
+    vector<int> primes;
+    
+    for (int i = 2; i <= n; ++ i) {
+        if (!notPrime[i]) {
+            primes.push_back(i);
+        }
+        
+        // lpf[i] 表示 i 的最小质因子
+        // 枚举质数 p (<= i)，划掉 i * p（保证 p 是小于等于 lpf[i] 的）
+        for (int p: primes) {
+            if (i * p > n) break;
+            notPrime[i * p] = 1;
+            if (i % p == 0) break; // p 是 i 的最小质因子
+        }
+    }
+    return primes.size(); // 返回 [0...n] 中质数个数
+}
+```
+
+参考：[0x3F-预处理质数 + 枚举](https://leetcode.cn/problems/closest-prime-numbers-in-range/solution/yu-chu-li-zhi-shu-mei-ju-by-endlesscheng-uw2b/)
+
+
+
+### 2. 最大公约数和最小公倍数
 
 **最大公约数（gcd）**：greatest common divisor，C++ `<numeric>`中有具体的库函数 `std::gcd`，如果自己实现可以这样写：
 
@@ -141,13 +192,13 @@ int lcm(int a,int b){
 
 
 
-### 4. Dijkstra
+### 3. Dijkstra
 
 迪杰斯塔拉算法用来求**单源最短路**，也就是某个节点到其他所有节点的最短路，这里可以使用**邻接矩阵或者邻接表**来存图。这里以 **[743. 网络延迟时间](https://leetcode.cn/problems/network-delay-time/)** 为例展示 Dijkstra 的用法：
 
 > 题目给出了图的边权数组 times，图中节点数 n，指定节点 k，求节点 k 到其他节点的最大值，也就是利用 Dijkstra 求出 k 到其他节点的距离然后再取最大值
 
-#### 邻接矩阵
+#### 3.1 邻接矩阵
 
 ```cpp
 // 邻接矩阵数组，w[a][b] = c 表示 a 到 b 有权重为 c 的边
@@ -256,7 +307,7 @@ vector<int> getPath(vector<int>& pre, int start, int end) {
 
 
 
-#### 邻接表
+#### 3.2 邻接表
 
 当边比较少时，使用邻接矩阵会存在浪费节点信息的情况，这时可以考虑邻接表。邻接表适用于边数较少的 **「稀疏图」，当边数量接近点的数量，即 m≈n 时，可定义为「稀疏图」**
 
@@ -384,7 +435,7 @@ vector<int> dijkstra(vector<vector<pair<int, int>>>& g, vector<int>& pre, int st
 
 
 
-### 5. Floyd
+### 4. Floyd
 
 佛洛依德算法用来求解**多源最短路径**，即每个节点到其余节点的最短路径，相当于调用 n 次 Dijkstra 算法，这里使用邻接矩阵来写 Floyd 算法，还是以 LC743 为例
 
@@ -437,7 +488,7 @@ public:
 
 
 
-### 6. 位运算
+### 5. 位运算
 
 **n&(n-1)** 
 
@@ -475,7 +526,7 @@ a = a ^ b = a ^ b ^ a = b;	// a = b;
 
 
 
-### 7. 模运算
+### 6. 模运算
 
 涉及到取模的题目，通常会用到如下等式
 
@@ -498,7 +549,7 @@ $$ (a+b) \bmod p\ =((k_1+k_2) p+r_1+r_2)\bmod p\ =(r_1+r_2)\bmod p\ =(a\bmod p +
 
 
 
-### 8. Split
+### 7. Split
 
 stringstream 通常用来格式化字符串，可以实现 cin 和 cout 的功能， 同时支持C风格字符串的输入输出操作，相关头文件是 `<sstream>`
 
@@ -559,7 +610,7 @@ istream& getline (char* s, streamsize n, char delim );
 
 
 
-### 9. 前缀和
+### 8. 前缀和
 
 对于数组 nums，定义前缀和 s[0] = 0,  $s[i+1]=\Sigma_{j=0}^i nums[j]$
 
@@ -598,7 +649,7 @@ $$
 
 
 
-### 10. KMP
+### 9. KMP
 
 > 目标串 s = "BBCXABCDABXABCDABCDABDE"，模式串 p = "ABCDABD"
 
@@ -690,7 +741,7 @@ int main() {
 
 
 
-### 11. 后缀表达式
+### 10. 后缀表达式
 
 也叫逆波兰表达式，使用栈求值很简单，参考 [剑指 Offer II 036. 后缀表达式](https://leetcode.cn/problems/8Zf90G/)
 
@@ -712,7 +763,7 @@ int main() {
 
 
 
-### 12. 十进制转 base 进制
+### 11. 十进制转 base 进制
 
 首先学会十进制转 -2 进制，[1017. 负二进制转换](https://leetcode.cn/problems/convert-to-base-2/)
 
@@ -750,3 +801,4 @@ string baseAny(int n, int base)
 ```
 
 参考：[进制表达式的本质，不同语言的通用写法](https://leetcode.cn/problems/convert-to-base-2/solution/jin-zhi-biao-da-shi-de-ben-zhi-bu-tong-y-1x4a/)
+
