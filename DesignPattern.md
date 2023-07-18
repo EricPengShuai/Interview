@@ -43,21 +43,30 @@ private:
     single(){
         pthread_mutex_init(&mutex, NULL);
     };
+    
+    // 定义一个嵌套类，在该类的析构函数中，自动释放外层类的资源
+	class CRelease
+	{
+	public:
+		~CRelease() { delete single; }
+	};
+	// 通过该静态对象在程序结束时自动析构的特点，来释放外层类的对象资源
+	static CRelease release;
 };
 
 // 注意这里需要先声明
 single* single::instance = nullptr;
-pthread_mutex_t single::mutex;
+pthread_mutex_t single::mutex = PTHREAD_MUTEX_INITIALIZER;
+CSingleton::CRelease CSingleton::release;
 
 int main(){
     // 因为没有办法创建对象，就得采用静态成员函数的方法返回静态成员变量
     single *s = single::getInstance();
-    delete s;
     return 0;
 }
 ```
 
-- 写法2：C++11 之后编译器可以保证内部静态变量的线程安全性
+- 写法2：C++11 之后编译器可以保证「局部静态变量」的线程安全性，**对于static静态局部变量的初始化，编译器会自动对它的初始化进行加锁和解锁控制，使静态局部变量的初始化成为线程安全的操作，不用担心多个线程都会初始化静态局部变量，因此下面的懒汉单例模式是线程安全的单例模式！**
 
 ```cpp
 class single {
@@ -102,22 +111,38 @@ pthread_mutex_t single::mutex;
 
 #### 1.2 饿汉式
 
-类初始化时，会立即加载该对象，**线程天生安全**，调用效率高
+**饿汉式**单例模式，顾名思义，就是程序启动时就实例化了该对象，并没有推迟到第一次使用该对象时再进行实例化；如果运行过程中没有使用到，该实例对象就被浪费掉了。类初始化时，会立即加载该对象，**线程天生安全**，调用效率高
 
 ```cpp
-class single {
-  private:
-    static single *p;
-    single() {}
-    ~single() {}
-
-  public:
-    static single *getinstance() { return p; }
+class CSingleton
+{
+public:
+	static CSingleton* getInstance()
+	{
+		return &single;
+	}
+private:
+	static CSingleton single;
+	CSingleton() { cout << "CSingleton()" << endl; }
+	~CSingleton() { cout << "~CSingleton()" << endl; }
+	CSingleton(const CSingleton&); // 防止外部使用拷贝构造产生新的对象，如下面CSingleton s = *p1;
 };
+CSingleton CSingleton::single;
 
-// 运行时直接初始化
-single *single::p = new single();
+int main()
+{
+	CSingleton *p1 = CSingleton::getInstance();
+	CSingleton *p2 = CSingleton::getInstance();
+	CSingleton *p3 = CSingleton::getInstance();
+	cout<<p1<<" "<<p2<<" "<<p3<<endl; // p1 p2 p3 地址是一样的
+	return 0;
+}
 ```
+
+#### 参考
+
+- [C++设计模式 - 单例模式](https://blog.csdn.net/QIANGWEIYUAN/article/details/88544524)
+- [最新版Web服务器项目详解 - 09 日志系统（上）](https://mp.weixin.qq.com/s/IWAlPzVDkR2ZRI5iirEfCg)
 
 
 
@@ -259,6 +284,10 @@ int main(){
 }
 ```
 
+#### 参考
+
+- [C++设计模式 - 简单工厂，工厂方法和抽象工厂](https://blog.csdn.net/QIANGWEIYUAN/article/details/88792594)
+
 
 
 ### 3. 观察者模式
@@ -275,13 +304,6 @@ using namespace std;
 class Observer{  // 观察者抽象
 public:
     virtual void Update(int) = 0;
-};
- 
-class Subject{  // 被观察者抽象
-public:
-    virtual void Attach(Observer *) = 0;
-    virtual void Detach(Observer *) = 0;
-    virtual void Notify() = 0;
 };
  
 class ConcreteObserver1:public Observer{  // 第一个观察者
@@ -302,6 +324,13 @@ public:
     }
 private:
     Subject *m_pSubject;
+};
+
+class Subject{  // 被观察者抽象
+public:
+    virtual void Attach(Observer *) = 0;
+    virtual void Detach(Observer *) = 0;
+    virtual void Notify() = 0;
 };
  
 class ConcreteSubject:public Subject{  // 被观察者
@@ -356,7 +385,9 @@ int main(){
 }
 ```
 
+#### 参考
 
+- [C++设计模式 - 观察者Observer模式](https://blog.csdn.net/QIANGWEIYUAN/article/details/88745835) :fire:
 
 
 
