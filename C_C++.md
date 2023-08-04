@@ -163,6 +163,8 @@ int *p(int);
 int (*p)(int)
 ```
 
+**另外参考：施磊《指向类成员的指针》**
+
 
 
 #### 8、new/delete 与 malloc/free 的异同
@@ -626,6 +628,24 @@ C 只在局部上下文中表现出类型安全，比如试图从一种结构体
 **（1）重载（overload）**
 
 重载是指在同一范围定义中的同名成员函数才存在重载关系。主要特点是**函数名相同，参数类型和数目有所不同**，不能出现参数个数和类型均相同，仅仅依靠返回值不同来区分的函数。**重载和函数成员是否是虚函数无关。**
+
+- 注意 const 和 volatile 对形参的影响
+
+```cpp
+// 重载
+void func(int* a) {}
+void func(const int* a) {}
+
+// 不叫重载
+void func(int* a) {}
+void func(int* const a) {}
+
+// 不叫重载
+void func(int a) {}
+void func(const int a) {}
+```
+
+
 
 **（2）重写（覆盖）（override）**
 
