@@ -318,8 +318,16 @@ struct random_iterator_tag : public bidirectional_iterator_tag {};
 
 #### 失效问题
 
-- vector 插入和删除都可能导致迭代器失效，因为插入可能导致扩容 [参考](https://blog.csdn.net/Ferlan/article/details/86423563)
-- list 删除时可能导致失效，插入不会导致扩容
+1. vector 插入和删除都可能导致迭代器失效，因为插入可能导致扩容 [参考](https://blog.csdn.net/Ferlan/article/details/86423563)
+2. list 删除时可能导致失效，插入不会导致扩容
+
+**原因**：对于 vector 而言
+
+- 当容器调用 erase 方法后，当前位置到容器未尾元素的所有的迭代器全部失效了
+- 当容器调用 insert 方法后，当前位置到容器末尾元素的所有的迭代器全部失效了
+- 对于 insert 来说，如果引起容器内存扩容，原来容器的所有的迭代器就全部失效了
+
+**解决**：利用返回值
 
 **插入**
 
