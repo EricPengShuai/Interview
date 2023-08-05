@@ -1,10 +1,10 @@
-# C++ base 
+## C++ base
 
+> C++ 基础知识点
 
+### C++ 本科课程总结
 
-## C++ 本科课程总结
-
-### 1. 概述
+#### 1. 概述
 
 1. 类和对象关系是抽象和具体关系，对象是类的一个实例
 2. OO基本特征：抽象、封装、继承、多态
@@ -18,7 +18,7 @@
    2. 运算符重载：比如可以实现字符串相加
    3. 虚函数：使用关键字`virtual`声明，在基类中申明一些能够在派生类中重新定义的函数
 
-### 2. 语言基础
+#### 2. 语言基础
 
 1. 各种数据类型：字符型有单和宽之分，构造类型有结构类型`struct`、联合型`union`、枚举类型`enum`，比较重要的有**类类型**`class`
 
@@ -29,7 +29,7 @@
 
 3. 变量：不要随意定义全局变量或堆变量，尽量使用局部变量或栈变量。
 
-   1. ##### [堆和栈的区别是什么？](https://www.cnblogs.com/cchHers/p/10010275.html)
+   1. [堆和栈的区别是什么？](https://www.cnblogs.com/cchHers/p/10010275.html)
 
    2. 内存分为5个区：
 
@@ -52,7 +52,7 @@
 8. 数组、指针变量、void类型指针的值（地址）可赋值给任何类型的指针变量但是需要强制类型转换
 9. 指向常量的指针和和常量指针
 
-### 3. 类和对象
+#### 3. 类和对象
 
 1. 三种成员类型
    1. 公有成员：作为类与外部的接口
@@ -67,7 +67,7 @@
 8. 友元函数：一种破坏数据封装和数据隐藏的机制
 9. 静态数据成员
 
-### 4. 派生类和继承
+#### 4. 派生类和继承
 
 1. 继承方式：默认时私有继承（全部变成私有），公有继承，保护继承
 2. 派生类：不能继承基类的构造函数和析构函数，有单继承、多继承、直接基类、间接基类说法
@@ -75,9 +75,9 @@
 
 
 
-## C++ Things
+### C++ Things
 
-### 1. const
+#### 1. const
 
 - **作用**
 
@@ -103,7 +103,7 @@
   - const对象只能访问const成员函数
   - 非const对象可以访问所有的成员函数
 
-### 2. static
+#### 2. static
 
 - 静态变量：静态变量的空间只分配一次；类中的静态变量被实例化对象共享，所以类中的静态变量不能使用构造函数初始化
 
@@ -129,7 +129,7 @@
   ```
 
 
-### 3. this指针
+#### 3. this指针
 
 - 作用：
   1. 一个对象的this指针不是对象本身的一部分
@@ -139,7 +139,7 @@
 
 
 
-### 4. inline
+#### 4. inline
 
 **内联函数是以代码膨胀（复制）为代价提升函数执行效率的**
 
@@ -152,57 +152,53 @@
 
 > 虚函数可以是内联函数，但是当虚函数表现多态性时不能内联（因为多态性是在运行期，内存是在编译期）
 >
-> 参考代码：[/base_code/inline.cpp](./base_code/inline.cpp)
+> 参考代码：[inline.cpp](inline.cpp)
 
 - [ ] 修改文件名称
 
 
 
-### 5. sizeof
+#### 5. sizeof
 
 - 空类的大小为1字节
 - 类中的虚函数、成员函数、静态数据成员都不占用类对象的存储空间，**即使类中有多个虚函数，但是只有一个虚指针**
 - 虚函数继承都是继承基类的vptr
 
-> 参考代码 ：[/base_code/sizeof.cpp](./base_code/sizeof.cpp)
+> 参考代码 ：[sizeof.cpp](sizeof.cpp)
 
 
 
-### 6. 纯虚函数和抽象类
+#### 6. 纯虚函数和抽象类
 
-#### 纯虚函数
+##### 纯虚函数
 
 - 只需要声明，不需要实现
 - 包含纯虚函数的类就是抽象类，抽象类只能作为基类使用，**不能创建抽象类对象**，但是可以定义抽象类的指针
 
-
-
-#### 抽象类
+##### 抽象类
 
 - **抽象类中成员函数可以调用纯虚函数，但是构造函数/析构函数内部不能使用纯虚函数**
 - 如果一个类中集成抽象类，它只有实现实现了抽象类中所有的纯虚函数之后才能成为非抽象类
-
-
 
 > 构造函数不能是虚函数，但是析构函数可以是虚函数
 
 
 
-### 7. vptr, vtable and virtual
+#### 7. vptr, vtable and virtual
 
-#### **vtable**
+##### vtable
 
 每个使用虚函数的类（从虚函数派生出来的类）都有自己的虚拟表`vtable`。虚函数表包含可由类的对象调用的每个虚函数的一个条目，每个条目只是一个函数指针，指向该类可访问的派生函数
 
-#### **vptr**
+##### vptr
 
 `vptr`是指向基类的指针，类创建实例时自动设置，和`this`指针不同，`this`指针实际上是编译器用来解析自引用的函数参数，vptr是一个真正的指针
 
-#### **virtual**
+##### virtual
 
 :fire: 虚函数的调用取决于指向或者引用的对象的类型，而不是指针或者引用自身的类型
 
-> 参考代码：[/base_code/virtual.cpp](./base_code/virtual.cpp)
+> 参考代码：[virtual.cpp](virtual.cpp)
 
 
 
@@ -210,11 +206,11 @@
 
 默认参数是静态绑定的，虚函数是动态绑定的。默认参数的使用需要看指针或者引用本身的类型，而不是对象的类型。
 
-> 参考代码：[/base_code/default_arg.cpp](./base_code/default_arg.cpp)
+> 参考代码：[default_arg.cpp](default_arg.cpp)
 
 
 
-#### 常见问题
+##### 常见问题
 
 :one: 静态函数可以声明为虚函数吗？
 
@@ -243,7 +239,7 @@
 - 基类指针指向继承类对象，则调用继承类对象的函数
 - int main() 必须声明为Base类的友元，否则编译失败。编译器报错：ptr无法访问私有函数。
 
-> 代码参考：[/base_code/virtual_function.cpp](./base_code/virtual_function.cpp)
+> 代码参考：[virtual_function.cpp](virtual_function.cpp)
 
 
 
@@ -254,19 +250,21 @@
 - 虚函数可以是内联函数，内联是可以修饰虚函数的，但是当虚函数表现多态性的时候不能内联
 - 内联是在编译器建议编译时内联，而虚函数的多态性是在运行期表现，编译器无法知道运行调用哪个代码，因此虚函数表现为多态性时不可以内联
 
-> 代码学习： [/base_code/virtual_inline.cpp](./base_code/virtual_inline.cpp)
+> 代码学习： [virtual_inline.cpp](virtual_inline.cpp)
 
 
 
-#### RTTI and dynamic_cast
+##### RTTI and dynamic_cast
 
 - Run-Time Type Identification：通过运行时类型信息程序能够使用基类的指针或引用来检查这些指针或引用所指的对象的实际派生类型
 
-- dynamic_cast 提供了类型安全检查，是一种基于能力查询的转换，所以在多态类型间进行转换更提倡采用dynamic_cast。
+- dynamic_cast 提供了类型安全检查，是一种基于能力查询的转换，所以在多态类型间进行转换更提倡采用 dynamic_cast
 
-> 代码参考：[/base_code/rtti.cpp](./base_code/rtti.cpp)
+> 代码参考：[rtti.cpp](rtti.cpp)
 
-### 8. volatile
+
+
+#### 8. volatile
 
 - `volatile`关键字是一种类型修饰符，用它声明的类型变量表示可以被某些编译器未知的因素（操作系统、硬件、其他线程）更改。所以使用`volatile`告诉编译器不应对这样的对象进行优化。
 - `volatile` 关键字声明的变量，每次访问时都必须从**内存**中取出值（没有被`volatile`修饰的变量，可能由于编译器的优化，从**CPU寄存器**中取值）
@@ -279,21 +277,21 @@
 
 可以。当一个中断服务子程序修改一个指向buffer的指针时。
 
-> 代码参考：[/base_code/volatile.cpp](./base_code/volatile.cpp)
+> 代码参考：[volatile.cpp](volatile.cpp)
 
 
 
-### 9. assert
+#### 9. assert
 
 是一个断言，是宏，不是函数，类似于Python中`assert`的用法
 
 可以通过`NDEBUG`来关闭`assert`，但是需要在源代码的开头引入`assert`之前使用
 
-> 参考代码：[/base_code/assert.cpp](./base_code/assert.cpp)
+> 参考代码：[assert.cpp](assert.cpp)
 
 
 
-### 10. extern
+#### 10. extern
 
 虽然C++兼容C，但是C++文件中函数编译后生成的符号与C语言生成的不同。因为C++虽然支持函数重载，C++函数编译之后生成的符号带有函数类型的信息，而C则没有。
 
@@ -373,29 +371,29 @@ int main() {
 
 
 
-### 11. struct
+#### 11. struct
 
-#### C中的struct
+##### C中的struct
 
 - C 中的struct只是单纯用作数据的符合类型，也就是说，在结构体声明中只能将数据成员放在里面，**不能将函数放在里面**
 - C 的结构体不能继承
 - 结构体的名字可以和函数名字相同
 
-> 代码参考：[base_code/struct_func.c](base_code/struct_func.c)
+> 代码参考：[struct_func.c](struct_func.c)
 
 
 
-#### C++中的struct
+##### C++中的struct
 
 - C++结构体可以**定义函数**
 - C++结构体定义时可以直接使用不用带struct，但是如果有同名函数需要加struct（C中不管是否有同名函数都必须要加struct）
 - C++中的结构体可以继承
 
-> 代码参考：[base_code/struct_function.cpp](base_code/struct_function.cpp)
+> 代码参考：[struct_function.cpp](struct_function.cpp)
 
 
 
-### 12. union
+#### 12. union
 
 联合是一种节省空间的特殊的类，一个`union`可以有多个数据成员，但是在任意时刻只有一个数据成员可以有值。当某个成员被赋值后其他成员变为未定义状态。
 
@@ -408,13 +406,13 @@ int main() {
 
 
 
-### 13. C 实现 C++ 面向对象思想
+#### 13. C 实现 C++ 面向对象思想
 
 C++中的多态：在C++中会维护一张虚函数表
 
 如果一个父类的指针或者引用调用父类的虚函数则该父类的指针会在自己的虚函数表中查找的自己的函数地址，如果该父类对象的指针或者引用指向的是子类的对象，而且该子类已经重写了父类的虚函数，则该指针会调用子类的已经重写的虚函数
 
-> 参考代码：[base_code/c++_polymorphism.cpp](base_code/c++_polymorphism.cpp)
+> 参考代码：[c++_polymorphism.cpp](c++_polymorphism.cpp)
 
 
 
@@ -426,30 +424,25 @@ C++中的多态：在C++中会维护一张虚函数表
 
 模拟多态必须保持函数指针变量对齐（**在内容上完全一致，而且变量对齐上也完全一致**）。否则父类指针指向子类对象，运行崩溃！
 
-> 代码参考：[base_code/c_polymorphism.c](base_code/c_polymorphism.c)
+> 代码参考：[c_polymorphism.c](c_polymorphism.c)
 
 
 
-### 14. explicit
+#### 14. explicit
 
 - `explicit`修饰构造函数时，可以防止**隐式转换**和**复制初始化**
 - `explicit`修饰转换函数时，可以防止隐式转换，但按语境转换除外
 
->  代码参考：[base_code/explicit.cpp](base_code/explicit.cpp)
+>  代码参考：[explicit.cpp](explicit.cpp)
 
 
 
-### 15. friend
+#### 15. friend
 
-#### 友元函数
+- 友元函数：可以访问某个类的私有或者保护成员，不是这个类的成员函数，可以在任何位置调用
+- 友元类：类A中的成员函数可以访问另一个类B的私有或者保护成员，友元类A的声明在类B的声明中，而具体实现在类B外面
 
-可以访问某个类的私有或者保护成员，不是这个类的成员函数，可以在任何位置调用
-
-#### 友元类
-
-类A中的成员函数可以访问另一个类B的私有或者保护成员，友元类A的声明在类B的声明中，而具体实现在类B外面
-
-> 代码参考：[base_code/friend_func_class.cpp](base_code/friend_func_class.cpp)
+> 代码参考：[friend_func_class.cpp](friend_func_class.cpp)
 
 
 
@@ -458,19 +451,19 @@ C++中的多态：在C++中会维护一张虚函数表
 
 
 
-### 16. using
+#### 16. using
 
 - 基本使用
 
-  > 代码参考：[base_code/using_global.cpp](base_code/using_global.cpp)
+  > 代码参考：[using_global.cpp](using_global.cpp)
 
 - 改变访问性：访问父类的私有成员
 
-  > 代码参考：[base_code/derived_base.cpp](base_code/derived_base.cpp)
+  > 代码参考：[derived_base.cpp](derived_base.cpp)
 
 - 函数重载
 
-  > 代码参考：[base_code/using_derived.cpp](base_code/using_derived.cpp)
+  > 代码参考：[using_derived.cpp](using_derived.cpp)
 
 - 取代typedef
 
@@ -481,17 +474,17 @@ C++中的多态：在C++中会维护一张虚函数表
 
 
 
-### 17. `::`
+#### 17. `::`
 
 - 全局作用域：`::name`
 - 类作用域：`class::name`
 - 命名空间作用域符：`namespace::name`
 
-> 代码参考：[base_code/colon.cpp](base_code/colon.cpp)
+> 代码参考：[colon.cpp](colon.cpp)
 
 
 
-### 18. enum
+#### 18. enum
 
 - 枚举类
 
@@ -501,11 +494,11 @@ C++中的多态：在C++中会维护一张虚函数表
 >
 >  枚举常量的缺点：他的隐含数据类型是整数，其最大值有限，且不能表示浮点
 >
-> 代码参考：[base_code/enum.cpp](base_code/enum.cpp)
+> 代码参考：[enum.cpp](enum.cpp)
 
 
 
-### 19. decltype
+#### 19. decltype
 
 - 推导出表达式类型
 
@@ -525,11 +518,11 @@ C++中的多态：在C++中会维护一张虚函数表
 
 - 重用匿名类型
 
-> 代码参考：[base_code/decltype.cpp](base_code/decltype.cpp)
+> 代码参考：[decltype.cpp](decltype.cpp)
 
 
 
-### 20. 指针和引用
+#### 20. 指针和引用
 
 - 引用必须初始化，指针可以不初始化
 
@@ -548,9 +541,6 @@ C++中的多态：在C++中会维护一张虚函数表
   r = b;         //引用r依然指向a，但a的值变成了b
   ```
 
-  
-
-#### 引用
 
 - 右值引用：实现转移语义和精确传递
   - 消除两个对象交互时不必要的对象拷贝，节省运算存储资源，提高效率
@@ -560,7 +550,7 @@ C++中的多态：在C++中会维护一张虚函数表
 
 
 
-### 21. 宏
+#### 21. 宏
 
 **字符串化操作符（#）**：在一个宏中的参数前面使用一个`#`，预处理器会把这个参数转换为一个字符数组，出现在宏定义中的`#`是把跟在后面的参数转换成一个字符串
 
@@ -574,7 +564,7 @@ C++中的多态：在C++中会维护一张虚函数表
 
 **续行操作符（\）**：当定义的宏不能用一行表达完整时，可以用"\\"表示下一行继续此宏的定义
 
-> 代码参考：[base_code/macro.cpp](base_code/macro.cpp)
+> 代码参考：[macro.cpp](macro.cpp)
 
 
 
