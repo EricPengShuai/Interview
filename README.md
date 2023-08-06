@@ -17,9 +17,42 @@
 
 
 
+## C++ 基础
+
+> C++ 基础关键字的用法，更多参考`base_code` 文件夹
+
+1. [assert.cpp](base_code/assert.cpp)：断言语句，只有在Debug版本才有效
+2. [c_polymorphism.c](c_polymorphism.c), [c++_polymorphism.cpp](base_code/c++_polymorphism.cpp)：多态在c和c++中的实现
+   - C 中使用函数指针，`typedef void (*pf) ();` 表示重定义一个函数指针的类型
+   - C++ 中使用虚函数，`virtual override`
+3. [colon.cpp](base_code/colon.cpp)：C++ 中冒号的使用，包括全局变量、类成员定义
+4. [decltype.cpp](base_code/decltype.cpp)：推导表达式类型，与 using/typedef 联合使用定义类型
+4. [const_volatile.cpp](base_code/const_volatile.cpp): 通过`volatile`关键字修改`const`常量
+4. [static_in_class.cpp](base_code/static_in_class.cpp): 类中定义的静态成员变量不占类的大小，**在类外分配空间**；静态成员函数不能调用非静态成员，因为缺乏`this`指针
+5. 更多移步到 [base_code/readme](base_code) 
+
+
+
+## C++ 新特性
+
+> C++11/14/17/20新特性，`c++2.0` 文件夹
+
+包括但不限于：
+- 智能指针
+- 引入了 auto 和 decltype 这两个关键字实现了类型推导
+- 基于范围的 for 循环：for(auto& i : res){}
+- 类和结构体的中初始化列表
+- Lambda 表达式（匿名函数）
+- std::forward_list（单向链表）
+- 右值引用和move语义
+
+具体参考 [c++2.0/README.md](c++2.0)
+
+
+
 ## 常见 STL 库
 
-> C++一些**标准模板库**的常规使用，`STL` 文件夹
+> C++ 一些**标准模板库**的常规使用，`STL` 文件夹
 
 C++ Standard Library（标准库）包括 Standard Template Library（标准模板库），STL 分为六大类型：容器、分配器、算法、迭代器、适配器和仿函式
 
@@ -27,9 +60,25 @@ C++ Standard Library（标准库）包括 Standard Template Library（标准模�
 
 
 
+## 实践代码
+
+> C++ 实战代码和一些备忘知识点，`practice` 文件夹
+
+1. [unique_ptr.cpp](practice/unique_ptr_ex.cpp): 独占指针
+4. [++i_i++.cpp](practice/++i_i++.cpp): `++i`和`i++`的[区别](https://www.php.cn/csharp-article-443596.html)，`++i`可以作为左值，`i++`不能作为左值（需要调用拷贝构造函数，测试之后只有一次？）
+5. [regexEx.cpp](practice/regexEx.cpp): C++正则表达式`regex`的用法
+6. [tieTuple.cpp](practice/tieTuple.cpp): C++标准库函数`tie`和`tuple`的用法
+7. [small_big_end.cpp](practice/small_big_end.cpp): 大小端问题，“大端正着看，小端反着看”
+8. [accumulate.cpp](practice/accumulate.cpp): 标准库的求和模板函数
+8. [virtual_public.cpp](practice/virtual_public.cpp): 虚拟继承解决菱形继承问题
+8. [itemPool.cpp](practice/itemPool.cpp): 重载 new/delete 实现**对象池** :fire:
+9. 更多参考 [practice文件夹](practice) 
+
+
+
 ## 常见算法
 
-> 常见的LeetCode算法总结，`algorithm` 文件夹
+> 常见 LeetCode 算法总结，`algorithm` 文件夹
 
 1. [背包问题](algorithm/背包问题.md)
 2. [二分查找](algorithm/二分查找.md)
@@ -59,53 +108,6 @@ C++ Standard Library（标准库）包括 Standard Template Library（标准模�
 
 
 
-## 基础代码
-
-> C++基础关键字的用法，`base_code` 文件夹，[C++_base.md](C++_base.md) 中第二部分有相关描述
-
-1. [assert.cpp](base_code/assert.cpp)：断言语句，只有在Debug版本才有效
-2. [c_polymorphism.c](c_polymorphism.c), [c++_polymorphism.cpp](base_code/c++_polymorphism.cpp)：多态在c和c++中的实现
-   - C 中使用函数指针，`typedef void (*pf) ();` 表示重定义一个函数指针的类型
-   - C++ 中使用虚函数，`virtual override`
-3. [colon.cpp](base_code/colon.cpp)：C++ 中冒号的使用，包括全局变量、类成员定义
-4. [decltype.cpp](base_code/decltype.cpp)：推导表达式类型，与 using/typedef 联合使用定义类型
-5. 更多参考 [base_code文件夹](base_code) ...
-
-
-
-## C++ 新特性
-
-> C++11/14/17/20新特性，`c++2.0` 文件夹
-
-包括但不限于：
-- 智能指针
-- 引入了 auto 和 decltype 这两个关键字实现了类型推导
-- 基于范围的 for 循环：for(auto& i : res){}
-- 类和结构体的中初始化列表
-- Lambda 表达式（匿名函数）
-- std::forward_list（单向链表）
-- 右值引用和move语义
-
-具体参考 [c++2.0/README.md](c++2.0)
-
-
-
-## 实践代码
-
-> C++实战代码和一些备忘知识点，`practice` 文件夹
-
-1. [unique_ptr.cpp](practice/unique_ptr_ex.cpp)：智能指针
-2. [const_volatile.cpp](practice/const_volatile.cpp)：通过`volatile`关键字修改`const`常量
-3. [static_in_class.cpp](practice/static_in_class.cpp)：类中定义的静态成员变量不占类的大小，**在类外分配空间**；静态成员函数不能调用非静态成员，因为缺乏`this`指针
-4. [++i_i++.cpp](practice/++i_i++.cpp)：`++i`和`i++`的[区别](https://www.php.cn/csharp-article-443596.html)，`++i`可以作为左值，`i++`不能作为左值（需要调用拷贝构造函数，测试之后只有一次？）
-5. [regexEx.cpp](practice/regexEx.cpp)：C++正则表达式`regex`的用法
-6. [tieTuple.cpp](practice/tieTuple.cpp)：C++标准库函数`tie`和`tuple`的用法
-7. [small_big_end.cpp](practice/small_big_end.cpp): 大小端问题，“大端正着看，小端反着看”
-8. [accumulate.cpp](practice/accumulate.cpp)：标准库的求和模板函数
-9. 更多参考 [practice文件夹](practice) ...
-
-
-
 ## Linux 相关
 > 《Linux 高性能服务器编程》阅读笔记，`Linux` 文件夹
 
@@ -117,6 +119,12 @@ C++ Standard Library（标准库）包括 Standard Template Library（标准模�
 
 
 ## 设计模式
+
+> 常见设计模式
+
+- 单例模式：饿汉式、懒汉式
+- 工厂模式：简单工厂、抽象工厂
+- 观察者模式
 
 参考：[DesignPattern.md](DesignPattern.md)
 
@@ -150,8 +158,7 @@ C++ Standard Library（标准库）包括 Standard Template Library（标准模�
 
 ## 其他
 
-- [CMakeLists.txt](CMakeLists.txt)：方便CLion同时编译多个文件的配置文件
-- [C_C++.md](C_C++.md)：C/C++八股文，摘自[拓跋阿秀](https://github.com/forthespada/InterviewGuide)
+- [CMakeLists.txt](CMakeLists.txt)：方便 CLion 同时编译多个文件的配置文件
+- [C_C++.md](C_C++.md)：C/C++八股文，大部分摘自[拓跋阿秀](https://github.com/forthespada/InterviewGuide)，外加自己勘误
 - [CPPhelper.md](CPPhelper.md)：一些关于 CPP 的零碎知识，例如 g++, CMakeLists.txt, makefile 等
-- [C++\_base.md](C++_base.md)：来自北邮《C++面向对象程序设计实践》课程知识点和基础关键字代码
 
