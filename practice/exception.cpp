@@ -30,7 +30,7 @@ void handler(int n) throw(int, char, double) {
     if (n==3) throw 1.1;
 }
 
-int main(){
+int main() {
     cout << "1--befroe try block..." << endl;
     try {
         cout << "2--Inside try block..." << endl;
@@ -58,4 +58,3 @@ int main(){
 
     return 0;
 }
-

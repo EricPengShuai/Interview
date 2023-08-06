@@ -1,5 +1,6 @@
 #include<iostream>
 using namespace std;
+
 int i = 1;  // i 为全局变量，具有静态生存期
 
 int main()

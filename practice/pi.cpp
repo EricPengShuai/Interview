@@ -2,10 +2,10 @@
 #include<iomanip>
 #include<cmath>
 using namespace std;
-/*
-1. https://blog.csdn.net/qq_45782378/article/details/112985013 
-*/
 
+/**
+ * 公式求π 参考 https://blog.csdn.net/qq_45782378/article/details/112985013 
+ * */
 int main()
 {
 	int s = 1;

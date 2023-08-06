@@ -10,7 +10,7 @@ union myun
 		int z;
 	} u;
 	int k;
-}a;
+} a;
 
 int main()
 {

@@ -17,7 +17,7 @@ public:
 class Derived : private Base {
 public:
     using Base::f;
-//    void f() { cout<<"Derived::f()"<<endl; }
+    // void f() { cout << "Derived::f()" << endl; }
 
     void f(int n) {
         cout<<"Derived::f(int)"<<endl;
@@ -26,7 +26,7 @@ public:
 
 int main()
 {
-//    Base b;
+    // Base b;
     Derived d;
     d.f();
     d.f(1);

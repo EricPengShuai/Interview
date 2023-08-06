@@ -1,5 +1,6 @@
 #include <iostream>
 using namespace std;
+
 class Time{
 private:
     int hh,mm,ss;
