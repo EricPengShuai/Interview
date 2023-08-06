@@ -103,30 +103,17 @@
   - const对象只能访问const成员函数
   - 非const对象可以访问所有的成员函数
 
+
+
 #### 2. static
 
 - 静态变量：静态变量的空间只分配一次；类中的静态变量被实例化对象共享，所以类中的静态变量不能使用构造函数初始化
 
 - 静态成员：类对象为静态时，一直到程序结束时才会被销毁；类中静态函数可以访问静态成员数据以及其他静态成员函数，无法访问类的非静态数据成员或成员函数，**注意一下访问方式**
 
-  ```c++
-  #include<iostream> 
-  using namespace std; 
-  
-  class Apple 
-  { 
-      public: 
-          static void printMsg() 
-          {
-              cout<<"Welcome to Apple!"; 
-          }
-  }; 
-  
-  int main() 
-  { 
-      Apple::printMsg(); // invoking a static member function 
-  } 
-  ```
+
+> 代码参考：[static.cpp](static.cpp) && [static_in_class.cpp](static_in_class.cpp)
+
 
 
 #### 3. this指针
@@ -404,6 +391,8 @@ int main() {
 - 匿名`union`在定义所在作用域可直接访问`union`成员
 - 全局匿名`union`必须是静态的
 
+> 代码参考：[union.cpp](union.cpp)
+
 
 
 #### 13. C 实现 C++ 面向对象思想
@@ -587,3 +576,21 @@ C++中的多态：在C++中会维护一张虚函数表
 - 函数模板、模板特例化、非模板函数可以共存，编译器会怎么简单怎么来
 
 参考：[template.cpp](template.cpp)
+
+
+
+#### 重载
+
+记住常见重载的写法，参考 [overload.cpp](overload.cpp)
+
+malloc/free 和 new/delete 的区别？
+
+- malloc 按字节开辟内存，new 开辟内存时需要指定类型，malloc 开辟内存返回的都是 void\*
+- malloc 只负责开辟空间，new 不仅仅有的 malloc 的功能，还可以进行数据的初始化
+- malloc 开辟内存失败返回 nullptr 指针；new 抛出的是 bad_alloc 类型的异常
+- new/delete 是运算符，也可以被重载；malloc/free 是库函数，可以被覆盖
+
+new 先底层调用 operator new（实际就是 malloc）申请内存, 然后再调用构造函数；delete 先调用析构函数，然后底层调用 operator delete （实际就是 free）释放内存，参考 [new_delete.cpp](new_delete.cpp)
+
+
+
