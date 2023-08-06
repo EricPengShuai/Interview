@@ -623,7 +623,7 @@ C 只在局部上下文中表现出类型安全，比如试图从一种结构体
 
 
 
-#### 33、C++中的重载、重写（覆盖）和隐藏的区别
+#### 33、C++中的重载、重写（覆盖）和隐藏的区别 :fire:
 
 **（1）重载（overload）**
 
@@ -644,8 +644,6 @@ void func(int* const a) {}
 void func(int a) {}
 void func(const int a) {}
 ```
-
-
 
 **（2）重写（覆盖）（override）**
 
@@ -738,17 +736,14 @@ public、protected、private 的访问权限范围关系：public > protected > 
 
 1. 派生类继承自基类的成员权限有四种状态：public、protected、private、不可见
 2. 派生类对基类成员的访问权限取决于两点：① 继承方式；② 基类成员在基类中的访问权限
-3. 派生类对基类成员的访问权限是取以上两点中的更小的访问范围（除了 private 的继承方式遇到 private 成员是不可见外）。例如：
-   - public 继承 + private 成员 => private
-   - private 继承 + protected 成员 => private
-   - private 继承 + private 成员 => 不可见
+3. 派生类对基类成员的访问权限是取以上两点中的更小的访问范围（**除了 private 的继承方式遇到 private 成员是不可见外**）
 
 派生类对基类成员的访问形象有如下两种：
 
 - **内部访问**：由派生类中新增的成员函数对从基类继承来的成员的访问
 - **外部访问**：在派生类外部，通过派生类的对象对从基类继承来的成员的访问
 
-> 具体详细比较参考：[点击寻找原文链接](#name2)
+> 原文有误，基类的 private 成员在派生类都是不可见的
 
 
 
@@ -1351,7 +1346,7 @@ void realloc(void *p, size_t new_size);	// 给动态分配的空间分配额外�
 
 
 
-#### 65、C++的四种强制转换 `xx_cast`
+#### 65、C++的四种强制转换 `xx_cast` :fire:
 
 **(1) reinterpret_cast**
 
@@ -1375,7 +1370,7 @@ type-id 必须是一个指针、引用、算术类型、函数指针或者成员
 
 `static_cast<type-id> (expression)`
 
-该运算符把expression转换为type-id类型，**但没有运行时类型检查来保证转换的安全性**。它主要有如下几种用法：
+该运算符把 expression 转换为 type-id 类型，**但没有运行时类型检查来保证转换的安全性**。它主要有如下几种用法：
 
 - 用于类层次结构中基类（父类）和派生类（子类）之间指针或引用引用的转换
 
@@ -1385,17 +1380,17 @@ type-id 必须是一个指针、引用、算术类型、函数指针或者成员
 
   - 进行**下行转换**（把基类指针或引用转换成派生类表示）时，由于没有动态类型检查，所以是不安全的
 
-- 用于基本数据类型之间的转换，如把int转换成char，把int转换成enum。这种转换的安全性也要开发人员来保证。
+- 用于基本数据类型之间的转换，如把 int 转换成 char，把 int 转换成 enum
 
 - 把空指针转换成目标类型的空指针
 
-- 把任何类型的表达式转换成void类型
+- 把任何类型的表达式转换成 void 类型
 
-注意：static_cast不能转换掉expression的const、volatile、或者__unaligned属性。
+注意：static_cast 不能转换掉 expression 的 const、volatile 或者 __unaligned 属性。
 
 **(4) dynamic_cast**
 
-**有类型检查**，基类向派生类转换比较安全，但是派生类向基类转换则不太安全
+**有类型检查**，基类向派生类转换比较安全，但是派生类向基类转换则不太安全，**只能用于多态之间的转换**
 
 `dynamic_cast<type-id> (expression)`
 
@@ -1403,7 +1398,7 @@ dynamic_cast 运算符可以在执行期决定真正的类型，也就是说expr
 
 dynamic_cast主要用于类层次间的上行转换和下行转换，还可以用于类之间的交叉转换
 
-在类层次间进行上行转换时，dynamic_cast和static_cast的效果是一样的
+在类层次间进行上行转换时，dynamic_cast 和 static_cast 的效果是一样的
 
 > 例子参考：[点击查看原文链接](#name4)
 
@@ -4156,7 +4151,7 @@ unordered_map是C++ 11新添加的容器，底层机制是**哈希表**，通过
 
 #### 3、构造函数能否声明为虚函数或者纯虚函数，析构函数呢？
 
-虚函数对应一个vtable(虚函数表)，类中存储一个vptr指向这个vtable。如果构造函数是虚函数，就需要通过vtable调用，可是对象没有初始化就没有vptr，无法找到vtable，所以构造函数不能是虚函数
+虚函数对应一个 vtable (虚函数表)，类中存储一个 vptr 指向这个 vtable。如果构造函数是虚函数，就需要通过 vtable 调用，可是对象没有初始化就没有 vptr，无法找到 vtable，所以构造函数不能是虚函数
 
 
 
