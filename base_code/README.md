@@ -651,3 +651,19 @@ Derive *pd = (Derive *)&b; // 不安全涉及了内存的非法访问
 
 
 
+#### 虚继承
+
+- 抽象类：vfptr --> vftable
+- 虚基类：vbptr --> vbtable，vbptr 在上，vfptr 在下，了解内存布局，代码参考：[virtual_base.cpp](virtual_base.cpp)
+
+```cpp
+A *p = new B(); // 基类指针指向派生类对象，永远指向的都是派生类基类部分数据的起始地址
+cout << "A *p " << p << endl;
+p->show();
+delete p;
+```
+
+多重继承好处就是可以复用更多的代码，但是会有菱形继承的问题，也就是间接父类的成员会有多份出现在最终子类中，通过虚继承可以解决菱形继承问题，代码参考：[virtual_public.cpp](virtual_public.cpp)
+
+> 建议再看看施磊老师这部分课程，内存分析很透彻
+
