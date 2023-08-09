@@ -1,4 +1,5 @@
 ## C++ STL
+
 STL 全称是 Standard Template Library之所以得到广泛的赞誉，也被很多人使用，不只是提供了像`vector`, `string`, `list`等方便的容器，更重要的是**STL**封装了许多复杂的数据结构算法和大量常用数据结构操作。
 
 STL 有六大部件：容器（Containers）、分配器（Allocators）、算法（Algorithms）、迭代器（Iterators）、适配器（Adapters）、仿函式（Functors）
@@ -70,7 +71,7 @@ STL 有六大部件：容器（Containers）、分配器（Allocators）、算�
 
 - forward_list 是单向链表，list 是双向（循环）链表，两者都是序列容器，可以在 O(1) 时间内插入和删除元素
 - GUN 2.9 源码中 list 通过一个指针 `list_node* node` 维护元素，sizeof(list\<int>) = 4 (32 位) / 8 (64 位)，list::iterator 中有两个指针 next, prev 和一个 data
-- *[list](list.cpp)*：list 和 forward_list 的基本用法
+- *[list.cpp](list.cpp)*：list 和 forward_list 的基本用法
   - splice 转移函数，LeetCode LRU 经典题目用法：[146. LRU 缓存](https://leetcode.cn/problems/lru-cache/)
 
 
@@ -203,7 +204,7 @@ strcut is_void: public __is_void_helper<typename remove_cv<_Tp>::type>::type {};
 
 ### 算法|Algorithm
 
-Algorithms 看不見 Containers，对其一无所知；所以它所需要的一切信息都必须从 Iteratrors 取得，而 Iterators （由 Containers 供应）必须能够回答 Algorithm 的所有提问，才能搭配该 Algorithm 的所有操作
+Algorithms 看不见 Containers，对其一无所知；所以它所需要的一切信息都必须从 Iteratrors 取得，而 Iterators （由 Containers 供应）必须能够回答 Algorithm 的所有提问，才能搭配该 Algorithm 的所有操作
 
 iterator_category 对算法的影响：
 
@@ -214,7 +215,7 @@ iterator_category 对算法的影响：
 
 #### replace
 
-- replace(first, last, old_value, new_value): 将 [first, last) 范围内等于 old_value 的值都已 new_value 取代
+- replace(first, last, old_value, new_value): 将 [first, last) 范围内等于 old_value 的值都以 new_value 取代
 - replace_if(first, last, pred, new_value): 将范围内所有满足 pred() 为 true 的元素都以 new_value 取代
 - replace_copy(first, last, result, old_value, new_value): 范围内所有等于 old_value 者都以 new_value 放至新区间
 
@@ -369,7 +370,12 @@ lt.insert(it, 0);	// 【注意】此时 it 已经失效，解决方式 it = eras
 
 ### 仿函数|Functor
 
-仿函数就是一个模板类，GUN 2.9 有 24 个仿函数，一般都会继承一些「适当的模板函数」，这样才能让仿函数（functor）具有可适配（adaptable）条件，才能让仿函数 “回答问题”
+仿函数就是一个模板类，也是函数对象，有如下好处：[functor.cpp](functor.cpp)
+
+1. 通过函数对象调用 operator()，可以省略函数的调用开销，比通过函数指针调用（无法 inline **内联调用**）效率高
+2. 函数对象使用类生成，所以可以添加相关的成员变量，用来记录函数对象使用时更多的信息
+
+GUN 2.9 有 24 个仿函数，一般都会继承一些「适当的模板函数」，这样才能让仿函数（functor）具有可适配（adaptable）条件，才能让仿函数 “回答问题”
 
 ```cpp
 // 算术类
@@ -426,7 +432,8 @@ struct less: public binary_function<T, T, bool> {
 
 #### Container Adapter
 
-- stack 和 queue 就是 deque 的适配器
+- stack 和 queue 就是 deque 的适配器，默认是 queue，因为 queue 对内存的利用率要高，queue 只需要**分段连续**的内存（）
+- priority_queue 底层默认是 vector，因为大/小根堆通过下标之间的关系维护这个堆结构，需要在**内存连续**的数组上构建一个大根堆或者小根堆，deque 是分段连续的，实现没有 vector 方便
 - 通过使用 deque 已有的一些成员数实现 stack、queue 的功能
 
 
