@@ -1348,29 +1348,37 @@ void realloc(void *p, size_t new_size);	// 给动态分配的空间分配额外�
 
 #### 65、C++的四种强制转换 `xx_cast` :fire:
 
+这些类型转换是语言级别的，没法查看源码，做更加安全的转换，格式为 `reinterpret_cast<type-id> (expression)`
+
 **(1) reinterpret_cast**
 
-`reinterpret_cast<type-id> (expression)`
-
-type-id 必须是一个指针、引用、算术类型、函数指针或者成员指针。它可以用于类型之间进行强制转换。
+它可以用于类型之间进行强制转换，类似于 C 风格的强制类型转换
 
 **(2) const_cast**
 
-`const_cast<type_id> (expression)`
+去掉常量属性的一个类型转换，type_id 必须是指针或者引用类型，用来修改类型的 const 或 volatile 属性
 
-该运算符用来修改类型的const或volatile属性。除了const 或volatile修饰之外， type_id和expression的类型是一样的。用法如下：
+```cpp
+const int a = 1;
+int *p = const_cast<int*>(&a);
+cout << *p << ' ' << a << endl;	// 1 1
+*p = 2;
+cout << *p << ' ' << a << endl;	// 2 1
 
-- **常量**指针被转化成**非常量**的指针，并且仍然指向原来的对象
-
-- **常量**引用被转换成**非常量**的引用，并且仍然指向原来的对象
-
-- const_cast一般用于修改底指针。如const char *p形式
+// int b = const_cast<int>(a); // error
+```
 
 **(3) static_cast**
 
-`static_cast<type-id> (expression)`
+提供编译器认为的安全的类型转换，没有任何联系的类型之间的转换就会被编译器否定，**没有运行时类型检查来保证转换的安全性**。它主要有如下几种用法：
 
-该运算符把 expression 转换为 type-id 类型，**但没有运行时类型检查来保证转换的安全性**。它主要有如下几种用法：
+- 用于基本数据类型之间的转换，如把 int 转换成 char，把 int 转换成 enum。可以把空指针转换成目标类型的空指针，把任何类型的表达式转换成 void 类型
+
+  ```cpp
+  int a = 1;
+  double b = static_cast<double>(a);
+  // double *p = static_cast<double *>(a); // error
+  ```
 
 - 用于类层次结构中基类（父类）和派生类（子类）之间指针或引用引用的转换
 
@@ -1380,27 +1388,69 @@ type-id 必须是一个指针、引用、算术类型、函数指针或者成员
 
   - 进行**下行转换**（把基类指针或引用转换成派生类表示）时，由于没有动态类型检查，所以是不安全的
 
-- 用于基本数据类型之间的转换，如把 int 转换成 char，把 int 转换成 enum
-
-- 把空指针转换成目标类型的空指针
-
-- 把任何类型的表达式转换成 void 类型
-
-注意：static_cast 不能转换掉 expression 的 const、volatile 或者 __unaligned 属性。
-
 **(4) dynamic_cast**
 
-**有类型检查**，基类向派生类转换比较安全，但是派生类向基类转换则不太安全，**只能用于多态之间的转换**
+主要用于继承结构中，可以支持 RTTI 类型识别的上下转换，**有类型检查**，基类向派生类转换比较安全，但是派生类向基类转换则不太安全，**只能用于多态之间的转换**
 
-`dynamic_cast<type-id> (expression)`
-
-dynamic_cast 运算符可以在执行期决定真正的类型，也就是说expression 必须是多态类型。如果下行转换是安全的（也就说，如果基类指针或者引用确实指向一个派生类对象）这个运算符会传回适当转型过的指针。**如果下行转换不安全，这个运算符会传回空指针**（也就是说，基类指针或者引用没有指向一个派生类对象）
+> dynamic_cast 运算符可以在执行期决定真正的类型，也就是说expression 必须是多态类型。如果下行转换是安全的（也就说，如果基类指针或者引用确实指向一个派生类对象）这个运算符会传回适当转型过的指针。**如果下行转换不安全，这个运算符会传回空指针**（也就是说，基类指针或者引用没有指向一个派生类对象）
 
 dynamic_cast主要用于类层次间的上行转换和下行转换，还可以用于类之间的交叉转换
 
 在类层次间进行上行转换时，dynamic_cast 和 static_cast 的效果是一样的
 
-> 例子参考：[点击查看原文链接](#name4)
+```cpp
+class Base
+{
+public:
+    virtual void func() = 0;
+};
+
+class Derive1: public Base
+{
+public:
+    void func() { cout << "call Derive1::func()" << endl; }
+
+};
+
+class Derive2: public Base
+{
+public:
+    void func() { cout << "call Derive2::func()" << endl; }
+    
+    void derive2func()
+    {
+        cout << "call Derive2::derive2func()" << endl;
+    }
+};
+
+void showFunc(Base *p)
+{
+    /* *
+     * @brief dynamic_cast 会检查 p 指针是否指向的是一个 Derive2 类型的对象？
+     * p->vfptr->vftable RTTI 信息，如果是 Derive2，那么转换成功
+     * 返回 Derive2 对象的地址给 pd2，否则返回 nullptr 
+     * */
+    // 这里如果使用 static_cast 是不安全的，它是编译时期的类型转换，dynamic_cast 是运行时期的类型转换 RTTI
+    Derive2 *pd2 = dynamic_cast<Derive2 *>(p);
+
+    if (pd2 != nullptr) {
+        pd2->derive2func();
+    } else {
+        p->func();
+    }
+};
+
+int main()
+{
+    Derive1 d1;
+    Derive2 d2;
+    showFunc(&d1); // call Derive1::func()
+    showFunc(&d2); // call Derive2::derive2func()
+    return 0;
+}
+```
+
+
 
 
 
