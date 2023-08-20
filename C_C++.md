@@ -1843,7 +1843,7 @@ cout是有**缓冲输出**：
 cout << "abc " << endl;
 
 // 和上面等价: flush立即强迫缓冲输出
-cout << "abc\n "; cout <<flush; 
+cout << "abc\n "; cout << flush; 
 ~~~
 
 
