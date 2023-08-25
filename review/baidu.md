@@ -256,7 +256,47 @@ share_ptr 中含有两个指针：
 
 
 
-#### 
+### 网盘国际部
+
+#### 一面
+
+> 2023.08.22 11:00-12:00 服务端 Golang、MySQL、Redis、消息队列
+
+##### 1、MySQL 事务 ACID、MVCC 原理
+
+##### 2、索引 B+ 树结构，如何优化索引、索引失效情况、分析耗时操作
+
+##### 3、TCP SYN 攻击、怎么解决，拥塞控制算法
+
+- 了解半连接队列（SYN队列）和全连接队列（Accept队列），参考：[xiaolincoding](https://xiaolincoding.com/network/3_tcp/tcp_interview.html#%E4%BB%80%E4%B9%88%E6%98%AF-syn-%E6%94%BB%E5%87%BB-%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D-syn-%E6%94%BB%E5%87%BB)
+- [SYN 攻击](https://blog.csdn.net/weixin_35973945/article/details/122997741) 是一种常见的 DoS/DoSS 攻击
+
+##### 4、算法：[279. 完全平方数](https://leetcode.cn/problems/perfect-squares/)
+
+
+
+#### 二面
+
+> 2023.08.25 18:00-19:00
+
+##### 1、TCP CLOSE_WAIT 是什么，断开连接的各种状态
+
+- 主动断开方有 TIME_WAIT，被动方才有 CLOSE_WAIT（收到 FIN 就会进入），别弄混了
+- 考虑常见客户端主动断开连接、服务端被动断开的情况
+  - 客户端：FIN_WAIT_1 --> FIN_WAIT_2 --> TIME_WAIT --> CLOSED
+  - 服务端：CLOSE_WAIT（收到 FIN） --> LAST_ACK --> CLOSED
+
+##### 2、TCP 半连接队列
+
+##### 3、epoll 原理，有什么不同的触发方式
+
+##### 4、DASH 协议，连接过程
+
+##### 5、MySQL 脏读和幻读，有哪些锁
+
+##### 6、Redis 结构，跳表（没看过...）
+
+##### 7、手撕 LRU
 
 
 
