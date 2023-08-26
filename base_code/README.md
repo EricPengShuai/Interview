@@ -77,6 +77,47 @@
 
 
 
+#### 优化OOP代码
+
+注意不能返回局部的或者临时对象的指针或引用
+
+1. ﻿函数参数传递过程中，对象优先按引用传递，不要按值传递
+2. ﻿﻿函数返回对象的时候，应该优先返回一个临时对象，而不要返回一个定义过的对象
+3. ﻿﻿接收返回值是对象的函数调用的时候，优先按初始化的方式接收，不要按赋值的方式接收
+
+```cpp
+class Test()
+{
+private:
+    int a;
+public:
+    Test(int v=10) : a(v) {}
+    Test(const Test&);
+    void operator=(const Test &);
+    ~Test() {}
+    int getData() const { return a; }
+};
+
+Test getTest(Test &t) // 1. 按引用传递
+{
+    int val = t.getData();
+    // Test tmp(val);
+    return Test(val); // 2. 直接返回临时对象
+}
+
+int main()
+{
+    Test t1;
+    // Test t2;
+    // t2 = getTest(t1);
+    Test t2 = getTest(t1); // 3. 优先按照初始化方式接受
+}
+```
+
+
+
+
+
 ### C++ Things
 
 > 主要学习 https://github.com/Light-City/CPlusPlusThings
@@ -666,4 +707,96 @@ delete p;
 多重继承好处就是可以复用更多的代码，但是会有菱形继承的问题，也就是间接父类的成员会有多份出现在最终子类中，通过虚继承可以解决菱形继承问题，代码参考：[virtual_public.cpp](virtual_public.cpp)
 
 > 建议再看看施磊老师这部分课程，内存分析很透彻
+
+
+
+#### 智能指针
+
+##### 不带引用计数
+
+auto_ptr 是原 C++ 库就存在，现在应该过时了，scope_ptr 和 unique_ptr 是 C++11 新标准
+
+- auto_ptr：拷贝构造或者赋值构造会直接将原指针置空
+
+- scope_ptr
+
+  ```cpp
+  scoped_ptr(const scoped_ptr<T>&) = delete;
+  scoped_ptr<T>& operator=(cosnt scoped_ptr<T>&) = delete;
+  ```
+
+- unique_ptr
+
+  ```cpp
+  unique_ptr(const unique_ptr<T>&) = delete;
+  unique_ptr<T>& operator=(cosnt unique_ptr<T>&) = delete;
+  
+  // 提供右值引用的拷贝构造和赋值
+  unique_ptr(unique_ptr<T>&&)
+  unique_ptr<T>& operator=(unique_ptr<T>&&)
+  ```
+
+
+
+##### 带引用计数
+
+多个智能指针可以管理同一个资源
+
+定义对象的时候使用强智能指针，引用对象的时候使用弱智能指针
+
+- shared_ptr: 强智能指针可以改变引用计数，:fire:自定义 [CSmartPtr.cpp](smart_ptr.cpp)
+
+- weak_ptr: 弱智能指针只起到监测的作用
+
+```cpp
+// 解决线程安全问题
+class A {
+  public:
+    A() { cout << "A()\n"; }
+    ~A() { cout << "~A()\n"; }
+    void testA() { cout << "非常好用的方法！\n"; }
+};
+
+void handler(weak_ptr<A> p) {
+    shared_ptr<A> sp = p.lock();
+    if (sp != nullptr) {
+        sp->testA();
+    } else {
+        cout << "A 对象已经析构，不能再访问了！\n";
+    }
+}
+
+int main() {
+    {
+        std::shared_ptr<A> p(new A());
+        std::thread t(handler, weak_ptr<A>(p));
+        t.detach();
+    }
+    std::this_thread::sleep_for(std::chrono::seconds(4));
+    return 0;
+}
+```
+
+
+
+#### 函数对象
+
+1. function 类模板定义出可以看出希望使用一个函数类型实例化
+2. 通过 function 调用 operate() 函数时要传入相应的参数
+
+```cpp
+class Test
+{
+public: // 必须依赖一个对象 void (Test::*pfunc)(string)
+    void hello(string str) { cout << str << endl; }
+};
+
+// 默认有一个 this 指针作为参数
+function<void(Test*, string)> f = &Test:hello;
+f(&Test(), "call Test::hello!");
+```
+
+
+
+
 
