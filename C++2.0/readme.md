@@ -529,7 +529,7 @@ auto add = [](auto x, auto y) {
 
 
 
-#### 3.2 函数对象包装器
+#### 3.2 函数对象包装器 :fire:
 
 - std::function
 
@@ -546,7 +546,7 @@ auto add = [](auto x, auto y) {
   bind 是用来绑定函数调用的参数的，它解决的需求是我们有时候可能并不一定能够一次性获得调用某个函数的全部参数，通过这个函数，我们可以将部分调用参数提前绑定到函数身上成为一个新的对象，然后在参数齐全后，完成调用。例如：  
   
   ```cpp
-  int foo(int a, int b, int c) { ; } 
+  int foo(int a, int b, int c);
   int main() { 
     // 将参数 1,2 绑定到函数 foo 上，但是使用 std::placeholders::_1 来对第一个参数进行占位 
     auto bindFoo = std::bind(foo, std::placeholders::_1, 1,2); 
@@ -555,7 +555,25 @@ auto add = [](auto x, auto y) {
   }
   ```
   
-  
+
+1. function 类模板定义出可以看出希望使用一个函数类型实例化
+2. 通过 function 调用 operate() 函数时要传入相应的参数
+
+```cpp
+class Test
+{
+public: // 必须依赖一个对象 void (Test::*hello)(string)
+    void hello(string str) { cout << str << endl; }
+};
+
+// 默认有一个 this 指针作为参数
+function<void(Test*, string)> f = &Test:hello;
+f(&Test(), "call Test::hello!");
+```
+
+原理：实际就是重载了 operator() 操作符，参考 [bind_function.cpp](bind_function.cpp)
+
+
 
 #### 3.3 右值引用
 
@@ -793,6 +811,77 @@ std::weak_ptr 没有 `*` 运算符和 `->` 运算符，所以不能够对资源�
 - weak_ptr 不控制对象的生命周期，但是它知道对象是否还活着
 - 用 lock() 函数把它可以提升为shared_ptr，如果对象还活着，返回有效的shared_ptr，如果对象已经死了，提升会失败，返回一个空的shared ptr。
 - 提升的行为 lock() 是线程安全的
+
+
+
+#### 总结 :fire:
+
+##### 不带引用计数
+
+auto_ptr 是原 C++ 库就存在，现在应该过时了，scope_ptr 和 unique_ptr 是 C++11 新标准
+
+- auto_ptr：拷贝构造或者赋值构造会直接将原指针置空
+
+- scope_ptr
+
+  ```cpp
+  scoped_ptr(const scoped_ptr<T>&) = delete;
+  scoped_ptr<T>& operator=(cosnt scoped_ptr<T>&) = delete;
+  ```
+
+- unique_ptr
+
+  ```cpp
+  unique_ptr(const unique_ptr<T>&) = delete;
+  unique_ptr<T>& operator=(cosnt unique_ptr<T>&) = delete;
+  
+  // 提供右值引用的拷贝构造和赋值
+  unique_ptr(unique_ptr<T>&&)
+  unique_ptr<T>& operator=(unique_ptr<T>&&)
+  ```
+
+
+
+##### 带引用计数
+
+多个智能指针可以管理同一个资源
+
+定义对象的时候使用强智能指针，引用对象的时候使用弱智能指针
+
+- shared_ptr: 强智能指针可以改变引用计数，:fire:自定义 [CSmartPtr.cpp](smart_ptr.cpp)
+
+- weak_ptr: 弱智能指针只起到监测的作用
+
+```cpp
+// 解决线程安全问题
+class A {
+  public:
+    A() { cout << "A()\n"; }
+    ~A() { cout << "~A()\n"; }
+    void testA() { cout << "非常好用的方法！\n"; }
+};
+
+void handler(weak_ptr<A> p) {
+    shared_ptr<A> sp = p.lock();
+    if (sp != nullptr) {
+        sp->testA();
+    } else {
+        cout << "A 对象已经析构，不能再访问了！\n";
+    }
+}
+
+int main() {
+    {
+        std::shared_ptr<A> p(new A());
+        std::thread t(handler, weak_ptr<A>(p));
+        t.detach();
+    }
+    std::this_thread::sleep_for(std::chrono::seconds(4));
+    return 0;
+}
+```
+
+
 
 
 
