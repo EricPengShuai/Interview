@@ -1683,7 +1683,7 @@ C语言里规定：16bit程序中，**返回值**保存在ax寄存器中，32bit
 
 
 
-#### 82、函数指针？
+#### 82、函数指针？:fire:
 
 **1)  什么是函数指针?**
 
@@ -1695,11 +1695,24 @@ C语言里规定：16bit程序中，**返回值**保存在ax寄存器中，32bit
 
 `int (*pf)(const int&, const int&);`
 
-上面的pf就是一个函数指针，指向所有返回类型为int，并带有两个const int&参数的函数。注意*pf两边的括号是必须的，否则上面的定义就变成了：
+上面的 pf 就是一个函数指针，指向所有返回类型为 int，并带有两个 const int& 参数的函数。注意 *pf 两边的括号是必须的，否则上面的定义就变成了：
 
 `int *pf(const int&, const int&);`
 
-而这声明了一个函数pf，其返回类型为int *， 带有两个const int&参数。
+而这声明了一个函数 pf，其返回类型为 int *， 带有两个 const int& 参数。
+
+```cpp
+using PF1 = int(*)(int, int); // 函数指针
+PF1 f = sum; // 初始化方式 1
+cout << f(1, 2) << endl;
+
+PF1 f1 = &sum; // 初始化方式 2
+cout << f1(1, 2) << endl;
+
+using PF2 = int(int, int);    // 函数
+PF2* f2 = sum;
+cout << f2(1, 2) << endl;
+```
 
 **3)  为什么有函数指针**
 

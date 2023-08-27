@@ -6,13 +6,15 @@
 
 实现原理就是将能够创建对象的函数都设置为 private，通过**静态成员**返回一个实例，具体而言：
 
-- 构造函数或者拷贝构造函数私有化；
-- 共有的静态变量和静态函数；
+1. 构造函数或者拷贝构造函数私有化
+
+2. 定义一个唯一的类的实例对象
+3. 获取类的唯一实例对象的结构方法
 
 **应用：**
 
-1. 网站计数器，单例模式容易实现同步
-2. 日志模块，应用程序一般是需要维护一个日志实例，否则内容不好追加显示
+- 网站计数器，单例模式容易实现同步
+- 日志模块，应用程序一般是需要维护一个日志实例，否则内容不好追加显示
 
 
 
@@ -21,90 +23,63 @@
 懒汉模式是在**第一次用到类实例时**才会实例化对象。类初始化时，不会初始化该对象，真正需要使用的时候才会创建该对象，具备懒加载功能
 
 ```cpp
-class single {
-public:
-    static single* getInstance() {
-        if (instance == NULL){
-            pthread_mutex_lock(&mutex); // mlock.lock();
+class CSingleton {
+  public:
+    // #3 获取类的唯一实例对象的结构方法
+    static CSingleton *getInstance() {
+        if (instance == NULL) {
+            //!NOTE: 锁+双重判断 -> 线程安全
+            lock_guard<std::mutex> guard(mtx);
             if (instance == NULL) {
-                instance = new single();
+                instance = new CSingleton();
             }
-            pthread_mutex_unlock(&mutex); // mlock.unlock();
         }
         return instance;
     };
-    ~single(){};
-    
-private:
-    static pthread_mutex_t mutex; // mutex mlock; 加锁互斥
-    static single* instance;
-    
-    // 涉及创建对象的函数都设置为private
-    single(){
-        pthread_mutex_init(&mutex, NULL);
+
+  private:
+    static std::mutex mtx;
+    // #2 定义一个唯一的类的实例对象
+    //!NOTE: 在多线程情况下让各个线程立即看到 instance 的改变，直接读取内存，而不是从缓存中拿
+    static CSingleton *volatile instance;
+
+    // #1 涉及创建对象的函数都设置为private
+    CSingleton() {}
+    ~CSingleton() { cout << "~CSingleton()" << endl; }
+    CSingleton(const CSingleton &s) = delete;
+    CSingleton& operator()(const CSingleton &s) = delete;
+
+    //!NOTE: 定义一个嵌套类，在该类的析构函数中，自动释放外层类的资源
+    class CRelease {
+      public:
+        ~CRelease() { delete instance; }
     };
-    
-    // 定义一个嵌套类，在该类的析构函数中，自动释放外层类的资源
-	class CRelease
-	{
-	public:
-		~CRelease() { delete single; }
-	};
-	// 通过该静态对象在程序结束时自动析构的特点，来释放外层类的对象资源
-	static CRelease release;
+    // 通过该静态对象在程序结束时自动析构的特点，来释放外层类的对象资源
+    static CRelease release;
 };
 
 // 注意这里需要先声明
-single* single::instance = nullptr;
-pthread_mutex_t single::mutex = PTHREAD_MUTEX_INITIALIZER;
+CSingleton *volatile CSingleton::instance = nullptr;
+std::mutex CSingleton::mtx;
 CSingleton::CRelease CSingleton::release;
-
-int main(){
-    // 因为没有办法创建对象，就得采用静态成员函数的方法返回静态成员变量
-    single *s = single::getInstance();
-    return 0;
-}
 ```
 
 - 写法2：C++11 之后编译器可以保证「局部静态变量」的线程安全性，**对于static静态局部变量的初始化，编译器会自动对它的初始化进行加锁和解锁控制，使静态局部变量的初始化成为线程安全的操作，不用担心多个线程都会初始化静态局部变量，因此下面的懒汉单例模式是线程安全的单例模式！**
 
 ```cpp
-class single {
+class CSingleton {
   public:
-    static single *getInstance() {
-        static single instance;
+    static CSingleton *getInstance() {
+        static CSingleton instance;
         return &instance;
     };
-    ~single(){};
+    ~CSingleton(){};
 
   private:
-    single(){};
+    CSingleton(){};
+    CSingleton(const CSingleton &s) = delete;
+    CSingleton& operator()(const CSingleton &s) = delete;
 };
-
-// 需要先声明
-pthread_mutex_t single::mutex;
-```
-
-- 写法2：C++11 之前还是需要加锁的
-
-```cpp
-class single {
-  private:
-    static pthread_mutex_t mutex;
-    single() { pthread_mutex_init(&mutex, NULL); }
-
-  public:
-    static single *getInstance() {
-        pthread_mutex_lock(&mutex);
-        static single obj;
-        pthread_mutex_unlock(&mutex);
-        return &obj;
-    };
-    ~single() {}
-};
-
-// 需要先声明
-pthread_mutex_t single::mutex;
 ```
 
 
@@ -114,28 +89,26 @@ pthread_mutex_t single::mutex;
 **饿汉式**单例模式，顾名思义，就是程序启动时就实例化了该对象，并没有推迟到第一次使用该对象时再进行实例化；如果运行过程中没有使用到，该实例对象就被浪费掉了。类初始化时，会立即加载该对象，**线程天生安全**，调用效率高
 
 ```cpp
-class CSingleton
-{
-public:
-	static CSingleton* getInstance()
-	{
-		return &single;
-	}
-private:
-	static CSingleton single;
-	CSingleton() { cout << "CSingleton()" << endl; }
-	~CSingleton() { cout << "~CSingleton()" << endl; }
-	CSingleton(const CSingleton&); // 防止外部使用拷贝构造产生新的对象，如下面CSingleton s = *p1;
+class CSingleton {
+  public:
+    static CSingleton *getInstance() { return &single; }
+
+  private:
+    static CSingleton single;
+    CSingleton() { cout << "CSingleton()" << endl; }
+    ~CSingleton() { cout << "~CSingleton()" << endl; }
+    CSingleton(const CSingleton &) = delete;
+    CSingleton &operator()(const CSingleton &s) = delete;
 };
+
 CSingleton CSingleton::single;
 
-int main()
-{
-	CSingleton *p1 = CSingleton::getInstance();
-	CSingleton *p2 = CSingleton::getInstance();
-	CSingleton *p3 = CSingleton::getInstance();
-	cout<<p1<<" "<<p2<<" "<<p3<<endl; // p1 p2 p3 地址是一样的
-	return 0;
+int main() {
+    CSingleton *p1 = CSingleton::getInstance();
+    CSingleton *p2 = CSingleton::getInstance();
+    CSingleton *p3 = CSingleton::getInstance();
+    cout << p1 << " " << p2 << " " << p3 << endl;  // p1 p2 p3 地址是一样的
+    return 0;
 }
 ```
 
