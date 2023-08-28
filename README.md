@@ -72,6 +72,7 @@ C++ Standard Library（标准库）包括 Standard Template Library（标准模�
 8. [accumulate.cpp](practice/accumulate.cpp): 标准库的求和模板函数
 8. [virtual_public.cpp](practice/virtual_public.cpp): 虚拟继承解决菱形继承问题
 8. [itemPool.cpp](practice/itemPool.cpp): 重载 new/delete 实现**对象池** :fire:
+8. [producer_consumer.cpp](producer_consumer.cpp): 互斥锁和条件变量实现生产者消费者模型 :fire:
 9. 更多参考 [practice文件夹](practice) 
 
 
