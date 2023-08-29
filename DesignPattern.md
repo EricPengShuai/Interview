@@ -187,79 +187,149 @@ int main(){
 
 工厂模式为的就是**代码解耦**，如果我们不采用工厂模式，如果要创建产品A、B，我们通常做法是不是用switch...case语句？那麻烦了，代码耦合程度高，后期添加更多的产品进来，我们不是要添加更多的case吗？这样就太麻烦了，而且不符合设计模式中的**开放封闭原则**。
 
+
+
 #### 2.2 抽象工厂
 
 为了进一步解耦，在简单工厂的基础上发展出了抽象工厂模式，**即连工厂都抽象出来**，实现了进一步代码解耦。代码如下：
 
 ```cpp
 #include <iostream>
-#include <pthread.h>
+#include <string>
+#include <memory>
 using namespace std;
 
-// 产品类（抽象类，不能实例化）
-class Product{
+// 产品簇手机类型
+class ProductA
+{
 public:
-    Product(){}
-    virtual void show()=0;  // 纯虚函数
-    virtual ~Product(){}
+	ProductA(string name) :_name(name) {}
+	// 模拟产品对象的一个抽象方法
+	virtual void show() = 0;
+protected:
+	string _name;
+};
+// 产品实体类型定义
+class XiaomiPhone : public ProductA
+{
+public:
+	XiaomiPhone(string name) :ProductA(name){}
+	void show() { cout << "获取了一个小米手机:" << _name << endl; }
+};
+// 产品实体类型定义
+class HuaweiPhone : public ProductA
+{
+public:
+	HuaweiPhone(string name) :ProductA(name) {}
+	void show() { cout << "获取了一个华为手机:" << _name << endl;
+	}
 };
 
-// 产品A
-class ProductA: public Product{
+// 产品簇智能手环类型
+class ProductB
+{
 public:
-    ProductA(){}
-    void show(){ cout<<"product A create!"<<endl; };
-    ~ProductA(){ cout<<"product A delete!"<<endl; };
+	ProductB(string name) :_name(name) {}
+	// 模拟产品对象的一个抽象方法
+	virtual void show() = 0;
+protected:
+	string _name;
+};
+// 产品实体类型定义
+class XiaomiCircle : public ProductB
+{
+public:
+	XiaomiCircle(string name) :ProductB(name) {}
+	void show() { cout << "获取了一个小米智能手环设备:" << _name << endl; }
+};
+// 产品实体类型定义
+class HuaweiCircle : public ProductB
+{
+public:
+	HuaweiCircle(string name) :ProductB(name) {}
+	void show() {
+		cout << "获取了一个华为智能手环设备:" << _name << endl;
+	}
 };
 
-// 产品B
-class ProductB: public Product{
+// 抽象工厂，创建通过一个产品簇的设备产品
+class AbstractFactory
+{
 public:
-    ProductB(){}
-    void show(){ cout<<"product B create!"<<endl; };
-    ~ProductB(){ cout<<"Product B delete!"<<endl; };
+	// 工厂里面创建手机的纯虚函数接口
+	virtual ProductA* createPhone() = 0;
+	// 工厂里面创建智能手环的纯虚函数接口
+	virtual ProductB* createSmartCircle() = 0;
 };
 
-class Factory{ // 抽象类
+// 生产小米产品簇的工厂
+class XiaomiFactory : public AbstractFactory
+{
 public:
-    virtual Product* CreateProduct()=0;
-    ~Factory(){}
+	ProductA* createPhone()
+	{
+		// 小米工厂肯定生产小米手机
+		return new XiaomiPhone("小米x9");
+	}
+	ProductB* createSmartCircle()
+	{
+		// 小米工厂肯定生产小米智能手环
+		return new XiaomiCircle("小米智能手环2代时尚版");
+	}
+};
+// 生产华为产品簇的工厂
+class HuaweiFactory : public AbstractFactory
+{
+public:
+	ProductA* createPhone()
+	{
+		// 华为工厂肯定生产华为手机
+		return new HuaweiPhone("华为荣耀7x");
+	}
+	ProductB* createSmartCircle()
+	{
+		// 华为工厂肯定生产华为智能手环
+		return new HuaweiCircle("华为智能手环B3青春版");
+	}
 };
 
-class FactorA: public Factory{ // 工厂类A，只生产A产品
-public:
-    Product* CreateProduct(){
-        return (new ProductA());
-    }
-};
+int main()
+{
+	// 使用智能指针自动释放堆内存
+	// 创建具体的工厂
+	unique_ptr<AbstractFactory> f1(new XiaomiFactory);
+	unique_ptr<AbstractFactory> f2(new HuaweiFactory);
 
-class FactorB: public Factory{ // 工厂类B，只生产B产品
-public:
-    Product* CreateProduct(){
-        return (new ProductB());
-    }
-};
+	// 通过工厂方法创建手机产品
+	unique_ptr<ProductA> p1(f1->createPhone());
+	unique_ptr<ProductA> p2(f2->createPhone());
+	p1->show();
+	p2->show();
 
-int main(){
-    Product* _Product = nullptr;
-    auto MyFactoryA = new FactorA();
-    _Product = MyFactoryA->CreateProduct(); // 调用产品A的工厂来生产A产品
-    _Product->show();
-    delete _Product;
+	// 通过工厂方法创建智能手环产品
+	unique_ptr<ProductB> p3(f1->createSmartCircle());
+	unique_ptr<ProductB> p4(f2->createSmartCircle());
+	p3->show();
+	p4->show();
 
-    auto MyFactoryB = new FactorB();
-    _Product = MyFactoryB->CreateProduct(); // 调用产品B的工厂来生产B产品
-    _Product->show();
-    delete _Product;
-    
-    getchar();
-    return 0;
+	return 0;
 }
 ```
 
-#### 参考
+#### 总结
 
-- [C++设计模式 - 简单工厂，工厂方法和抽象工厂](https://blog.csdn.net/QIANGWEIYUAN/article/details/88792594)
+- 简单工厂 Simple Factory: 
+  - 特点：把对象的创建封装在一个接口函数里面，通过传入不同的标识，返回创建的对象客户不用自己负责new对象，不用了解对象创建的详细过程
+  - 缺点：提供创建对象实例的接口函数不闭合，不能对修改关闭
+
+- 工厂方法 Factory Method
+  - 特点：Factory 基类，提供了一个纯虛函数（创建产品），定义派生类（具体产品的工厂）负责创建对应的产品，可以做到不同的产品，在不同的工厂里面创建，能够对现有工厂，以及产品的修改关闭
+  - 缺点：很多产品是有关联关系的，属于一个产品簇，不应该放在不同的工厂里面去创建，这样一是不符合实际的产品对象创建逻辑，二是工厂类太多了，不好维护
+
+- 抽象工厂 Abstract Factory
+  - 特点：把有关联关系的，属于一个产品簇的所有产品创建的接口函数，放在一个抽象工厂里 AbstractFactory，派生类（具体产品的工厂）应该负责创建该产品簇里面所有的产品
+
+- 参考：[C++设计模式 - 简单工厂，工厂方法和抽象工厂](https://blog.csdn.net/QIANGWEIYUAN/article/details/88792594)
 
 
 
@@ -272,95 +342,154 @@ int main(){
 ```cpp
 #include <iostream>
 #include <list>
+#include <unordered_map>
+#include <string>
+#include <algorithm>
 using namespace std;
- 
-class Observer{  // 观察者抽象
-public:
-    virtual void Update(int) = 0;
-};
- 
-class ConcreteObserver1:public Observer{  // 第一个观察者
-public:
-    ConcreteObserver1(Subject *pSubject):m_pSubject(pSubject){}
-    void Update(int value){
-        cout << "ConcreteObserver1 get the update. New State:" << value << endl;
-    }
-private:
-    Subject *m_pSubject;
-};
- 
-class ConcreteObserver2 : public Observer{  // 第二个观察者
-public:
-    ConcreteObserver2(Subject *pSubject):m_pSubject(pSubject){}
-    void Update(int value){
-        cout << "ConcreteObserver2 get the update. New State:" << value << endl;
-    }
-private:
-    Subject *m_pSubject;
-};
 
-class Subject{  // 被观察者抽象
+// 定义监听者基类
+class Listener
+{
 public:
-    virtual void Attach(Observer *) = 0;
-    virtual void Detach(Observer *) = 0;
-    virtual void Notify() = 0;
+	// 基类构造函数
+	Listener(string name) :_name(name) {}
+	// 监听者处理消息事件的纯虚函数接口
+	virtual void handleMessage(int msgid) = 0;
+protected:
+	string _name;
 };
- 
-class ConcreteSubject:public Subject{  // 被观察者
+// 一个具体的监听者类Listener1
+class Listener1 : public Listener
+{
 public:
-    void Attach(Observer *pObserver);
-    void Detach(Observer *pObserver);
-    void Notify();
-    void SetState(int state){
-        m_iState = state;
-    }
+	Listener1(string name) :Listener(name) {}
+	// Listener1处理自己感兴趣的事件
+	void handleMessage(int msgid)
+	{
+		cout << "listener:" << _name << " recv:" << msgid
+			<< " msg, handle it now!" << endl;
+	} 
+};
+// 一个具体的监听者类Listener2
+class Listener2 : public Listener
+{
+public:
+	Listener2(string name) :Listener(name) {}
+	// Listener2处理自己感兴趣的事件
+	void handleMessage(int msgid)
+	{
+		cout << "listener:" << _name << " recv:" << msgid
+			<< " msg, handle it now!" << endl;
+	}
+};
+// 实现观察者
+class Observer
+{
+public:
+	/*
+	params:
+	1. Listener *pListener: 具体的监听者
+	2. int msgid： 监听者感兴趣的事件
+	该函数接口主要用于监听者向观察者注册感兴趣的事件
+	*/
+	void registerListener(Listener *pListener, int msgid)
+	{
+        listenerMap[msgid].push_back(pListener);
+	}
+	/*
+	params:
+	1. int msgid：观察到发生的事件id
+	该函数接口主要用于观察者观察到事件发生，并转发到对该事件感兴趣
+	的监听者
+	*/
+	void dispatchMessage(int msgid)
+	{
+		auto it = listenerMap.find(msgid);
+		if (it != listenerMap.end())
+		{
+            // 观察者派生事件到感兴趣的监听者，
+            // 监听者通过handleMessage接口负责事件的具体处理操作
+			for_each(it->second.begin(), it->second.end(),
+				[&msgid](Listener *pListener) -> void {
+                    pListener->handleMessage(msgid);
+                }
+            );
+		}
+	}
 private:
-    std::list<Observer *> m_ObserverList;
-    int m_iState;
+	// 存储监听者注册的感兴趣的事件
+	unordered_map<int, list<Listener*>> listenerMap;
 };
- 
-void ConcreteSubject::Attach(Observer *pObserver){ // 添加观察者
-    m_ObserverList.push_back(pObserver);
+int main()
+{
+	Listener *p1 = new Listener1("高海山");
+	Listener *p2 = new Listener2("冯丽婷");
+
+	Observer obser;
+	// 监听者p1注册1，2，3号事件
+	obser.registerListener(p1, 1);
+	obser.registerListener(p1, 2);
+	obser.registerListener(p1, 3);
+	// 监听者p2注册1，3号事件
+	obser.registerListener(p2, 1);
+	obser.registerListener(p2, 3);
+
+	// 模拟事件的发生
+	int msgid;
+	for (;;)
+	{
+		cout << "输入事件id:";
+		cin >> msgid;
+		if (-1 == msgid)
+			break;
+		// 通过用户手动输入msgid模拟事件发生，此处观察者派发事件
+		obser.dispatchMessage(msgid);
+	}
+
+	return 0;
 }
- 
-void ConcreteSubject::Detach(Observer *pObserver){ // 删除观察者
-    m_ObserverList.remove(pObserver);
-}
- 
-void ConcreteSubject::Notify(){  // 通知观察者
-    std::list<Observer *>::iterator it = m_ObserverList.begin();
-    while (it != m_ObserverList.end()){
-        (*it)->Update(m_iState);
-        ++it;
-    }
-}
- 
-int main(){
-    // Create 被观察者
-    ConcreteSubject *pSubject = new ConcreteSubject();
- 
-    // Create 观察者
-    Observer *pObserver1 = new ConcreteObserver1(pSubject);
-    Observer *pObserver2 = new ConcreteObserver2(pSubject);
- 
-    // 改变状态
-    pSubject->SetState(2);
- 
-    // 注册观察者
-    pSubject->Attach(pObserver1);
-    pSubject->Attach(pObserver2);
- 
-    pSubject->Notify();// 通知观察者
- 
-    // 删除观察者
-    pSubject->Detach(pObserver1);
-    pSubject->Detach(pObserver2);
-}
+
 ```
 
-#### 参考
+#### 总结
 
-- [C++设计模式 - 观察者Observer模式](https://blog.csdn.net/QIANGWEIYUAN/article/details/88745835) :fire:
+- 上述 dispatchMessage 显然不是线程安全的，多线程环境下需要使用 shared_ptr 和 weak_ptr
+
+- 参考：[C++设计模式 - 观察者Observer模式](https://blog.csdn.net/QIANGWEIYUAN/article/details/88745835) :fire:
+
+
+
+---
+
+以下属于结构型模式，关注类和对象的组合
+
+---
+
+### 4. 代理模式
+
+考虑视频网站的不同视频：免费观看、VIP观看、用券观看 
+
+考虑视频类 VideoSite，委托类 FixBugVideoSite，分别对不同的游客身份制定不同的代理类 FreeVideoSiteProxy, VIPVideoSiteProxy 等，代理类和委托类之间是组合关系（代理包含委托）
+
+代码：todo
+
+
+
+### 5. 装饰器模式
+
+
+
+
+
+### 6. 适配器模式
+
+考虑电脑要投影到投影仪上需要使用不同的接口场景，例如有 VGA、HDMI 等接口
+
+现在只有一个 VGA 接口的投影仪 TV01，但是电脑 Computer 只能使用 HDMI 接口，因此可以在 VGA 和 HDMI 之间加一个适配器类 VGAToHDMIAdapter 作为桥梁让不兼容的接口可以一起工作
+
+代码：todo
+
+
 
 
 
