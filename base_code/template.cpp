@@ -82,7 +82,13 @@ struct Allocator
 
     void construct(T *p, const T &val) // 负责对象构造
     {
-        new (p) T(val); // 定位 new
+        new (p) T(val); // 定位 new: 在地址 p 创建值为 val 的对象
+    }
+    
+    template<typename... Types> // 接受不定参的构造方法
+    void construct(T* ptr, Types&&... args)
+    {
+        new (ptr) T(std::forward<Types>(args)...);
     }
 
     void destroy(T *p) // 负责对象析构
@@ -150,12 +156,46 @@ public:
         _end = _first + size;
     }
 
-    void push_back(const T &val) // 向容器末尾添加元素
+    // void push_back(const T& val) // 向容器末尾添加元素
+    // {
+    //     if (full()) {
+    //         expand();
+    //     }
+    //     _allocator.construct(_last, val);
+    //     ++ _last;
+    // }
+
+    // void push_back(T&& val) // 接受右值
+    // {
+    //     if (full()) {
+    //         expand();
+    //     }
+    //     _allocator.construct(_last, move(val));
+    //     ++ _last;
+    // }
+
+    // 通过万能引用实现 push_back 的两个版本
+    template<typename Types>
+    void push_back(Types&& args)
     {
         if (full()) {
             expand();
         }
-        _allocator.construct(_last, val);
+        // 1. 引用折叠 &+&& => &, &&+&& => &&
+        // 2. 类型完美转发 forward
+        _allocator.construct(_last, std::forward<Types>(args));
+        ++ _last;
+    }
+
+    template<typename... Types>
+    void emplace_back(Types&&... args)
+    {
+        if (full()) {
+            expand();
+        }
+        // 1. 引用折叠 &+&& => &, &&+&& => &&
+        // 2. 类型完美转发 forward
+        _allocator.construct(_last, std::forward<Types>(args)...);
         ++ _last;
     }
     
@@ -201,12 +241,15 @@ private:
 };
 
 /* 测试类 */
-class A
+class Test
 {
 public:
-    A() { cout << "A()\n"; }
-    ~A() { cout << "~A()\n"; }
-    A(const A&) { cout << "A(const A&)\n"; }
+    Test() { cout << "Test()\n"; }
+    Test(int a) { cout << "Test(int)\n"; }
+    Test(int a, int b) { cout << "Test(int, int)\n"; }
+    ~Test() { cout << "~Test()\n"; }
+    Test(const Test&) { cout << "Test(const Test&)\n"; }
+    Test(Test&&) { cout << "Test(Test&&)\n"; }
 };
 
 
@@ -217,16 +260,32 @@ int main()
     compare("aaa", "ddd"); // 编译器会直接调用非模板函数
     compare<const char *>("aaa", "ddd"); // 调用特例化
 #endif
-
-    A a1, a2, a3;
+    /* 测试 Vector  */
+    Test a1, a2, a3;
     cout << "--------------------\n";
-    Vector<A> vec;
+    Vector<Test> vec;
     vec.push_back(a1);
     vec.push_back(a2);
     vec.push_back(a3);
     cout << "--------------------\n";
     vec.pop_back();
-    cout << "--------------------\n";
+    cout << "--------------------\n\n";
     
+    /* 对比 push_back 和 emplace_back */
+    Test t1(10);
+    Vector<Test> v(100);
+
+    cout << "==========\n";
+    v.push_back(t1);
+    v.emplace_back(t1);
+
+    cout << "==========\n";
+    v.push_back(Test(20));
+    v.emplace_back(Test(20));
+
+    cout << "==========\n";
+    v.emplace_back(20);
+    v.emplace_back(30, 40);
+
     return 0;
 }
