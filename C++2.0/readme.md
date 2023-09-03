@@ -283,7 +283,7 @@ clang++ 1.1.cpp foo.o -o 1.1
 
 ##### initialize_list 
 
-初始化列表：C++11 引入 initializer_list 允许构造函数或其他函数像像参数一样使用初始化列表，可以使用 {} 进行初始化
+初始化列表：C++11 引入 initializer_list 允许构造函数或其他函数像像参数一样使用初始化列表，可以使用 {} 进行初始化（**类中构造函数初始化顺序和参数定义顺序相关**）
 
 - initializer_list\<T> 背后有 array 数组支撑，initializer_list 它其实是关联一个 array\<T,n>
 - 源码实现中只是对 array 指针的一个浅拷贝动作，比较危险
@@ -882,6 +882,25 @@ int main() {
 ```
 
 
+
+##### make_shared 和 make_unique
+
+创建引用计数的智能指针 shared_ptr，包括 T * 以及 RefCnt *ref，并且 RefCnt 包括两个原子类型的参数 use 和 weak（底层通过 CAS 实现，是线程安全的）
+
+```cpp
+shared_ptr<int> sp1(new int(10)); // 引用对象和引用计数是分开 new 的，有时候一个 new 失败
+shared_ptr<int> sp2 = make_shared<int>(10); // 引用对象和引用计数一起 new，要么成功要么失败
+```
+
+make_shared 优点
+
+- 内存分配效率高了，因为引用对象以及引用计数是一起的 new 的
+- 防止了资源泄露的风险，因为引用对象和引用计数要么 new 成功要么失败
+
+make_shared 缺点
+
+- make_shared 无法自定义删除器，类模板没有提供参数
+- 导致托管的资源延迟释放，因为 shared_ptr new 只要等到 uses == 0 就会释放资源，不管有没有观察对象 weak，make_shared 是需要看 uses 和 weak 的，只有 uses 和 weak 都为 0 时才释放资源
 
 
 

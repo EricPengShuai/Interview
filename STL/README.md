@@ -432,7 +432,7 @@ struct less: public binary_function<T, T, bool> {
 
 #### Container Adapter
 
-- stack 和 queue 就是 deque 的适配器，默认是 queue，因为 queue 对内存的利用率要高，queue 只需要**分段连续**的内存（）
+- stack 和 queue 就是 deque 的适配器，默认是 deque，因为 deque 对内存的利用率要高，并且 deque 初始化会分配空间（MAP_SIZE=2、QUE_SIZE=4096/sizeof(T)），queue 只需要**分段连续**的内存
 - priority_queue 底层默认是 vector，因为大/小根堆通过下标之间的关系维护这个堆结构，需要在**内存连续**的数组上构建一个大根堆或者小根堆，deque 是分段连续的，实现没有 vector 方便
 - 通过使用 deque 已有的一些成员数实现 stack、queue 的功能
 
