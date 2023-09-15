@@ -60,18 +60,18 @@ call add_t_user(2000000);
 
 **内连接**
 
-- on a.uid = c.uid 底层区分大表和小表，按照数据量来区分，小表永远是整表扫描，然后区大表搜索，因此在大表上建立索引更好
+- on a.uid = c.uid 底层区分大表和小表，按照数据量来区分，小表永远是整表扫描，然后按大表搜索，因此在大表上建立索引更好
 - **注意这里小表和大表是在 where 过滤之后比较的**
 - 对于 inner join 内连接，限制/过滤条件写在 where 的后面和 on 连接条件里面，效果是一样的
 
 **外连接**
 
 - 左外连接和右外连接
-- **外连接中过滤条件写在 on 后面和 where 后面区别是很大的**
+- **外连接中过滤条件写在 on 后面和 where 后面区别是很大的**，有可能 where 过滤之后再连接
 
 
 
-#### 常用信息语言
+#### 常用信息语法
 
 ```mysql
 show indexes from student; -- 查看 student 表的所有索引信息
@@ -146,7 +146,7 @@ InnoDB 存储监测到同样的二级索引不断被使用（涉及不断地搜�
 show engine innodb status\G -- 查看性能指标参数，关注下面两个重要的信息
 ```
 
-- RW-latch 等待的线程数量（自适应哈希索引默认分配了 8 个分区），同一个分区等待的线程数量过多就需要关注是否 diable adaptive hash index
+- RW-latch 等待的线程数量（自适应哈希索引默认分配了 8 个分区），同一个分区等待的线程数量过多就需要关注是否 disable adaptive hash index
 - `hash serches/s`走自适应哈希索引搜索的频率（低）和 `non-hash second`二级索引树搜索的频率（高）
 
 ![自适应哈希索引.png](https://s2.loli.net/2023/08/20/pEdRViqKrkANDXn.png)
