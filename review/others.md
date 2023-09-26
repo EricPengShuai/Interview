@@ -343,3 +343,17 @@ int main()
 
 
 
+### 得物
+
+> 2023.09.23 09:30-10:00 算法工程
+
+- 自我介绍之后直接做题，[102. 二叉树的层序遍历](https://leetcode.cn/problems/binary-tree-level-order-traversal/)
+- 项目中遇到难点
+- MySQL  索引结构，为什么要用 B+ 树
+- MySQL 事务的理解
+- MySQL MVCC 机制
+- 为什么在本校读研了，本科没考虑直接就业吗
+- 反问：做什么业务？推荐相关，Java 比较多，C++ 也有
+
+
+
