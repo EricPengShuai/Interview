@@ -31,10 +31,12 @@ bool compare(const char * a, const char * b)
 }
 
 /*************** 顺序栈类模板 ****************/
+/* 顺序栈模板 */
 template<typename T>
 class SeqStack
 {
 public:
+    // 构造和析构函数名不用加 <T>，其它出现模板的地方都加上类型参数列表
     SeqStack(int size = 10) 
      : _pstack(new T[size])
     , _top(0)
@@ -48,7 +50,7 @@ public:
 
     SeqStack(const SeqStack<T> &stack)
         : _top(stack._top)
-        , _size(stack._size) // 提供拷贝构造函数，避免浅拷贝
+        , _size(stack._size)
     {
         _pstack = new T[_size];
         for (int i = 0; i < _top; ++ i) {
@@ -56,10 +58,64 @@ public:
         }
     }
 
+    SeqStack<T>& operator=(const SeqStack<T> &stack)
+    {
+        if (this == &stack) return *this;
+
+        delete []_pstack;
+
+        _top = stack._top;
+        _size = stack._size;
+        _pstack = new T[_size];
+        // 不用使用 memcpy 进行浅拷贝
+        for (int i = 0; i < _top; ++ i) 
+        {
+            _pstack[i] = stack._pstack[i];
+        }
+        return *this;
+    }
+
+    void push(const T &val)  // 入栈操作
+    {
+        if (full()) expand();
+        _pstack[_top++] = val;
+    }
+
+    void pop() 
+    {
+        if (empty()) return;
+        --_top;
+    }
+
+    T top() const
+    {
+        if (empty()) {
+            throw "stack is empty!"; // 抛异常也代表函数逻辑结束
+        }
+
+        return _pstack[_top-1];
+    }
+
+    bool full() const { return _top == _size; }
+
+    bool empty() const { return _top == 0; }
+     
 private:
     T *_pstack;
     int _top;
     int _size;
+
+    void expand() // 2 倍扩容
+    {
+        T *ptmp = new T[_size * 2];
+        for (int i = 0; i < _top; ++ i) 
+        {
+            ptmp[i] = _pstack[i];
+        }
+        delete []_pstack;
+        _pstack = ptmp;
+        _size *= 2;
+    }
 };
 
 /**
