@@ -403,8 +403,16 @@ vecLines.push_back(line2);
 #### 一面
 
 - muduo网络库有什么改进的地方
+
 - 如何实现高并发的，IO 线程和业务线程为什么分开，压测过吗（寄
+
 - 重构点在哪，thread 类底层如何创建线程，thread_local 了解吗（寄
+
+  > - thread_local 是一个存储器指定符，描述的对象在 thread 开始时分配，在 thread 结束时分解
+  > - 一般在声明时赋值，在本 thread 中只执行一次
+  > - 描述的对象依然只在作用域内有效
+  > - 描述类成员变量时，必须是 static 的
+
 - 协程了解吗
 - 智能指针说一下
 - map 和 unordered_map 区别
