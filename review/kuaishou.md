@@ -406,6 +406,9 @@ vecLines.push_back(line2);
 
 - 如何实现高并发的，IO 线程和业务线程为什么分开，压测过吗（寄
 
+  > - 更好的区分，如果混在一个线程，业务耗时比较多的情况下会导致无法监听新的 IO 事件
+  > - 一个 Base IO thread 负责 accept 新的连接，接收到新的连接以后，使用轮询的方式在 reactor pool 中找到合适的 subReactor 将这个连接挂载上去，这个连接上的所有任务都在这个 subReactor 上完成。如果有过多的耗费 CPU I/O 的计算任务，可以提交到创建的 ThreadPool 线程池中专门处理耗时的计算任务
+
 - 重构点在哪，thread 类底层如何创建线程，thread_local 了解吗（寄
 
   > - thread_local 是一个存储器指定符，描述的对象在 thread 开始时分配，在 thread 结束时分解
@@ -414,6 +417,9 @@ vecLines.push_back(line2);
   > - 描述类成员变量时，必须是 static 的
 
 - 协程了解吗
+
 - 智能指针说一下
+
 - map 和 unordered_map 区别
+
 - 算法：[162. 寻找峰值](https://leetcode.cn/problems/find-peak-element/)
