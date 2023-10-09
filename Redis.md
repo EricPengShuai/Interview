@@ -337,3 +337,58 @@ ZREVRANGEBYLEX key max min [LIMIT offset count]
 
 底层使用 String 保存二值状态数组
 
+```bash
+SETBIT key offset value # 设置值，value 只能是 0/1
+GETBIT key offset
+BITCOUNT key [start end] # 统计 start 和 end 范围内的 1 的个数
+```
+
+应用场景：二值状态统计的场景
+
+- 签到打卡：BITPOS 可以统计用户首次打卡时间
+- 判断用户登录状态：SETBIT 设置登录、GETBIT 检查用户是否登录
+- 连续签到用户总数：日期作为 key，userId 作为 offset，如果要统计3天连续打卡的用户数，就将三个 bitmap进行 AND 操作，并将结果保存到 destmap 中，然后对 destmap 进行 BITCOUNT 统计
+
+
+
+#### HyperLogLog
+
+主要作用就是**提供不精确的去重计数**，一种用于「统计基数」的数据集合类型，基数统计就是指统计一个集合中不重复的元素个数。但要注意，HyperLogLog 是统计规则是基于概率完成的，不是非常准确，标准误算率是 0.81%
+
+在 Redis 里面，**每个 HyperLogLog 键只需要花费 12 KB 内存，就可以计算接近 `2^64` 个不同元素的基数**，和元素越多就越耗费内存的 Set 和 Hash 类型相比，HyperLogLog 就非常节省空间。
+
+```bash
+PFADD key element [element ...] # 指定元素添加到 HyperLogLog 中
+PFCOUNT key [key ...] # 返回给定 HyperLogLog 的基数估算值
+PFMERGE destkey sourcekey [sourcekey ...] # PFMERGE destkey sourcekey [sourcekey ...]
+```
+
+应用场景：百万级网页 UV 计数
+
+
+
+#### GEO
+
+用于存储地理位置信息，并对存储信息进行操作
+
+应用场景：滴滴叫车，使用 GEOADD 存储指定的地理位置空间，然后基于用户的地理位置信息利用 GEORADIUS 获取周围指定范围内的车辆信息
+
+
+
+#### Stream
+
+Redis 5.0 版本之前使用 list 实现消息队列存在很多问题，例如不能重复消费、生产者需要自行实现全局唯一 ID 来避免重复的消息等等
+
+stream 可以完美实现消息队列，支持消息的持久化、支持自动生成全局唯一 ID、支持 ack 确认消息的模式、支持消费者模式、让消费者队列更加的稳定和可靠
+
+
+
+> **Redis 发布/订阅机制为什么不可以作为消息队列？**
+
+发布订阅机制存在以下缺点，都是跟丢失数据有关：
+
+1. 发布/订阅机制没有基于任何数据类型实现，所以不具备「数据持久化」的能力，也就是发布/订阅机制的相关操作，不会写入到 RDB 和 AOF 中，当 Redis 宕机重启，发布/订阅机制的数据也会全部丢失。
+2. 发布订阅模式是“发后既忘”的工作模式，如果有订阅者离线重连之后不能消费之前的历史消息。
+3. 当消费端有一定的消息积压时，也就是生产者发送的消息，消费者消费不过来时，如果超过 32M 或者是 60s 内持续保持在 8M 以上，消费端会被强行断开，这个参数是在配置文件中设置的，默认值是 `client-output-buffer-limit pubsub 32mb 8mb 60`。
+
+所以，发布/订阅机制只适合即时通讯的场景，例如在C++集群聊天服务器中就使用 redis 的发布订阅模式实现一个简单的消息队列，参考：https://github.com/fixbug666/chatserver
