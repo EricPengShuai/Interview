@@ -195,124 +195,109 @@ int main(){
 
 ```cpp
 #include <iostream>
-#include <string>
 #include <memory>
+#include <string>
 using namespace std;
 
 // 产品簇手机类型
-class ProductA
-{
-public:
-	ProductA(string name) :_name(name) {}
-	// 模拟产品对象的一个抽象方法
-	virtual void show() = 0;
-protected:
-	string _name;
+class ProductA {
+  public:
+    ProductA(string name) : _name(name) {}
+    // 模拟产品对象的一个抽象方法
+    virtual void show() = 0;
+
+  protected:
+    string _name;
 };
 // 产品实体类型定义
-class XiaomiPhone : public ProductA
-{
-public:
-	XiaomiPhone(string name) :ProductA(name){}
-	void show() { cout << "获取了一个小米手机:" << _name << endl; }
+class XiaomiPhone : public ProductA {
+  public:
+    XiaomiPhone(string name) : ProductA(name) {}
+    void show() { cout << "获取了一个小米手机:" << _name << endl; }
 };
 // 产品实体类型定义
-class HuaweiPhone : public ProductA
-{
-public:
-	HuaweiPhone(string name) :ProductA(name) {}
-	void show() { cout << "获取了一个华为手机:" << _name << endl;
-	}
+class HuaweiPhone : public ProductA {
+  public:
+    HuaweiPhone(string name) : ProductA(name) {}
+    void show() { cout << "获取了一个华为手机:" << _name << endl; }
 };
 
 // 产品簇智能手环类型
-class ProductB
-{
-public:
-	ProductB(string name) :_name(name) {}
-	// 模拟产品对象的一个抽象方法
-	virtual void show() = 0;
-protected:
-	string _name;
+class ProductB {
+  public:
+    ProductB(string name) : _name(name) {}
+    // 模拟产品对象的一个抽象方法
+    virtual void show() = 0;
+
+  protected:
+    string _name;
 };
 // 产品实体类型定义
-class XiaomiCircle : public ProductB
-{
-public:
-	XiaomiCircle(string name) :ProductB(name) {}
-	void show() { cout << "获取了一个小米智能手环设备:" << _name << endl; }
+class XiaomiCircle : public ProductB {
+  public:
+    XiaomiCircle(string name) : ProductB(name) {}
+    void show() { cout << "获取了一个小米智能手环设备:" << _name << endl; }
 };
 // 产品实体类型定义
-class HuaweiCircle : public ProductB
-{
-public:
-	HuaweiCircle(string name) :ProductB(name) {}
-	void show() {
-		cout << "获取了一个华为智能手环设备:" << _name << endl;
-	}
+class HuaweiCircle : public ProductB {
+  public:
+    HuaweiCircle(string name) : ProductB(name) {}
+    void show() { cout << "获取了一个华为智能手环设备:" << _name << endl; }
 };
 
 // 抽象工厂，创建通过一个产品簇的设备产品
-class AbstractFactory
-{
-public:
-	// 工厂里面创建手机的纯虚函数接口
-	virtual ProductA* createPhone() = 0;
-	// 工厂里面创建智能手环的纯虚函数接口
-	virtual ProductB* createSmartCircle() = 0;
+class AbstractFactory {
+  public:
+    // 工厂里面创建手机的纯虚函数接口
+    virtual ProductA *createPhone() = 0;
+    // 工厂里面创建智能手环的纯虚函数接口
+    virtual ProductB *createSmartCircle() = 0;
 };
 
 // 生产小米产品簇的工厂
-class XiaomiFactory : public AbstractFactory
-{
-public:
-	ProductA* createPhone()
-	{
-		// 小米工厂肯定生产小米手机
-		return new XiaomiPhone("小米x9");
-	}
-	ProductB* createSmartCircle()
-	{
-		// 小米工厂肯定生产小米智能手环
-		return new XiaomiCircle("小米智能手环2代时尚版");
-	}
+class XiaomiFactory : public AbstractFactory {
+  public:
+    ProductA *createPhone() {
+        // 小米工厂肯定生产小米手机
+        return new XiaomiPhone("小米x9");
+    }
+    ProductB *createSmartCircle() {
+        // 小米工厂肯定生产小米智能手环
+        return new XiaomiCircle("小米智能手环2代时尚版");
+    }
 };
 // 生产华为产品簇的工厂
-class HuaweiFactory : public AbstractFactory
-{
-public:
-	ProductA* createPhone()
-	{
-		// 华为工厂肯定生产华为手机
-		return new HuaweiPhone("华为荣耀7x");
-	}
-	ProductB* createSmartCircle()
-	{
-		// 华为工厂肯定生产华为智能手环
-		return new HuaweiCircle("华为智能手环B3青春版");
-	}
+class HuaweiFactory : public AbstractFactory {
+  public:
+    ProductA *createPhone() {
+        // 华为工厂肯定生产华为手机
+        return new HuaweiPhone("华为荣耀7x");
+    }
+    ProductB *createSmartCircle() {
+        // 华为工厂肯定生产华为智能手环
+        return new HuaweiCircle("华为智能手环B3青春版");
+    }
 };
 
-int main()
-{
-	// 使用智能指针自动释放堆内存
-	// 创建具体的工厂
-	unique_ptr<AbstractFactory> f1(new XiaomiFactory);
-	unique_ptr<AbstractFactory> f2(new HuaweiFactory);
+int main() {
+    // 使用智能指针自动释放堆内存
+    // 创建具体的工厂
+    unique_ptr<AbstractFactory> f1(new XiaomiFactory);
+    unique_ptr<AbstractFactory> f2(new HuaweiFactory);
 
-	// 通过工厂方法创建手机产品
-	unique_ptr<ProductA> p1(f1->createPhone());
-	unique_ptr<ProductA> p2(f2->createPhone());
-	p1->show();
-	p2->show();
+    // 通过工厂方法创建手机产品
+    unique_ptr<ProductA> p1(f1->createPhone());
+    unique_ptr<ProductA> p2(f2->createPhone());
+    p1->show();
+    p2->show();
 
-	// 通过工厂方法创建智能手环产品
-	unique_ptr<ProductB> p3(f1->createSmartCircle());
-	unique_ptr<ProductB> p4(f2->createSmartCircle());
-	p3->show();
-	p4->show();
+    // 通过工厂方法创建智能手环产品
+    unique_ptr<ProductB> p3(f1->createSmartCircle());
+    unique_ptr<ProductB> p4(f2->createSmartCircle());
+    p3->show();
+    p4->show();
 
-	return 0;
+    return 0;
 }
 ```
 
@@ -340,113 +325,99 @@ int main()
 > 行为性模型：关注系统中对象之间的相互交互，解决系统在运行时对象之间的相互通信和协作，进一步明确对象的职责。
 
 ```cpp
+#include <algorithm>
 #include <iostream>
 #include <list>
-#include <unordered_map>
 #include <string>
-#include <algorithm>
+#include <unordered_map>
 using namespace std;
 
 // 定义监听者基类
-class Listener
-{
-public:
-	// 基类构造函数
-	Listener(string name) :_name(name) {}
-	// 监听者处理消息事件的纯虚函数接口
-	virtual void handleMessage(int msgid) = 0;
-protected:
-	string _name;
+class Listener {
+  public:
+    Listener(string name) : _name(name) {} // 基类构造函数
+    virtual void handleMessage(int msgid) = 0; // 监听者处理消息事件的纯虚函数接口
+
+  protected:
+    string _name;
 };
+
 // 一个具体的监听者类Listener1
-class Listener1 : public Listener
-{
-public:
-	Listener1(string name) :Listener(name) {}
-	// Listener1处理自己感兴趣的事件
-	void handleMessage(int msgid)
-	{
-		cout << "listener:" << _name << " recv:" << msgid
-			<< " msg, handle it now!" << endl;
-	} 
+class Listener1 : public Listener {
+  public:
+    Listener1(string name) : Listener(name) {}
+
+    void handleMessage(int msgid) { // Listener1处理自己感兴趣的事件
+        cout << "listener:" << _name << " recv:" << msgid << " msg, handle it now!" << endl;
+    }
 };
 // 一个具体的监听者类Listener2
-class Listener2 : public Listener
-{
-public:
-	Listener2(string name) :Listener(name) {}
-	// Listener2处理自己感兴趣的事件
-	void handleMessage(int msgid)
-	{
-		cout << "listener:" << _name << " recv:" << msgid
-			<< " msg, handle it now!" << endl;
-	}
+class Listener2 : public Listener {
+  public:
+    Listener2(string name) : Listener(name) {}
+    
+    void handleMessage(int msgid) { // Listener2处理自己感兴趣的事件
+        cout << "listener:" << _name << " recv:" << msgid << " msg, handle it now!" << endl;
+    }
 };
+
 // 实现观察者
-class Observer
-{
-public:
-	/*
-	params:
-	1. Listener *pListener: 具体的监听者
-	2. int msgid： 监听者感兴趣的事件
-	该函数接口主要用于监听者向观察者注册感兴趣的事件
-	*/
-	void registerListener(Listener *pListener, int msgid)
-	{
-        listenerMap[msgid].push_back(pListener);
-	}
-	/*
-	params:
-	1. int msgid：观察到发生的事件id
-	该函数接口主要用于观察者观察到事件发生，并转发到对该事件感兴趣
-	的监听者
-	*/
-	void dispatchMessage(int msgid)
-	{
-		auto it = listenerMap.find(msgid);
-		if (it != listenerMap.end())
-		{
+class Observer {
+  public:
+    /*
+    params:
+    1. Listener *pListener: 具体的监听者
+    2. int msgid： 监听者感兴趣的事件
+    该函数接口主要用于监听者向观察者注册感兴趣的事件
+    */
+    void registerListener(Listener *pListener, int msgid) { listenerMap[msgid].push_back(pListener); }
+    
+    /*
+    params:
+    1. int msgid：观察到发生的事件 id 
+    该函数接口主要用于观察者观察到事件发生，并转发到对该事件感兴趣的监听者
+    */
+    void dispatchMessage(int msgid) {
+        auto it = listenerMap.find(msgid);
+        if (it != listenerMap.end()) {
             // 观察者派生事件到感兴趣的监听者，
             // 监听者通过handleMessage接口负责事件的具体处理操作
-			for_each(it->second.begin(), it->second.end(),
-				[&msgid](Listener *pListener) -> void {
-                    pListener->handleMessage(msgid);
-                }
-            );
-		}
-	}
-private:
-	// 存储监听者注册的感兴趣的事件
-	unordered_map<int, list<Listener*>> listenerMap;
+            for_each(it->second.begin(), it->second.end(), [&msgid](Listener *pListener) -> void {
+                pListener->handleMessage(msgid);
+            });
+        }
+    }
+
+  private:
+    // 存储监听者注册的感兴趣的事件
+    unordered_map<int, list<Listener *>> listenerMap;
 };
-int main()
-{
-	Listener *p1 = new Listener1("高海山");
-	Listener *p2 = new Listener2("冯丽婷");
 
-	Observer obser;
-	// 监听者p1注册1，2，3号事件
-	obser.registerListener(p1, 1);
-	obser.registerListener(p1, 2);
-	obser.registerListener(p1, 3);
-	// 监听者p2注册1，3号事件
-	obser.registerListener(p2, 1);
-	obser.registerListener(p2, 3);
+int main() {
+    Listener *p1 = new Listener1("高海山");
+    Listener *p2 = new Listener2("冯丽婷");
 
-	// 模拟事件的发生
-	int msgid;
-	for (;;)
-	{
-		cout << "输入事件id:";
-		cin >> msgid;
-		if (-1 == msgid)
-			break;
-		// 通过用户手动输入msgid模拟事件发生，此处观察者派发事件
-		obser.dispatchMessage(msgid);
-	}
+    Observer obser;
+    // 监听者p1注册1，2，3号事件
+    obser.registerListener(p1, 1);
+    obser.registerListener(p1, 2);
+    obser.registerListener(p1, 3);
+    // 监听者p2注册1，3号事件
+    obser.registerListener(p2, 1);
+    obser.registerListener(p2, 3);
 
-	return 0;
+    // 模拟事件的发生
+    int msgid;
+    while(true) {
+        cout << "输入事件id:";
+        cin >> msgid;
+        if (-1 == msgid) break;
+
+        // 通过用户手动输入msgid模拟事件发生，此处观察者派发事件
+        obser.dispatchMessage(msgid);
+    }
+
+    return 0;
 }
 
 ```

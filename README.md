@@ -112,10 +112,17 @@ C++ Standard Library（标准库）包括 Standard Template Library（标准模�
 ## Linux 相关
 > 《Linux 高性能服务器编程》阅读笔记，`Linux` 文件夹
 
-详见 [Linux-readme.md](./Linux/readme.md)
+详见 [Linux-readme.md](Linux/readme.md)
 
 - 参考1：《Linux 高性能服务器编程》游双著
 - 参考2：牛客——[Linux高并发服务器开发](https://www.nowcoder.com/courses/cover/live/504)
+
+
+
+## 数据库
+
+- [MySQL](MySQL.md)
+- [Redis](Redis.md)
 
 
 
@@ -143,16 +150,11 @@ C++ Standard Library（标准库）包括 Standard Template Library（标准模�
 
 > 不同公司的面经，`review` 文件夹
 
-1. [百度面经](review/baidu.md)
-2. [字节面经](review/bytedance.md)
-3. [快手面经](review/kuaishou.md)
-4. [阿里巴巴](review/alibaba.md)
-5. [蚂蚁集团](review/antgroup.md)
-6. [美团](review/meituan.md)
-7. [京东](review/jingdong.md)
-8. [米哈游](review/mihoyo.md)
-9. [小红书](review/redxhs.md)
-10. [其他面经](review/others.md)
+|           :book:           |                 :book:                  |             :book:             |             :book:              |           :book:           |
+| :------------------------: | :-------------------------------------: | :----------------------------: | :-----------------------------: | :------------------------: |
+|  [百度](review/baidu.md)   |        [阿里](review/alibaba.md)        |   [腾讯](review/tencent.md)    | [字节跳动](review/bytedance.md) | [快手](review/kuaishou.md) |
+| [美团](review/meituan.md)  |       [京东](review/jingdong.md)        | [蚂蚁集团](review/antgroup.md) |   [小红书](review/redxhs.md)    | [米哈游](review/mihoyo.md) |
+| [国企银行](review/bank.md) | [手机电脑厂](review/mobile_computer.md) |  [其他面经](review/others.md)  |                                 |                            |
 
 
 
