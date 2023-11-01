@@ -396,5 +396,79 @@ cout << ++ ++i << endl;
 
 
 
+#### 三面
 
+> 2023.11.1 — 18:00-19:00
 
+- STL 容器有哪些
+
+- vector 和 list 区别
+
+- 存放 10w 条数据选择哪个容器更好一些，如何查找更加高效
+
+- 如果有序，list 可以二分吗
+
+- 智能指针，手撕 unique_ptr
+
+  ```cpp
+  template<typename T>
+  class uniquePtr {
+  private:
+      T* _ptr;	// 原始指针
+      
+  public:
+      // 默认构造函数
+      uniquePtr(T* ptr = nullptr): _ptr(ptr) {}
+      
+      uniquePtr(const uniquePtr&) = delete;
+      uniquePtr<T>& operator=(const uniquePtr&) = delete;
+  
+      uniquePtr(uniquePtr && other) {
+          // 注意这里没有 delete _ptr, 一般移动构造就是初始构造时调用，_ptr 并没有指向一个地址
+          _ptr = other._ptr;
+          other._ptr = nullptr;
+      }
+  
+      uniquePtr<T>& operator=(uniquePtr&& other) {
+          if (this != &other) {
+              delete _ptr; // 先释放现有空间，主要理解指针的含义，其实就是一地址！
+              _ptr = other._ptr;
+              other._ptr = nullptr;
+          }
+          return *this;
+      }
+      
+      T* get() const {
+          return ptr;
+      }
+      
+      T* operator->() const {
+          return _ptr;
+      }
+      
+      T& operator*() const {
+          return *_ptr;
+      }
+      
+      ~uniquePtr() {
+          delete _ptr;
+          _ptr = nullptr;
+      }
+  };
+  ```
+
+- 类的空间布局
+
+  ```cpp
+  class A { // sizeof(A) = 16
+      int a;
+      virtual void funA() {}
+  };
+  
+  class B : public A { // sizeof(B) = 16
+      virtual void funA() {}
+      virtual void funB() {}
+  };
+  ```
+
+- 项目遇到那些比较棘手的问题，如何防止内存泄漏

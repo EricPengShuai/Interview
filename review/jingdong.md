@@ -55,20 +55,20 @@ auto 让编译器通过初始值来进行类型推演。从而获得定义变量
 template<typename T>
 class sharedPtr {
 private:
-    T* _ptr;	// 原始指针
-    int* _pcount;	// 引用计数指针
+    T* _ptr;        // 原始指针
+    int* _pcount;   // 引用计数指针
     
 public:
     // 默认构造函数
-    sharePtr(T* ptr = nullptr): _ptr(ptr), _pcount(new int(1)) {}
+    sharedPtr(T* ptr = nullptr): _ptr(ptr), _pcount(new int(1)) {}
     
     // 拷贝构造函数
-    sharePtr(const sharedPtr& s): _ptr(s._ptr), _pcount(s._pcount) {
+    sharedPtr(const sharedPtr& s): _ptr(s._ptr), _pcount(s._pcount) {
         (*_pcount) ++;
     }
     
     // 重载赋值 = 操作符
-    sharedPtr<T>& operator=(const sharePtr& s) {
+    sharedPtr<T>& operator=(const sharedPtr& s) {
         if (this != &s) {
             -- (*(this->_pcount));
             if (*(this->_pcount) == 0) {
@@ -92,7 +92,7 @@ public:
         return this->_ptr;
     }
     
-    ~sharePtr() {
+    ~sharedPtr() {
         -- (*(this->_pcount));
         if (*(this->_pcount) == 0) {
             delete _ptr;
@@ -101,6 +101,6 @@ public:
             _pcount = nullptr;
         }
     }
-}
+};
 ```
 

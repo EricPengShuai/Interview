@@ -35,6 +35,8 @@
 
 ### 中金所技术
 
+#### 一面
+
 > 2023.10.13—9:20-9:40
 
 - 实习项目是如何模拟吞吐量变化的
@@ -53,6 +55,53 @@
 - C++ 右值引用了解吗
 
 - 反问：面试流程（两轮线上技术面+一轮线下HR面）、具体业务
+
+
+
+#### 二面
+
+> 2023.11.1 — 10:25-10:45
+
+- 项目或者实习中遇到困难
+
+- IO 复用如何实现的，如果回调函数参数个数不同应该如何设计
+
+  > 使用可变参模板：
+  >
+  > ```cpp
+  > // 定义一个接受可变参数的回调函数
+  > template <typename... Args>
+  > void VariableArgsCallback(const std::string& message, Args... args) {
+  >     std::cout << "Message: " << message << std::endl;
+  >     std::cout << "Arguments: ";
+  >     (std::cout << ... << args); // 使用折叠表达式输出参数
+  >     std::cout << std::endl;
+  > }
+  > 
+  > // 使用 std::bind 绑定可变参数的回调函数
+  > auto callback = std::bind(VariableArgsCallback<int, double, const char*>, "Hello", 42, 3.14, "World");
+  > 
+  > // 使用 std::function 包装回调
+  > std::function<void()> functionCallback = callback;
+  > 
+  > // 调用回调
+  > functionCallback();
+  > ```
+
+- **CLOSE_WAIT 状态过多如何解决**
+
+  > 主要是由于服务端这边代码逻辑出现问题导致的，一般服务器编码逻辑为：
+  >
+  > 1. 创建服务端 socket，bind 绑定端口、listen 监听端口
+  > 2. 将服务端 socket 注册到 epoll
+  > 3. epoll_wait 等待连接到来，连接到来时，调用 accpet 获取已连接的 socket
+  > 4. 将已连接的 socket 注册到 epoll**（如果没有注册时间，导致后续收到 FIN 报文是无法感知的，进而无法调用 close**
+  > 5. epoll_wait 等待事件发生
+  > 6. 对方连接关闭时，我方调用 close
+
+- 两个线程同时访问同一个队列：一个读、一个写，如何设计
+
+  > 先写完元素再 end_ptr ++ 
 
 
 
