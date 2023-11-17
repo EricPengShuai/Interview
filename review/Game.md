@@ -1,6 +1,6 @@
-## 米哈游
+## 游戏类公司
 
-### 0319笔试
+### 米哈游—0319笔试
 
 #### 选择题
 
@@ -75,3 +75,55 @@ RGBGRR
 这样就可以DP了，DP(i)表示集合最后一个元素为i的方案数。复杂度是调和级数乘上n的前缀和，约等于nlogn (n=1e6)。由于要求的是大于等于2的集合，因此还要把大小为1的删掉。
 
 > 感觉有点抽象：`dp[i*j] += dp[i]` ，代码参考：[mihoyo_0319_3.cpp](code/mihoyo_0319_3.cpp)
+
+
+
+### 网易游戏—测开
+
+> 2023.11.17 - 15:50-16:40
+
+- this 指针有什么用
+
+- mysql 索引作用、索引分类
+
+- **设计一个排行榜：用户id以及score，排行榜显示最多 50000 条数据，按照 score 逆序排列**
+
+  ```cpp
+  struct User {
+      int userId;
+      int score;
+  
+      User(int id, int s) : userId(id), score(s) {}
+  
+      // 自定义 less 小于重载，注意需要 const 修饰
+      bool operator<(const User& other) const {
+          if (score == other.score) {
+              return userId < other.userId; // 升序
+          } else {
+              return score > other.score; // 逆序
+          }
+      }
+  };
+  
+  // 第二种自定义<重载方法
+  bool operator<(const Item& a, const Item& b) {
+      return a.score > b.score; // 逆序
+  }
+  
+  int main() {
+      std::set<User> leaderboard = {{1, 150}, {2, 120}, {3, 180}, {5, 120}, /*...*/};
+      
+      // 输出排行榜
+      for (const auto& user : leaderboard) {
+          std::cout << "User ID: " << user.userId << ", Score: " << user.score << std::endl;
+      }
+  }
+  ```
+
+- **排行榜功能如何测试呢**
+
+  > 基本排行榜功能测试、边界条件测试、性能测试、线程安全测试、日志测试
+
+- 问游戏经历：三消、射击、MOBA
+
+> 奇特的面试体验，竟然还问王者连招顺序

@@ -47,7 +47,7 @@ class CSingleton {
     CSingleton() {}
     ~CSingleton() { cout << "~CSingleton()" << endl; }
     CSingleton(const CSingleton &s) = delete;
-    CSingleton& operator()(const CSingleton &s) = delete;
+    CSingleton& operator=(const CSingleton &s) = delete;
 
     //!NOTE: 定义一个嵌套类，在该类的析构函数中，自动释放外层类的资源
     class CRelease {
@@ -78,7 +78,7 @@ class CSingleton {
   private:
     CSingleton(){};
     CSingleton(const CSingleton &s) = delete;
-    CSingleton& operator()(const CSingleton &s) = delete;
+    CSingleton& operator=(const CSingleton &s) = delete;
 };
 ```
 

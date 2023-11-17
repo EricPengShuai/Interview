@@ -81,26 +81,14 @@ C++ Standard Library（标准库）包括 Standard Template Library（标准模�
 
 > 常见 LeetCode 算法总结，`algorithm` 文件夹
 
-1. [背包问题](algorithm/背包问题.md)
-2. [二分查找](algorithm/二分查找.md)
-3. [回溯算法](algorithm/回溯算法.md)
-4. [搜索算法](algorithm/搜索算法.md)
-5. [差分数组](algorithm/差分数组.md)
-6. [单调栈](algorithm/单调栈.md)
-7. [并查集](algorithm/并查集.md)
-8. [二叉树遍历方式](algorithm/二叉树遍历方式.md)
-9. [二叉树路径问题](algorithm/二叉树路径问题.md)
-10. [排序](algorithm/排序.md)
-11. [线段树](algorithm/线段树.md)
-12. [字典树](algorithm/字典树.md)
-13. [双指针](algorithm/双指针.md)
-14. [最长上升子序列](algorithm/最长上升子序列.md)
-15. [数位DP](algorithm/数位DP.md)
-16. [其他算法](algorithm/others.md)
+|               :book:               |               :book:                |                     :book:                      |                      :book:                      |                :book:                |
+| :--------------------------------: | :---------------------------------: | :---------------------------------------------: | :----------------------------------------------: | :----------------------------------: |
+| [1.排序](algorithm/排序.md) :star: | [2.二分查找](algorithm/二分查找.md) |   [3.回溯算法](algorithm/回溯算法.md) :star:    |    [4.搜索算法](algorithm/搜索算法.md) :star:    | [5.差分数组](algorithm/差分数组.md)  |
+|  [6.单调栈](algorithm/单调栈.md)   |   [7.并查集](algorithm/并查集.md)   | [8.二叉树遍历方式](algorithm/二叉树遍历方式.md) | [9.二叉树路径问题](algorithm/二叉树路径问题.md)  | [10.背包问题](algorithm/背包问题.md) |
+|  [11.线段树](algorithm/线段树.md)  |  [12.字典树](algorithm/字典树.md)   |     [13.双指针](algorithm/双指针.md) :star:     | [14.最长上升子序列](algorithm/最长上升子序列.md) |   [15.数位DP](algorithm/数位DP.md)   |
+| [16.其他算法](algorithm/others.md) |                                     |                                                 |                                                  |                                      |
 
-
-
-### ACM 模式备忘代码
+**自定义常见数据结构**
 
 > 处理链表二叉树等数据结构以及输入处理技巧，参考 `memo` 文件夹
 
@@ -152,9 +140,9 @@ C++ Standard Library（标准库）包括 Standard Template Library（标准模�
 
 |           :book:           |                 :book:                  |             :book:             |             :book:              |           :book:           |
 | :------------------------: | :-------------------------------------: | :----------------------------: | :-----------------------------: | :------------------------: |
-|  [百度](review/baidu.md)   |        [阿里](review/alibaba.md)        |   [腾讯](review/tencent.md)    | [字节跳动](review/bytedance.md) | [快手](review/kuaishou.md) |
-| [美团](review/meituan.md)  |       [京东](review/jingdong.md)        | [蚂蚁集团](review/antgroup.md) |   [小红书](review/redxhs.md)    | [米哈游](review/mihoyo.md) |
-| [国企银行](review/bank.md) | [手机电脑厂](review/mobile_computer.md) |  [其他面经](review/others.md)  |                                 |                            |
+|  [百度](review/Baidu.md)   |        [阿里](review/Alibaba.md)        |   [腾讯](review/Tencent.md)    | [字节跳动](review/Bytedance.md) | [快手](review/Kuaishou.md) |
+| [美团](review/Meituan.md)  |       [京东](review/Jingdong.md)        | [蚂蚁集团](review/Antgroup.md) |   [小红书](review/Redxhs.md)    |  [游戏厂](review/Game.md)  |
+| [国企银行](review/bank.md) | [手机电脑厂](review/mobile_computer.md) |  [其他面经](review/others.md)  |  [金融科技](review/Fintech.md)  |                            |
 
 
 
