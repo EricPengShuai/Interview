@@ -577,9 +577,17 @@ cout << ++ ++i << endl;
   }
   ```
 
-  
-
 - sql 题：stu_id、class_id、score 中计算每个班级的平均分以及找出每个班级最高分的学生
 
 - 算法题：[LCR 194. 二叉树的最近公共祖先](https://leetcode.cn/problems/er-cha-shu-de-zui-jin-gong-gong-zu-xian-lcof/)
 
+
+
+#### 三面
+
+> 2023.11.21 11:00-12:00
+
+- 实习项目有什么意义
+- 算法题：[301. 删除无效的括号](https://leetcode.cn/problems/remove-invalid-parentheses/)
+
+> 困难题，主管很傲慢的感觉...3面寄
