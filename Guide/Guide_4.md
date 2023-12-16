@@ -83,7 +83,7 @@ int main() {
 }
 ```
 
-输出结果都是：
+输出结果都是：（注意有些顺序是随机的）
 
 ```bash
 thread[t2]: x = 2
@@ -148,7 +148,7 @@ int main() {
 }
 ```
 
-输出结果：
+输出结果：（注意有些顺序是随机的）
 
 ```bash
 create A
@@ -185,25 +185,25 @@ public:
     }
     ~B() {}
     thread_local static int b_key;
-    // thread_local int b_key; // error: storage class specified for ‘b_key’
+    // thread_local int b_key;
     int b_value = 24;
     static int b_static;
 };
 
+// 静态成员变量必须在类外初始化
 int B::b_static = 36;
+thread_local int B::b_key = 12;
+
 void thread_func(const std::string& thread_name) {
     B b;
     for (int i = 0; i < 3; ++i) {
         b.b_key--;
-        b.b_value--;
-        b.b_static--;   // not thread safe
+        b.b_value--;    // not thread safe
+        b.b_static--;   // not thread safe 
         std::lock_guard<std::mutex> lock(cout_mutex);
-        std::cout << "thread[" << thread_name << "]: b_key:" 
-            	  << b.b_key << ", b_value:" << b.b_value 
-            	  << ", b_static:" << b.b_static << std::endl;
-        std::cout << "thread[" << thread_name << "]: B::key:"
-            	  << B::b_key << ", b_value:" << b.b_value 
-            	  << ", b_static: " << B::b_static << std::endl;
+        std::cout << "thread[" << thread_name << "]: b_key:" << b.b_key << ", b_value:" << b.b_value << ", b_static:" << b.b_static << std::endl;
+        std::cout << "thread[" << thread_name << "]: B::key:" << B::b_key << ", b_value:" << b.b_value << ", b_static: " << B::b_static << std::endl;
+    }
     return;
 }
 
@@ -216,23 +216,23 @@ int main() {
 }
 ```
 
-输出：
+输出：（注意有些顺序是随机的）
 
 ```bash
 create B
-thread[t2]: b_key:11, b_value:23, b_static:35
-thread[t2]: B::key:11, b_value:23, b_static: 35
-thread[t2]: b_key:10, b_value:22, b_static:34
-thread[t2]: B::key:10, b_value:22, b_static: 34
-thread[t2]: b_key:9, b_value:21, b_static:33
-thread[t2]: B::key:9, b_value:21, b_static: 33
+thread[t1]: b_key:11, b_value:23, b_static:35
+thread[t1]: B::key:11, b_value:23, b_static: 35
+thread[t1]: b_key:10, b_value:22, b_static:34
+thread[t1]: B::key:10, b_value:22, b_static: 34
+thread[t1]: b_key:9, b_value:21, b_static:33
+thread[t1]: B::key:9, b_value:21, b_static: 33
 create B
-thread[t1]: b_key:11, b_value:23, b_static:32
-thread[t1]: B::key:11, b_value:23, b_static: 32
-thread[t1]: b_key:10, b_value:22, b_static:31
-thread[t1]: B::key:10, b_value:22, b_static: 31
-thread[t1]: b_key:9, b_value:21, b_static:30
-thread[t1]: B::key:9, b_value:21, b_static: 30
+thread[t2]: b_key:11, b_value:23, b_static:32
+thread[t2]: B::key:11, b_value:23, b_static: 32
+thread[t2]: b_key:10, b_value:22, b_static:31
+thread[t2]: B::key:10, b_value:22, b_static: 31
+thread[t2]: b_key:9, b_value:21, b_static:30
+thread[t2]: B::key:9, b_value:21, b_static: 30
 ```
 
 **说明：**

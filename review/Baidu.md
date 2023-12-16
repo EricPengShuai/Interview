@@ -307,11 +307,59 @@ share_ptr 中含有两个指针：
 
 - 堆和栈的区别，**如何分配堆内存**
 
+  > malloc 底层通过 brk 和 mmap 分配内存，都是分配的虚拟内存
+  >
+  > - brk：将进程的数据段（data segment）末尾地址（通常是_edata）往高地址推，从而扩展进程的堆空间；一般用于**小型的内存分配**，因为它在物理内存上是连续的，可能存在**内存碎片**的问题
+  > - mmap: 在进程的虚拟地址空间中映射一块新的内存区域，适用于**大型的内存分配**，因为 `mmap` 不要求内存是连续的，它可以映射非连续的物理内存页，可以避免内存碎片
+
+  ```cpp
+  #include <unistd.h>
+  // end_data_segment参数是指向新的数据段末尾地址的指针
+  // 如果brk调用成功，它将返回0；否则，返回-1，并设置errno变量以指示错误原因
+  int brk(void *end_data_segment);
+  
+  #include <sys/mman.h>
+  // addr参数是指定映射区域的起始地址（通常为NULL，表示由系统自动分配）
+  // length参数指定映射区域的大小；prot参数指定映射区域的访问权限
+  // flags参数指定映射区域的其他属性；fd参数是指定文件描述符（通常为-1）
+  // offset参数是指定文件偏移量（通常为0）
+  void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset);
+  ```
+
 - 进程通信方式，进程和线程区别
 
 - TCP 为什么需要四次挥手，TCP 和 UDP 区别，拥塞控制算法
 
-- 算法：数组循环右移，三次翻转即可
+- 算法：[189. 轮转数组](https://leetcode.cn/problems/rotate-array/)
 
 
 
+#### 二面
+
+> 2023.12.13 — 16:00-16:40
+
+- 自我介绍，以后从事的工作技术栈有倾向吗，算法还是工程，可以实习吗
+
+- 访问 www.baidu.com 的具体过程
+
+- IO 复用、重载和重写区别
+
+- RPC 和部署方式有关系吗
+
+- MySQL 使用过哪些场景，**微博大V和粉丝场景如何设计表结构**
+
+  > User 用户表：user_id, username, email, password, ...
+  >
+  > Weibo 微博表：weibo_id, user_id, content, timestamp, ...
+  >
+  > Follow 关注表：follower_id, following_id, timestamp, ... （前两个是用户表的外键）
+  >
+  > Like 点赞表：user_id（用户表外键）, weibo_id（微博表外键）, timestamp, ...
+  >
+  > - 大V和粉丝的关系通过 `Follow` 表进行管理。当一个用户关注另一个用户时，在 `Follow` 表中插入一条记录
+  > - 用户发表微博时，将微博信息插入到 `Weibo` 表中
+  > - 用户之间的关系和点赞关系通过外键关联进行维护
+
+- 算法：[1. 两数之和](https://leetcode.cn/problems/two-sum/) （我似乎做成了三数之和...
+
+> 最后直接被感谢... 面完即挂
