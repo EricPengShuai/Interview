@@ -4,9 +4,10 @@
 
 > 2023.04.28—19:00-20:00
 
-#### 1、[算法] [334. 递增的三元子序列 ](https://leetcode.cn/problems/increasing-triplet-subsequence/) &&[16. 最接近的三数之和](https://leetcode.cn/problems/3sum-closest/)
+#### 1、[算法] [334. 递增的三元子序列](https://leetcode.cn/problems/increasing-triplet-subsequence/) [16. 最接近的三数之和](https://leetcode.cn/problems/3sum-closest/)
 
-- 第一题没想到贪心的做法，太紧张也没找到 leftMin 和 rightMax 的写法，o(╥﹏╥)o
+- 第一题没想到贪心的做法，太紧张也没找到 leftMin 和 rightMax 的写法
+
 - 第二题直接秒了：排序+双指针
 
 
@@ -52,9 +53,10 @@ deque内部有一个指针指向map，map是一小块连续空间，其中的每
 #### 3、move 用在哪，是不是所有赋值都可以换成 move
 
 - 和右值引用一起实现移动语义
+
 - 肯定不是所有地方都使用 move，因为会将原有的左值置空
 
-move 使用前提：① 定义的类使用了资源并定义了移动构造函数和移动赋值运算符；② 该变量即将不再使用
+> move 使用前提：① 定义的类使用了资源并定义了移动构造函数和移动赋值运算符；② 该变量即将不再使用
 
 
 
@@ -93,7 +95,7 @@ union
 
 
 
-#### 6、进程、线程、协程区别
+#### 4、进程、线程、协程区别
 
 1. 进程（Process）： 进程是操作系统资源分配的基本单位，每个进程都有独立的内存空间、独立的运行环境、独立的代码空间，它们之间通过进程间通信（IPC）来进行通信和协作。在Linux中，进程通过fork()系统调用创建，并可以通过exec()系统调用来替换自己的代码和数据。每个进程都有自己的pid（进程号）。
 2. 线程（Thread）： 线程是进程内部的一条执行路径，多个线程可以共享进程的代码、数据和打开的文件等资源，但每个线程都有自己的栈空间。线程之间的通信和协作可以通过共享内存等方式实现。在Linux中，线程通过pthread_create()函数创建，它们共享同一个进程号。
@@ -242,7 +244,7 @@ ICMP 报文分为：
 
 #### 二面
 
-> 2023.11.1 16:00-17:00
+> 2023.11.15 16:00-17:00
 
 - 上来自我介绍之后，直接做题
   - [23. 合并 K 个升序链表](https://leetcode.cn/problems/merge-k-sorted-lists/)
@@ -258,7 +260,7 @@ ICMP 报文分为：
 
 #### 一面
 
-> 2023.11.09 — 11:00 - 11:30
+> 2023.12.08 — 11:00 - 11:30
 
 - unordered_map 和 map 区别
 - 哈希表实现，扩容之后的均摊时间复杂度为什么是 O(1)
@@ -278,6 +280,54 @@ ICMP 报文分为：
 - RPC client 传输数据使用 TCP 吗，如何区分，粘包问题？
 - 实习中 Dash.js 执行码率决策的过程
 - 算法：[输出字典序最小的最长递增子序列](https://www.nowcoder.com/questionTerminal/9cf027bf54714ad889d4f30ff0ae5481) 可能还不太一样，这个是数值最小，还有要求 ASCII 字符最小
+
+
+
+### IEG—光子工作室
+
+> 2023.12.17 — 17:00 - 18:00
+
+- 算法：[146. LRU 缓存](https://leetcode.cn/problems/lru-cache/) 和 [378. 有序矩阵中第 K 小的元素](https://leetcode.cn/problems/kth-smallest-element-in-a-sorted-matrix/)
+
+  > 为什么二分结果一定在矩阵中 [参考](https://leetcode.cn/problems/kth-smallest-element-in-a-sorted-matrix/solutions/2582123/zheng-li-wei-shi-yao-er-fen-jie-guo-yi-d-kqrq/)
+
+- 操作系统进程调度算法
+
+  > RR 轮转、 SJN 最短作用优先、FCFS 先来先服务、优先级、多级反馈队列
+
+- Linux系统如何控制进程优先级以及默认的进程调度算法是啥
+
+  > `nice`命令可以在启动进程时设置初始nice值，而`renice`命令可以在进程运行时修改nice值。
+  >
+  > Linux中默认是基于时间片轮转（Round Robin）的多级反馈队列调度算法。这个调度算法在多个就绪队列之间切换，每个队列有不同的优先级，并且每个队列使用轮转调度策略。更具体地说，Linux使用CFS（Completely Fair Scheduler）调度器来实现这一算法。
+
+- 进程、线程、协程区别，线程有哪些独享的资源 :fire:
+
+  > 共享进程的资源：地址空间（代码段|数据段|堆|栈...）、全局和静态变量、fd、信号处理器、进程ID
+  >
+  > 线程独占的空间：线程ID、寄存器集合、栈空间、线程局部存储、寄存器变脸、信号屏蔽字
+  >
+  > 一般堆空间是共享的，需要保证线程的同步和互斥访问
+
+- TCP 和 UDP 区别，UDP 可以实现 TCP 的功能吗，**QUIC细说？**
+
+- TIME_WAIT 作用，等待时长
+
+  > Maxmiun Segment Lifetime 最大报文段的生存事件。因为客户端不知道服务端是否能收到ACK应答数据包，服务端如果没有收到ACK，会进行重传FIN，考虑最坏的一种情况：第四次挥手的ACK包的最大生存时长(MSL)+服务端重传的FIN包的最大生存时长(MSL)=2MSL
+  >
+  > MSL 和 MTU 并不直接相关：
+  >
+  > - MTU是指在网络上传输的数据帧中，能够携带的最大数据量。它通常是数据链路层的一个属性，表示在一个数据包中能够携带的最大字节数。
+  >
+  > - MSL是TCP协议中的一个参数，表示一个TCP报文段在网络中最长的存活时间。MSL的值通常设定为两分钟。除了重传可能丢失的 ACK 以外，还可以**防止旧连接的混淆：** 在某个连接被关闭后，可能过一段时间内会有新的连接尝试使用相同的本地端口和远程端口。如果没有`TIME_WAIT`状态，这可能导致新连接混淆并接收到错误的数据。
+
+- 如何两条链表是否相交以及交点在哪，**除了两根指针还有其他方法吗？**
+
+  > 哈希表，双指针 [参考](https://leetcode.cn/problems/3u1WK4/solutions/1037741/liang-ge-lian-biao-de-di-yi-ge-zhong-he-0msfg/)
+
+  
+
+
 
 
 
