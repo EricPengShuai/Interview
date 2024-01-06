@@ -543,3 +543,17 @@ int main()
 - **nginx 的流量分发在4层和7层的区别**
 - 单例模式、锁 + 双重检测为何提高效率
 
+
+
+### 阿里云—通义实验室
+
+> 2024.01.02 — 19:00-20:00
+
+- STL 好处、使用场景；C++11 新特性
+- 多态概念，重载区别，发生时期
+- vector 使用时注意场景，哈希表底层
+- 红黑树、B 树、B+ 树
+- 堆和栈区别
+- struct 和 class 区别
+- [场景题] **海量文件取 top10 词频元素** [参考](https://wizardforcel.gitbooks.io/the-art-of-programming-by-july/content/06.02.html)
+- [算法题] [53. 最大子数组和](https://leetcode.cn/problems/maximum-subarray/) [LCR 006. 两数之和 II - 输入有序数组](https://leetcode.cn/problems/kLl5u1/)
