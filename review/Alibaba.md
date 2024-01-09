@@ -547,6 +547,8 @@ int main()
 
 ### 阿里云—通义实验室
 
+#### 一面
+
 > 2024.01.02 — 19:00-20:00
 
 - STL 好处、使用场景；C++11 新特性
@@ -557,3 +559,17 @@ int main()
 - struct 和 class 区别
 - [场景题] **海量文件取 top10 词频元素** [参考](https://wizardforcel.gitbooks.io/the-art-of-programming-by-july/content/06.02.html)
 - [算法题] [53. 最大子数组和](https://leetcode.cn/problems/maximum-subarray/) [LCR 006. 两数之和 II - 输入有序数组](https://leetcode.cn/problems/kLl5u1/)
+
+
+
+#### 二面
+
+> 2024.01.09 — 19:00-19:30
+
+- 对 transformer 了解多少？（真的服...
+
+- 手写入堆和出堆的操作，基本上就是堆排序
+
+  > 参考 https://www.hello-algo.com/chapter_sorting/heap_sort/
+
+  
